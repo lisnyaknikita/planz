@@ -1,5 +1,11 @@
+import Test from './components/test/Test'
+
 function App() {
-	return <>hello</>
+	return (
+		<>
+			<Test />
+		</>
+	)
 }
 
 export default App
