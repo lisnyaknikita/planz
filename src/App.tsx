@@ -1,9 +1,9 @@
-import Test from './components/test/Test'
+import SignupPage from './pages/sign-up/Signup'
 
 function App() {
 	return (
 		<>
-			<Test />
+			<SignupPage />
 		</>
 	)
 }
