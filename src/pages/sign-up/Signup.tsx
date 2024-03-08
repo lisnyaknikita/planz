@@ -1,6 +1,7 @@
 import { FC } from 'react'
 
 import classes from './Signup.module.scss'
+
 import SignupForm from './components/sign-up-form/SignupForm'
 
 const SignupPage: FC = () => {

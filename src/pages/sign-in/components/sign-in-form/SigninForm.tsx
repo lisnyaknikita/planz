@@ -1,14 +1,10 @@
 import { FC } from 'react'
 
-import classes from './SignupForm.module.scss'
+import classes from './SigninForm.module.scss'
 
-const SignupForm: FC = () => {
+const SigninForm: FC = () => {
 	return (
 		<form className={classes.form}>
-			<label className={classes.label}>
-				<span className={classes.span}>Full name</span>
-				<input type='text' className={classes.input} placeholder='John' />
-			</label>
 			<label className={classes.label}>
 				<span className={classes.span}>Email</span>
 				<input
@@ -21,9 +17,9 @@ const SignupForm: FC = () => {
 				<span className={classes.span}>Password</span>
 				<input type='password' className={classes.input} />
 			</label>
-			<button className={classes.button}>Create account</button>
+			<button className={classes.button}>Log in</button>
 		</form>
 	)
 }
 
-export default SignupForm
+export default SigninForm
