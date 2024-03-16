@@ -13,6 +13,11 @@
 	padding-right: 40px;
 	border-right: 1px solid var(--main-gray);
 	border-radius: 30px;
+	transition: all 0.3s;
+
+	&:global(.hidden) {
+		transform: translateX(-1000%);
+	}
 
 	@media screen and (max-width: 1440px) {
 		padding-left: 20px;
@@ -26,7 +31,7 @@
 
 	@media screen and (max-width: 900px) {
 		position: absolute;
-		left: -1000%;
+		// left: -1000%;
 	}
 
 	@media screen and (max-width: 450px) {
@@ -44,12 +49,31 @@
 
 .toggleButton {
 	display: none;
+	transform: translateX(500%);
+	transition: transform 0.3s;
+
+	&:global(.closed) {
+		transform: rotate(180deg);
+
+		@media screen and (max-width: 450px) {
+			top: 10px;
+		}
+	}
+
+	// &:global(.opened) {
+	// 	transform: translateX(500%);
+	// }
 
 	@media screen and (max-width: 900px) {
 		display: block;
 		position: absolute;
 		top: 10px;
 		left: 15px;
+	}
+
+	@media screen and (max-width: 450px) {
+		top: 80px;
+		transform: translateX(150%);
 	}
 }
 
