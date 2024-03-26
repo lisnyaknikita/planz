@@ -3,7 +3,7 @@ import { FC } from 'react'
 import classes from './Signin.module.scss'
 import SigninForm from './components/sign-in-form/SigninForm'
 
-const Signin: FC = () => {
+const SigninPage: FC = () => {
 	return (
 		<div className={classes.inner}>
 			<img className={classes.logo} src='/logo.png' alt='logo' />
@@ -12,4 +12,4 @@ const Signin: FC = () => {
 	)
 }
 
-export default Signin
+export default SigninPage
