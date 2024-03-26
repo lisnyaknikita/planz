@@ -7,7 +7,12 @@ import SettingsIcon from '../../assets/icons/settings.svg'
 
 import clsx from 'clsx'
 
+import { Route, Routes } from 'react-router-dom'
 import Navigation from '../../components/navigation/Navigation'
+import HabitsPage from '../../pages/habits/Habits'
+import NotesPage from '../../pages/notes/Notes'
+import ProjectsPage from '../../pages/projects/Projects'
+import TimerPage from '../../pages/timer/Timer'
 
 const Layout: FC = () => {
 	const [isNavigationVisible, setIsNavigationVisible] = useState(true)
@@ -25,7 +30,12 @@ const Layout: FC = () => {
 				<Navigation />
 				<img className={classes.brain} src='/brain.svg' alt='brain image' />
 			</aside>
-			{/* <SomePageComponent/> */}
+			<Routes>
+				<Route path='/' element={<NotesPage />} />
+				<Route path='/habits' element={<HabitsPage />} />
+				<Route path='/timer' element={<TimerPage />} />
+				<Route path='/projects' element={<ProjectsPage />} />
+			</Routes>
 			<button
 				className={clsx(classes.toggleButton, !isNavigationVisible && 'closed')}
 				onClick={toggleNavigationVisibility}

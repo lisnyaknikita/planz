@@ -7,6 +7,10 @@ function App() {
 	return (
 		<>
 			<Layout />
+			{/* <Routes>
+				<Route path='/sign-in' element={<SigninPage />} />
+				<Route path='/sign-up' element={<SignupPage />} />
+			</Routes> */}
 		</>
 	)
 }
