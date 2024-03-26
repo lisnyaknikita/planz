@@ -75,11 +75,10 @@
 
 .settingsButton {
 	position: absolute;
-	top: 25px;
+	top: 15px;
 	right: 40px;
 
 	@media screen and (max-width: 1440px) {
-		top: 20px;
 		right: 30px;
 	}
 

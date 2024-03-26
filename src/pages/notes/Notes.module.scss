@@ -1,0 +1,51 @@
+.wrapper {
+	padding: 20px 40px;
+	display: flex;
+	justify-content: center;
+	flex: 1;
+	position: relative;
+}
+
+.toggleBtn {
+	position: absolute;
+	top: 25px;
+	left: 40px;
+}
+
+.inner {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	// gap: 19px;
+	justify-content: space-between;
+}
+
+.search {
+	position: relative;
+}
+
+.searchInput {
+	width: 400px;
+	height: 40px;
+	border-radius: 10px;
+	background-color: var(--secondary-dark);
+	color: #fff;
+	border: none;
+}
+
+.searchImage {
+	position: absolute;
+	left: 15px;
+	top: 5%;
+}
+
+.pagination {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+	list-style: none;
+}
+
+.paginationItem {
+	font-size: 22px;
+}
