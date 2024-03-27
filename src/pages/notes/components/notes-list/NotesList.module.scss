@@ -4,13 +4,50 @@
 	grid-template-columns: repeat(4, 1fr);
 	grid-template-rows: repeat(3, 1fr);
 	gap: 30px 35px;
+
+	@media screen and (max-width: 1500px) {
+		grid-template-columns: repeat(3, 1fr);
+		grid-template-rows: repeat(3, 1fr);
+		gap: 25px 30px;
+	}
+
+	@media screen and (max-width: 1165px) {
+		grid-template-columns: repeat(2, 1fr);
+		grid-template-rows: repeat(3, 1fr);
+		gap: 25px 30px;
+	}
+
+	@media screen and (max-width: 900px) {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+
+	@media screen and (max-width: 815px) {
+		margin-top: 40px;
+	}
+
+	@media screen and (max-width: 640px) {
+		margin-top: 0;
+	}
 }
 
 .note {
 	width: 250px;
 	height: 250px;
 	background-color: var(--secondary-dark);
+	border: 1px solid var(--main-gray);
 	border-radius: 10px;
+
+	@media screen and (max-width: 1165px) {
+		width: 200px;
+		height: 200px;
+	}
+
+	@media screen and (max-width: 900px) {
+		width: 160px;
+		height: 160px;
+	}
 }
 
 .noteLink {
@@ -24,8 +61,16 @@
 	margin-bottom: 25px;
 	text-align: center;
 	font-size: 28px;
+
+	@media screen and (max-width: 1165px) {
+		font-size: 24px;
+	}
 }
 
 .noteText {
 	font-size: 20px;
+
+	@media screen and (max-width: 1165px) {
+		font-size: 18px;
+	}
 }

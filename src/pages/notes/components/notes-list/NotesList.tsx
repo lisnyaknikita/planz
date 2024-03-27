@@ -2,7 +2,7 @@ import { FC } from 'react'
 
 import classes from './NotesList.module.scss'
 
-const Component: FC = () => {
+const NotesList: FC = () => {
 	return (
 		<ul className={classes.notesList}>
 			<li className={classes.note}>
@@ -75,4 +75,4 @@ const Component: FC = () => {
 	)
 }
 
-export default Component
+export default NotesList
