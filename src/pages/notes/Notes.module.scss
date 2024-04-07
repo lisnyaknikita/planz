@@ -11,9 +11,13 @@
 }
 
 .toggleBtn {
+	cursor: pointer;
 	position: absolute;
 	top: 25px;
 	left: 40px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
 
 	@media screen and (max-width: 900px) {
 		right: 65px;
@@ -30,6 +34,21 @@
 		right: 65px;
 		left: auto;
 		top: 17px;
+	}
+}
+
+.listViewButton {
+	transform: translateX(-100%);
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
+	transition: all 0.3s;
+
+	&:global(.clicked) {
+		transform: translateX(0);
+		visibility: visible;
+		opacity: 1;
+		pointer-events: all;
 	}
 }
 

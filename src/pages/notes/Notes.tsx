@@ -1,17 +1,39 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 
 import classes from './Notes.module.scss'
 
-import toggleButton from '../../assets/icons/cards-view.svg'
+import cardViewButton from '../../assets/icons/cards-view.svg'
+import listViewButton from '../../assets/icons/list-view.svg'
 import searchIcon from '../../assets/icons/search.svg'
+
+import clsx from 'clsx'
 import NotesList from './components/notes-list/NotesList'
 
 const NotesPage: FC = () => {
+	const [isToggleButtonClicked, setIsToggleButtonClicked] = useState(false)
+
+	function onToggleButtonClick() {
+		setIsToggleButtonClicked(prev => !prev)
+	}
+
 	return (
 		<div className={classes.wrapper}>
-			<button className={classes.toggleBtn}>
-				<img src={toggleButton} alt='change notes view' />
-			</button>
+			<div className={classes.toggleBtn}>
+				<button
+					className={classes.cardViewButton}
+					onClick={onToggleButtonClick}
+				>
+					<img src={cardViewButton} alt='change to card view' />
+				</button>
+				<button
+					className={clsx(
+						classes.listViewButton,
+						isToggleButtonClicked && 'clicked'
+					)}
+				>
+					<img src={listViewButton} alt='change to list view' />
+				</button>
+			</div>
 			<div className={classes.inner}>
 				<label className={classes.search}>
 					<input className={classes.searchInput} type='search' />
