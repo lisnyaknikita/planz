@@ -1,10 +1,15 @@
 import { FC } from 'react'
 
+import clsx from 'clsx'
 import classes from './NotesList.module.scss'
 
-const NotesList: FC = () => {
+interface INotesListProps {
+	isListView: boolean
+}
+
+const NotesList: FC<INotesListProps> = ({ isListView }) => {
 	return (
-		<ul className={classes.notesList}>
+		<ul className={clsx(classes.notesList, isListView && 'listView')}>
 			<li className={classes.note}>
 				<a className={classes.noteLink} href='#'>
 					<h5 className={classes.noteTitle}>Title of the note</h5>

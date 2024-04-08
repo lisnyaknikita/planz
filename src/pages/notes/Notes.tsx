@@ -10,29 +10,34 @@ import clsx from 'clsx'
 import NotesList from './components/notes-list/NotesList'
 
 const NotesPage: FC = () => {
-	const [isToggleButtonClicked, setIsToggleButtonClicked] = useState(false)
+	const [isListView, setIsListView] = useState(false)
 
-	function onToggleButtonClick() {
-		setIsToggleButtonClicked(prev => !prev)
+	function onChangeView() {
+		setIsListView(prev => !prev)
 	}
 
 	return (
 		<div className={classes.wrapper}>
-			<div className={classes.toggleBtn}>
-				<button
-					className={classes.cardViewButton}
-					onClick={onToggleButtonClick}
-				>
-					<img src={cardViewButton} alt='change to card view' />
-				</button>
-				<button
-					className={clsx(
-						classes.listViewButton,
-						isToggleButtonClicked && 'clicked'
-					)}
-				>
-					<img src={listViewButton} alt='change to list view' />
-				</button>
+			<div className={classes.toggleBtn} onClick={onChangeView}>
+				{!isListView ? (
+					<>
+						<button className={classes.cardViewButton}>
+							<img src={cardViewButton} alt='change to card view' />
+						</button>
+						<button className={clsx(classes.listViewButton, 'hidden')}>
+							<img src={listViewButton} alt='change to list view' />
+						</button>
+					</>
+				) : (
+					<>
+						<button className={clsx(classes.listViewButton)}>
+							<img src={listViewButton} alt='change to list view' />
+						</button>
+						<button className={clsx(classes.cardViewButton, 'hidden')}>
+							<img src={cardViewButton} alt='change to card view' />
+						</button>
+					</>
+				)}
 			</div>
 			<div className={classes.inner}>
 				<label className={classes.search}>
@@ -41,12 +46,14 @@ const NotesPage: FC = () => {
 						<img src={searchIcon} alt='search icon' />
 					</span>
 				</label>
-				<NotesList />
-				<ul className={classes.pagination}>
-					<li className={classes.paginationItem}>1</li>
-					<li className={classes.paginationItem}>2</li>
-					<li className={classes.paginationItem}>3</li>
-				</ul>
+				<NotesList isListView={isListView} />
+				{!isListView && (
+					<ul className={classes.pagination}>
+						<li className={classes.paginationItem}>1</li>
+						<li className={classes.paginationItem}>2</li>
+						<li className={classes.paginationItem}>3</li>
+					</ul>
+				)}
 			</div>
 		</div>
 	)
