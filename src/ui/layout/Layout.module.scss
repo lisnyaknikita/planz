@@ -16,6 +16,7 @@
 	transition: all 0.3s;
 
 	&:global(.hidden) {
+		width: 0;
 		transform: translateX(-1000%);
 	}
 
@@ -30,7 +31,7 @@
 	}
 
 	@media screen and (max-width: 900px) {
-		position: absolute;
+		// position: absolute;
 		// left: -1000%;
 	}
 
@@ -44,6 +45,10 @@
 	@media screen and (max-width: 1024px) {
 		max-width: 75%;
 		align-self: center;
+	}
+
+	@media screen and (max-width: 480px) {
+		// max-width: 65%;
 	}
 }
 
@@ -71,21 +76,28 @@
 		top: 80px;
 		transform: translateX(150%);
 	}
+
+	@media screen and (max-width: 375px) {
+		left: 0;
+	}
 }
 
 .settingsButton {
 	position: absolute;
-	top: 25px;
+	top: 15px;
 	right: 40px;
 
 	@media screen and (max-width: 1440px) {
-		top: 20px;
 		right: 30px;
 	}
 
 	@media screen and (max-width: 1024px) {
-		top: 10px;
+		top: 13px;
 		right: 15px;
+		> img {
+			width: 40px;
+			height: 40px;
+		}
 	}
 }
 
