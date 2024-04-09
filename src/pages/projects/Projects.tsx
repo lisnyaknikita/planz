@@ -2,9 +2,9 @@ import { FC } from 'react'
 
 import classes from './Projects.module.scss'
 
-import deleteButton from '../../assets/icons/delete.svg'
 import plusButton from '../../assets/icons/plus.svg'
 import searchIcon from '../../assets/icons/search.svg'
+import ProjectsList from './components/projects-list/ProjectsList'
 
 const ProjectsPage: FC = () => {
 	return (
@@ -19,18 +19,7 @@ const ProjectsPage: FC = () => {
 						<img src={searchIcon} alt='search icon' />
 					</span>
 				</label>
-				<ul className={classes.projectsList}>
-					<li className={classes.projectCard}>
-						<button className={classes.deleteProjectButton}>
-							<img src={deleteButton} alt='delete project' />
-						</button>
-						<div className={classes.progress}>
-							<span className={classes.percent}>25%</span>
-						</div>
-						<h4 className={classes.projectName}>Project name</h4>
-						<p className={classes.projectDescription}>Project description</p>
-					</li>
-				</ul>
+				<ProjectsList />
 			</div>
 		</div>
 	)

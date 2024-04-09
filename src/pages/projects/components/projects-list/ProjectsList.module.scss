@@ -1,0 +1,158 @@
+.projectsList {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 37px;
+	max-height: 850px;
+	overflow: auto;
+
+	@media screen and (max-width: 815px) {
+		margin-top: 30px;
+	}
+
+	@media screen and (max-width: 640px) {
+		margin-top: 0;
+		gap: 15px;
+	}
+}
+
+.projectCard {
+	padding: 20px;
+	border-radius: 10px;
+	background-color: var(--secondary-dark);
+	list-style: none;
+	width: 475px;
+	height: 300px;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+
+	@media screen and (max-width: 1600px) {
+		width: 400px;
+		height: 280px;
+	}
+
+	@media screen and (max-width: 1200px) {
+		width: 330px;
+		height: 230px;
+	}
+
+	@media screen and (max-width: 700px) {
+		width: 260px;
+		height: 190px;
+		padding: 10px;
+	}
+
+	@media screen and (max-width: 530px) {
+		width: 200px;
+	}
+
+	@media screen and (max-width: 490px) {
+		width: 160px;
+		height: 170px;
+	}
+}
+
+.deleteProjectButton {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+
+	@media screen and (max-width: 1600px) {
+		> img {
+			width: 80%;
+		}
+	}
+
+	@media screen and (max-width: 700px) {
+		top: 10px;
+		right: 5px;
+
+		> img {
+			width: 60%;
+		}
+	}
+}
+
+.progress {
+	background-color: var(--main-gray);
+	border-radius: 50%;
+	width: 104px;
+	height: 104px;
+	margin-bottom: 10px;
+	position: relative;
+	align-self: center;
+
+	@media screen and (max-width: 1200px) {
+		width: 80px;
+		height: 80px;
+	}
+
+	@media screen and (max-width: 700px) {
+		width: 60px;
+		height: 60px;
+	}
+}
+
+.percent {
+	font-size: 36px;
+	color: var(--main-dark);
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+
+	@media screen and (max-width: 1600px) {
+		font-size: 32px;
+	}
+
+	@media screen and (max-width: 1200px) {
+		font-size: 26px;
+	}
+
+	@media screen and (max-width: 700px) {
+		font-size: 22px;
+	}
+}
+
+.projectName {
+	font-size: 36px;
+	color: var(--white-for-dark);
+	font-weight: 400;
+	margin-bottom: 10px;
+
+	@media screen and (max-width: 1600px) {
+		font-size: 32px;
+	}
+
+	@media screen and (max-width: 700px) {
+		font-size: 26px;
+	}
+
+	@media screen and (max-width: 530px) {
+		font-size: 23px;
+	}
+
+	@media screen and (max-width: 490px) {
+		font-size: 21px;
+	}
+}
+
+.projectDescription {
+	font-size: 24px;
+	color: var(--white-for-dark);
+
+	@media screen and (max-width: 1600px) {
+		font-size: 22px;
+	}
+
+	@media screen and (max-width: 700px) {
+		font-size: 18px;
+	}
+
+	@media screen and (max-width: 530px) {
+		font-size: 16px;
+	}
+}
