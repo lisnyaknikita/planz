@@ -13,6 +13,7 @@ import HabitsPage from '../../pages/habits/Habits'
 import NotesPage from '../../pages/notes/Notes'
 import ProjectsPage from '../../pages/projects/Projects'
 import TimerPage from '../../pages/timer/Timer'
+import TimerSettings from '../../pages/timer/components/timer-settings/TimerSettings'
 
 const Layout: FC = () => {
 	const [isNavigationVisible, setIsNavigationVisible] = useState(true)
@@ -34,6 +35,7 @@ const Layout: FC = () => {
 				<Route path='/' element={<NotesPage />} />
 				<Route path='/habits' element={<HabitsPage />} />
 				<Route path='/timer' element={<TimerPage />} />
+				<Route path='/timer/settings' element={<TimerSettings />} />
 				<Route path='/projects' element={<ProjectsPage />} />
 			</Routes>
 			<button

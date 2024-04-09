@@ -4,14 +4,15 @@ import classes from './Timer.module.scss'
 
 import playButton from '../../assets/icons/play.svg'
 // import pauseButton from '../../assets/icons/pause.svg'
+import { Link } from 'react-router-dom'
 import timerButton from '../../assets/icons/timer.svg'
 
 const TimerPage: FC = () => {
 	return (
 		<div className={classes.wrapper}>
-			<button className={classes.timerSettingsButton}>
+			<Link to={'/timer/settings'} className={classes.timerSettingsButton}>
 				<img src={timerButton} alt='add new project' />
-			</button>
+			</Link>
 			<div className={classes.inner}>
 				<h6 className={classes.timerLabel}>Flow</h6>
 				<div className={classes.timer}>90:00</div>
