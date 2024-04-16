@@ -46,28 +46,25 @@
 	justify-content: center;
 
 	@media screen and (max-width: 1130px) {
-		width: 580px;
+		width: 80%;
 		height: 400px;
 	}
 
 	@media screen and (max-width: 915px) {
-		width: 400px;
 		height: 300px;
 	}
 
 	@media screen and (max-width: 750px) {
-		width: 300px;
 		height: 250px;
 	}
 
 	@media screen and (max-width: 600px) {
-		width: 200px;
 		height: 300px;
 		padding: 20px;
 	}
 
 	@media screen and (max-width: 480px) {
-		width: 150px;
+		width: 100%;
 		padding: 10px;
 	}
 }
