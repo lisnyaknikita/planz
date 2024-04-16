@@ -1,0 +1,137 @@
+.wrapper {
+	padding: 20px 40px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex: 1;
+	position: relative;
+
+	@media screen and (max-width: 640px) {
+		padding: 20px 10px;
+	}
+}
+
+.backButton {
+	cursor: pointer;
+	position: absolute;
+	top: 15px;
+	left: 40px;
+	display: flex;
+	align-items: center;
+
+	@media screen and (max-width: 1024px) {
+		top: 13px;
+
+		> img {
+			width: 45px;
+			height: 45px;
+		}
+	}
+
+	@media screen and (max-width: 900px) {
+		right: 65px;
+		left: auto;
+		top: 11px;
+	}
+}
+
+.inner {
+	width: 725px;
+	height: 456px;
+	border-radius: 10px;
+	background-color: var(--secondary-dark);
+	padding: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	@media screen and (max-width: 1130px) {
+		width: 80%;
+		height: 400px;
+	}
+
+	@media screen and (max-width: 915px) {
+		height: 300px;
+	}
+
+	@media screen and (max-width: 750px) {
+		height: 250px;
+	}
+
+	@media screen and (max-width: 600px) {
+		height: 300px;
+		padding: 20px;
+	}
+
+	@media screen and (max-width: 480px) {
+		width: 100%;
+		padding: 10px;
+	}
+}
+
+.settingsForm {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 20px;
+
+	@media screen and (max-width: 1130px) {
+		gap: 10px;
+	}
+
+	> label {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 18px;
+
+		@media screen and (max-width: 1130px) {
+			gap: 8px;
+		}
+	}
+}
+
+.inputLabel {
+	font-size: 36px;
+	color: var(--white-for-dark);
+	text-align: center;
+
+	@media screen and (max-width: 1130px) {
+		font-size: 30px;
+	}
+
+	@media screen and (max-width: 915px) {
+		font-size: 24px;
+	}
+
+	@media screen and (max-width: 750px) {
+		font-size: 20px;
+	}
+
+	@media screen and (max-width: 600px) {
+		font-size: 18px;
+	}
+}
+
+.input {
+	width: 100px;
+	height: 50px;
+	border: none;
+	border-radius: 10px;
+	background-color: var(--main-gray);
+	color: #fff;
+	padding: 0 10px;
+	font-size: 32px;
+
+	@media screen and (max-width: 1130px) {
+		width: 80px;
+		height: 40px;
+		font-size: 22px;
+	}
+
+	@media screen and (max-width: 750px) {
+		width: 60px;
+		height: 30px;
+		font-size: 20px;
+	}
+}

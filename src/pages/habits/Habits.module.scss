@@ -1,0 +1,138 @@
+.wrapper {
+	padding: 20px 40px;
+	display: flex;
+	flex: 1;
+	position: relative;
+
+	@media screen and (max-width: 580px) {
+		padding: 20px 10px;
+	}
+}
+
+.addHabitButton {
+	cursor: pointer;
+	position: absolute;
+	top: 10px;
+	left: 40px;
+	display: flex;
+	align-items: center;
+
+	@media screen and (max-width: 1024px) {
+		> img {
+			width: 50px;
+			height: 50px;
+		}
+	}
+
+	@media screen and (max-width: 900px) {
+		right: 65px;
+		left: auto;
+		top: 8px;
+	}
+
+	@media screen and (max-width: 640px) {
+		right: 65px;
+		left: auto;
+		top: 10px;
+	}
+}
+
+.inner {
+	margin-top: 100px;
+
+	@media screen and (max-width: 900px) {
+		width: 100%;
+	}
+}
+
+.habitsList {
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
+	max-height: 800px;
+	overflow-y: auto;
+
+	@media screen and (max-width: 900px) {
+		gap: 15px;
+	}
+}
+
+.habit {
+	list-style: none;
+	min-width: 750px;
+	background-color: var(--secondary-dark);
+	border-radius: 10px;
+	padding: 40px 20px 40px 40px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	@media screen and (max-width: 1120px) {
+		min-width: 0;
+		width: 90%;
+		padding: 20px 10px 20px 20px;
+	}
+
+	@media screen and (max-width: 900px) {
+		width: 100%;
+	}
+
+	@media screen and (max-width: 768px) {
+		padding: 10px 5px 10px 10px;
+	}
+}
+
+.habitName {
+	font-size: 32px;
+	color: var(--white-for-dark);
+	// padding-right: 15px;
+	max-width: 80%;
+
+	@media screen and (max-width: 1120px) {
+		font-size: 28px;
+	}
+
+	@media screen and (max-width: 900px) {
+		font-size: 24px;
+	}
+
+	@media screen and (max-width: 768px) {
+		font-size: 20px;
+	}
+
+	@media screen and (max-width: 460px) {
+		font-size: 15px;
+		max-width: 60%;
+	}
+}
+
+.completeButton {
+	background-color: var(--main-gray);
+	// background-color: #16c347;
+	border-radius: 10px;
+	padding: 8px;
+
+	> img {
+		width: 50px;
+		height: 50px;
+
+		@media screen and (max-width: 900px) {
+			width: 40px;
+			height: 40px;
+		}
+
+		@media screen and (max-width: 768px) {
+			width: 25px;
+			height: 25px;
+		}
+
+		@media screen and (max-width: 460px) {
+			width: 18px;
+			height: 18px;
+		}
+	}
+
+	@media screen and (max-width: 1120px) {
+		padding: 6px;
+	}
+}
