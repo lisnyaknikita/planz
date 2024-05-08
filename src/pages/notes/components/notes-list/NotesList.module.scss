@@ -5,6 +5,11 @@
 	grid-template-rows: repeat(3, 1fr);
 	gap: 30px 35px;
 
+	&::-webkit-scrollbar {
+		width: 0px;
+		height: 0px;
+	}
+
 	@media screen and (max-width: 1500px) {
 		grid-template-columns: repeat(3, 1fr);
 		grid-template-rows: repeat(3, 1fr);
@@ -64,6 +69,30 @@
 					font-size: 16px;
 				}
 			}
+		}
+	}
+
+	&:global(.noteOpened) {
+		gap: 0px;
+		// max-height: ;
+		overflow: auto;
+		width: 20%;
+		border-right: 1px solid var(--main-gray);
+
+		& .note {
+			border-radius: 0;
+			background-color: transparent;
+			border: none;
+		}
+
+		& .note .noteLink {
+			padding: 5px 30px;
+		}
+
+		& .note .noteLink .noteTitle {
+			font-size: 32px;
+			font-weight: 400;
+			margin-bottom: 15px;
 		}
 	}
 }

@@ -11,6 +11,7 @@ import { Route, Routes } from 'react-router-dom'
 import Navigation from '../../components/navigation/Navigation'
 import HabitsPage from '../../pages/habits/Habits'
 import NotesPage from '../../pages/notes/Notes'
+import NotePage from '../../pages/notes/components/note/Note'
 import ProjectsPage from '../../pages/projects/Projects'
 import TimerPage from '../../pages/timer/Timer'
 import TimerSettings from '../../pages/timer/components/timer-settings/TimerSettings'
@@ -33,6 +34,7 @@ const Layout: FC = () => {
 			</aside>
 			<Routes>
 				<Route path='/' element={<NotesPage />} />
+				<Route path='/note/:id' element={<NotePage />} />
 				<Route path='/habits' element={<HabitsPage />} />
 				<Route path='/timer' element={<TimerPage />} />
 				<Route path='/timer/settings' element={<TimerSettings />} />

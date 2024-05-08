@@ -1,0 +1,93 @@
+.wrapper {
+	padding: 20px 40px 20px 0;
+	display: flex;
+	justify-content: center;
+	flex: 1;
+	position: relative;
+
+	// @media screen and (max-width: 580px) {
+	// 	padding: 20px 10px;
+	// }
+}
+
+.inner {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 19px;
+	width: 100%;
+
+	// @media screen and (max-width: 640px) {
+	// 	margin-top: 50px;
+	// }
+}
+
+.search {
+	position: relative;
+	align-self: flex-start;
+	margin-left: 20px;
+}
+
+.searchInput {
+	width: 280px;
+	height: 35px;
+	border-radius: 10px;
+	background-color: var(--secondary-dark);
+	color: #fff;
+	border: none;
+	padding: 0 20px 0 40px;
+
+	// @media screen and (max-width: 900px) {
+	// 	height: 30px;
+	// 	width: 340px;
+	// }
+
+	// @media screen and (max-width: 768px) {
+	// 	width: 240px;
+	// 	padding: 0 10px 0 45px;
+	// }
+
+	// @media screen and (max-width: 530px) {
+	// 	width: 200px;
+	// }
+
+	// @media screen and (max-width: 480px) {
+	// 	width: 140px;
+	// }
+}
+
+.searchImage {
+	position: absolute;
+	left: 10px;
+	top: 13%;
+
+	> img {
+		width: 70%;
+	}
+
+	// @media screen and (max-width: 900px) {
+	// 	top: 10%;
+
+	// 	> img {
+	// 		width: 70%;
+	// 	}
+	// }
+}
+
+.content {
+	display: flex;
+}
+
+.noteItem {
+	padding: 50px 40px;
+	width: 80%;
+}
+
+.noteTitle {
+	font-size: 66px;
+	margin-bottom: 60px;
+}
+
+.noteText {
+	font-size: 26px;
+}
