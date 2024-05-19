@@ -2,8 +2,11 @@ import { FC, useState } from 'react'
 
 import classes from './Layout.module.scss'
 
+import editBtn from '../../assets/icons/edit.svg'
 import ToggleIcon from '../../assets/icons/nav-toggle.svg'
+import quitBtn from '../../assets/icons/quit.svg'
 import SettingsIcon from '../../assets/icons/settings.svg'
+import testAvatar from '../../assets/icons/test-avatar.png'
 
 import clsx from 'clsx'
 
@@ -15,6 +18,7 @@ import NotePage from '../../pages/notes/components/note/Note'
 import ProjectsPage from '../../pages/projects/Projects'
 import TimerPage from '../../pages/timer/Timer'
 import TimerSettings from '../../pages/timer/components/timer-settings/TimerSettings'
+import Modal from '../modal/Modal'
 
 const Layout: FC = () => {
 	const [isNavigationVisible, setIsNavigationVisible] = useState(true)
@@ -49,6 +53,33 @@ const Layout: FC = () => {
 			<button className={classes.settingsButton}>
 				<img src={SettingsIcon} alt='settings' />
 			</button>
+			<Modal>
+				<div className={classes.modalBody}>
+					<button className={classes.quitButton}>
+						<img src={quitBtn} alt='quit button' />
+					</button>
+					<img className={classes.avatar} src={testAvatar} alt='avatar' />
+					<div className={classes.userName}>
+						<h6>John</h6>
+						<button className={classes.editBtn}>
+							<img src={editBtn} alt='edit button' />
+						</button>
+					</div>
+					<div className={classes.userEmail}>
+						<a href='mailto:test@test.ua'>test@test.ua</a>
+						<button className={classes.editBtn}>
+							<img src={editBtn} alt='edit button' />
+						</button>
+					</div>
+					<div className={classes.themeButtons}>
+						<button className={classes.themeLightButton}>Light</button>
+						<button className={classes.themeDarkButton}>Dark</button>
+					</div>
+					<a className={classes.projectLink} href='#'>
+						Link to project's github
+					</a>
+				</div>
+			</Modal>
 		</div>
 	)
 }
