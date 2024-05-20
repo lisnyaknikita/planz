@@ -8,6 +8,8 @@ interface IModalProps {
 	isSettingsModalOpened?: boolean
 	setIsProjectModalOpened?: (status: boolean) => void
 	isProjectModalOpened?: boolean
+	setIsHabitModalOpened?: (status: boolean) => void
+	isHabitModalOpened?: boolean
 }
 
 const Modal: FC<IModalProps> = ({
@@ -16,6 +18,8 @@ const Modal: FC<IModalProps> = ({
 	isSettingsModalOpened,
 	setIsProjectModalOpened,
 	isProjectModalOpened,
+	setIsHabitModalOpened,
+	isHabitModalOpened,
 }) => {
 	function onCloseModal() {
 		if (isSettingsModalOpened && setIsSettingsModalOpened) {
@@ -23,6 +27,9 @@ const Modal: FC<IModalProps> = ({
 		}
 		if (isProjectModalOpened && setIsProjectModalOpened) {
 			setIsProjectModalOpened(false)
+		}
+		if (isHabitModalOpened && setIsHabitModalOpened) {
+			setIsHabitModalOpened(false)
 		}
 	}
 
