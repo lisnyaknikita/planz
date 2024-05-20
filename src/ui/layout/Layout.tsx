@@ -22,9 +22,14 @@ import Modal from '../modal/Modal'
 
 const Layout: FC = () => {
 	const [isNavigationVisible, setIsNavigationVisible] = useState(true)
+	const [isSettingsModalOpened, setIsSettingsModalOpened] = useState(false)
 
 	function toggleNavigationVisibility() {
 		setIsNavigationVisible(prev => !prev)
+	}
+
+	function toggleModalVisibility() {
+		setIsSettingsModalOpened(true)
 	}
 
 	return (
@@ -50,36 +55,44 @@ const Layout: FC = () => {
 			>
 				<img src={ToggleIcon} alt='toggle navigation visibility' />
 			</button>
-			<button className={classes.settingsButton}>
+			<button
+				className={classes.settingsButton}
+				onClick={toggleModalVisibility}
+			>
 				<img src={SettingsIcon} alt='settings' />
 			</button>
-			<Modal>
-				<div className={classes.modalBody}>
-					<button className={classes.quitButton}>
-						<img src={quitBtn} alt='quit button' />
-					</button>
-					<img className={classes.avatar} src={testAvatar} alt='avatar' />
-					<div className={classes.userName}>
-						<h6>John</h6>
-						<button className={classes.editBtn}>
-							<img src={editBtn} alt='edit button' />
+			{isSettingsModalOpened && (
+				<Modal
+					setIsSettingsModalOpened={setIsSettingsModalOpened}
+					isSettingsModalOpened={isSettingsModalOpened}
+				>
+					<div className={classes.modalBody} onClick={e => e.stopPropagation()}>
+						<button className={classes.quitButton}>
+							<img src={quitBtn} alt='quit button' />
 						</button>
+						<img className={classes.avatar} src={testAvatar} alt='avatar' />
+						<div className={classes.userName}>
+							<h6>John</h6>
+							<button className={classes.editBtn}>
+								<img src={editBtn} alt='edit button' />
+							</button>
+						</div>
+						<div className={classes.userEmail}>
+							<a href='mailto:test@test.ua'>test@test.ua</a>
+							<button className={classes.editBtn}>
+								<img src={editBtn} alt='edit button' />
+							</button>
+						</div>
+						<div className={classes.themeButtons}>
+							<button className={classes.themeLightButton}>Light</button>
+							<button className={classes.themeDarkButton}>Dark</button>
+						</div>
+						<a className={classes.projectLink} href='#'>
+							Link to project's github
+						</a>
 					</div>
-					<div className={classes.userEmail}>
-						<a href='mailto:test@test.ua'>test@test.ua</a>
-						<button className={classes.editBtn}>
-							<img src={editBtn} alt='edit button' />
-						</button>
-					</div>
-					<div className={classes.themeButtons}>
-						<button className={classes.themeLightButton}>Light</button>
-						<button className={classes.themeDarkButton}>Dark</button>
-					</div>
-					<a className={classes.projectLink} href='#'>
-						Link to project's github
-					</a>
-				</div>
-			</Modal>
+				</Modal>
+			)}
 		</div>
 	)
 }
