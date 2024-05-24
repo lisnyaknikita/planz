@@ -74,10 +74,21 @@
 
 	&:global(.noteOpened) {
 		gap: 0px;
-		// max-height: ;
 		overflow: auto;
 		width: 20%;
 		border-right: 1px solid var(--main-gray);
+
+		@media screen and (max-width: 1240px) {
+			width: 30%;
+		}
+
+		@media screen and (max-width: 1124px) {
+			width: 25%;
+		}
+
+		@media screen and (max-width: 1024px) {
+			display: none;
+		}
 
 		& .note {
 			border-radius: 0;
@@ -87,12 +98,20 @@
 
 		& .note .noteLink {
 			padding: 5px 30px;
+
+			@media screen and (max-width: 1240px) {
+				padding: 5px 15px;
+			}
 		}
 
 		& .note .noteLink .noteTitle {
 			font-size: 32px;
 			font-weight: 400;
 			margin-bottom: 15px;
+
+			@media screen and (max-width: 1240px) {
+				font-size: 26px;
+			}
 		}
 	}
 }

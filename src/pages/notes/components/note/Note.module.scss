@@ -5,9 +5,9 @@
 	flex: 1;
 	position: relative;
 
-	// @media screen and (max-width: 580px) {
-	// 	padding: 20px 10px;
-	// }
+	@media screen and (max-width: 580px) {
+		padding: 20px 10px;
+	}
 }
 
 .inner {
@@ -17,15 +17,19 @@
 	gap: 19px;
 	width: 100%;
 
-	// @media screen and (max-width: 640px) {
-	// 	margin-top: 50px;
-	// }
+	@media screen and (max-width: 580px) {
+		overflow-y: auto;
+	}
 }
 
 .search {
 	position: relative;
 	align-self: flex-start;
 	margin-left: 20px;
+
+	@media screen and (max-width: 1024px) {
+		display: none;
+	}
 }
 
 .searchInput {
@@ -37,23 +41,21 @@
 	border: none;
 	padding: 0 20px 0 40px;
 
-	// @media screen and (max-width: 900px) {
-	// 	height: 30px;
-	// 	width: 340px;
-	// }
+	@media screen and (max-width: 1850px) {
+		width: 200px;
+	}
 
-	// @media screen and (max-width: 768px) {
-	// 	width: 240px;
-	// 	padding: 0 10px 0 45px;
-	// }
+	@media screen and (max-width: 1440px) {
+		width: 160px;
+	}
 
-	// @media screen and (max-width: 530px) {
-	// 	width: 200px;
-	// }
+	@media screen and (max-width: 1240px) {
+		width: 220px;
+	}
 
-	// @media screen and (max-width: 480px) {
-	// 	width: 140px;
-	// }
+	@media screen and (max-width: 1124px) {
+		width: 160px;
+	}
 }
 
 .searchImage {
@@ -64,30 +66,78 @@
 	> img {
 		width: 70%;
 	}
-
-	// @media screen and (max-width: 900px) {
-	// 	top: 10%;
-
-	// 	> img {
-	// 		width: 70%;
-	// 	}
-	// }
 }
 
 .content {
 	display: flex;
+
+	@media screen and (max-width: 900px) {
+		margin-top: 50px;
+	}
 }
 
 .noteItem {
 	padding: 50px 40px;
 	width: 80%;
+
+	@media screen and (max-width: 1240px) {
+		padding: 25px 20px;
+		width: 70%;
+	}
+
+	@media screen and (max-width: 1124px) {
+		width: 75%;
+	}
+
+	@media screen and (max-width: 1024px) {
+		width: 100%;
+	}
+
+	@media screen and (max-width: 580px) {
+		padding: 15px 10px;
+	}
 }
 
 .noteTitle {
 	font-size: 66px;
 	margin-bottom: 60px;
+
+	@media screen and (max-width: 1240px) {
+		font-size: 50px;
+		margin-bottom: 40px;
+	}
+
+	@media screen and (max-width: 900px) {
+		font-size: 42px;
+		margin-bottom: 30px;
+	}
+
+	@media screen and (max-width: 650px) {
+		font-size: 32px;
+		margin-bottom: 20px;
+	}
+
+	@media screen and (max-width: 425px) {
+		font-size: 26px;
+	}
 }
 
 .noteText {
 	font-size: 26px;
+
+	@media screen and (max-width: 1240px) {
+		font-size: 24px;
+	}
+
+	@media screen and (max-width: 900px) {
+		font-size: 20px;
+	}
+
+	@media screen and (max-width: 650px) {
+		font-size: 18px;
+	}
+
+	@media screen and (max-width: 425px) {
+		font-size: 16px;
+	}
 }
