@@ -1,0 +1,20 @@
+.wrapper {
+	padding: 20px 40px;
+	position: relative;
+	display: flex;
+	flex: 1;
+
+	// @media screen and (max-width: 580px) {
+	// 	padding: 20px 10px;
+	// }
+}
+
+.inner {
+	position: relative;
+	width: 100%;
+}
+
+.projectTitle {
+	font-size: 42px;
+	margin-bottom: 53px;
+}

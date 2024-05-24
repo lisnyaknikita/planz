@@ -1,0 +1,18 @@
+.inner {
+	display: flex;
+	align-items: center;
+	width: 100wv;
+	overflow-y: hidden;
+	overflow-x: auto;
+}
+
+.addNewColumnButton {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+
+	> span {
+		font-size: 28px;
+		color: var(--white-for-dark);
+	}
+}
