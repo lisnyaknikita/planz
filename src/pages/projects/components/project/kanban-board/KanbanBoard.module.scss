@@ -16,3 +16,9 @@
 		color: var(--white-for-dark);
 	}
 }
+
+.columns {
+	display: flex;
+	align-items: center;
+	gap: 71px;
+}

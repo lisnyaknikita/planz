@@ -1,0 +1,24 @@
+.columnContainer {
+	display: flex;
+	flex-direction: column;
+	gap: 43px;
+	width: 334px;
+}
+
+.titleAndDelete {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.columnTitle {
+	color: var(--white-for-dark);
+	font-size: 36px;
+}
+
+.deleteColumnButton {
+	> img {
+		width: 24px;
+		height: 24px;
+	}
+}

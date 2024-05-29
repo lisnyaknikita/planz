@@ -1,7 +1,7 @@
 import { FC } from 'react'
 
-import KanbanBoard from '../kanban-board/KanbanBoard'
 import classes from './Project.module.scss'
+import KanbanBoard from './kanban-board/KanbanBoard'
 
 const ProjectPage: FC = () => {
 	return (
