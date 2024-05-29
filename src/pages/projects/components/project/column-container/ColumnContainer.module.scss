@@ -3,6 +3,7 @@
 	flex-direction: column;
 	gap: 43px;
 	width: 334px;
+	height: 500px;
 }
 
 .titleAndDelete {
@@ -21,4 +22,14 @@
 		width: 24px;
 		height: 24px;
 	}
+}
+
+.editTitleInput {
+	background-color: var(--main-gray);
+	border: none;
+	border-radius: 10px;
+	color: var(--main-dark);
+	outline: none;
+	padding: 8px 10px;
+	font-size: 28px;
 }

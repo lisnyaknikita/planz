@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useMemo, useState } from 'react'
 
 import classes from './KanbanBoard.module.scss'
 
@@ -6,8 +6,31 @@ import newColumnButton from '../../../../../assets/icons/add-new-column-btn.svg'
 import { Column, ID } from '../../../types/types'
 import ColumnContainer from '../column-container/ColumnContainer'
 
+import {
+	DndContext,
+	DragEndEvent,
+	DragOverlay,
+	DragStartEvent,
+	PointerSensor,
+	useSensor,
+	useSensors,
+} from '@dnd-kit/core'
+import { SortableContext, arrayMove } from '@dnd-kit/sortable'
+import { createPortal } from 'react-dom'
+
 const KanbanBoard: FC = () => {
 	const [columns, setColumns] = useState<Column[]>([])
+	const [activeColumn, setActiveColumn] = useState<Column | null>(null)
+
+	const columnsId = useMemo(() => columns.map(col => col.id), [columns])
+
+	const sensors = useSensors(
+		useSensor(PointerSensor, {
+			activationConstraint: {
+				distance: 3,
+			},
+		})
+	)
 
 	function createNewColumn() {
 		const columnToAdd = {
@@ -19,26 +42,88 @@ const KanbanBoard: FC = () => {
 	}
 
 	function deleteColumn(id: ID) {
-		const filteredColums = columns.filter(column => column.id !== id)
+		const filteredColumns = columns.filter(column => column.id !== id)
 
-		setColumns(filteredColums)
+		setColumns(filteredColumns)
+	}
+
+	function onDragStart(event: DragStartEvent) {
+		console.log('drag started', event)
+		if (event.active.data.current?.type === 'Column') {
+			setActiveColumn(event.active.data.current.column)
+			return
+		}
+	}
+
+	function onDragEnd(event: DragEndEvent) {
+		const { active, over } = event
+
+		if (!over) return
+
+		const activeColumnId = active.id
+		const overColumnId = over.id
+
+		if (activeColumnId === overColumnId) return
+
+		setColumns(columns => {
+			const activeColumnIndex = columns.findIndex(
+				col => col.id === activeColumnId
+			)
+			const overColumnIndex = columns.findIndex(col => col.id === overColumnId)
+
+			return arrayMove(columns, activeColumnIndex, overColumnIndex)
+		})
+	}
+
+	function updateColumn(id: ID, title: string) {
+		const newColumns = columns.map(col => {
+			if (col.id !== id) return col
+			return { ...col, title }
+		})
+
+		setColumns(newColumns)
 	}
 
 	return (
 		<div className={classes.inner}>
-			<div className={classes.columns}>
-				{columns.map(column => (
-					<ColumnContainer
-						column={column}
-						deleteColumn={deleteColumn}
-						key={column.id}
-					/>
-				))}
-			</div>
-			<button className={classes.addNewColumnButton} onClick={createNewColumn}>
-				<img src={newColumnButton} alt='add new column' />
-				<span>Add new column</span>
-			</button>
+			<DndContext
+				onDragStart={onDragStart}
+				onDragEnd={onDragEnd}
+				sensors={sensors}
+			>
+				<div className={classes.columns}>
+					<SortableContext items={columnsId}>
+						{columns.map(column => (
+							<ColumnContainer
+								column={column}
+								deleteColumn={deleteColumn}
+								updateColumn={updateColumn}
+								key={column.id}
+							/>
+						))}
+					</SortableContext>
+				</div>
+				<button
+					className={classes.addNewColumnButton}
+					onClick={createNewColumn}
+				>
+					<img src={newColumnButton} alt='add new column' />
+					<span>Add new column</span>
+				</button>
+
+				{createPortal(
+					<DragOverlay>
+						{activeColumn && (
+							<ColumnContainer
+								column={activeColumn}
+								deleteColumn={deleteColumn}
+								updateColumn={updateColumn}
+							/>
+						)}
+					</DragOverlay>,
+					document.body
+				)}
+			</DndContext>
 		</div>
 	)
 }
