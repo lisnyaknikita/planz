@@ -36,9 +36,14 @@ const KanbanBoard: FC = () => {
 		})
 	)
 
+	function generateId() {
+		/* Generate a random number between 0 and 10000 */
+		return Math.floor(Math.random() * 10001)
+	}
+
 	function createNewColumn() {
 		const columnToAdd = {
-			id: columns.length + 1,
+			id: generateId(),
 			title: `New column ${columns.length}`,
 		}
 
@@ -140,7 +145,7 @@ const KanbanBoard: FC = () => {
 
 	function createTask(columnId: ID) {
 		const newTask: Task = {
-			id: tasks.length + 1,
+			id: generateId(),
 			columnId,
 			content: `Task ${tasks.length + 1}`,
 		}
