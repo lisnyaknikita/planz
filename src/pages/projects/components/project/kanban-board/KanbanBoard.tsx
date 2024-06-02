@@ -44,7 +44,7 @@ const KanbanBoard: FC = () => {
 	function createNewColumn() {
 		const columnToAdd = {
 			id: generateId(),
-			title: `New column ${columns.length}`,
+			title: `Name a column...`,
 		}
 
 		setColumns([...columns, columnToAdd])
@@ -147,7 +147,7 @@ const KanbanBoard: FC = () => {
 		const newTask: Task = {
 			id: generateId(),
 			columnId,
-			content: `Task ${tasks.length + 1}`,
+			content: `Name a task...`,
 		}
 
 		setTasks([...tasks, newTask])

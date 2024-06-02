@@ -4,6 +4,24 @@
 	width: 344px;
 	height: 790px;
 	overflow-y: hidden;
+
+	@media screen and (max-width: 1440px) {
+		width: 310px;
+	}
+
+	@media screen and (max-width: 1024px) {
+		width: 290px;
+		height: 720px;
+	}
+
+	@media screen and (max-width: 768px) {
+		width: 270px;
+	}
+
+	@media screen and (max-width: 650px) {
+		width: 240px;
+		height: 710px;
+	}
 }
 
 .titleAndDelete {
@@ -11,11 +29,31 @@
 	align-items: center;
 	justify-content: space-between;
 	margin-bottom: 43px;
+
+	@media screen and (max-width: 1140px) {
+		margin-bottom: 30px;
+	}
+
+	@media screen and (max-width: 650px) {
+		margin-bottom: 20px;
+	}
 }
 
 .columnTitle {
 	color: var(--white-for-dark);
 	font-size: 36px;
+
+	@media screen and (max-width: 1440px) {
+		font-size: 32px;
+	}
+
+	@media screen and (max-width: 1024px) {
+		font-size: 28px;
+	}
+
+	@media screen and (max-width: 650px) {
+		font-size: 24px;
+	}
 }
 
 .deleteColumnButton {
@@ -26,13 +64,20 @@
 }
 
 .editTitleInput {
-	background-color: var(--main-gray);
+	// background-color: var(--main-gray);
+	background-color: transparent;
 	border: none;
 	border-radius: 10px;
-	color: var(--main-dark);
+	color: var(--white-for-dark);
 	outline: none;
 	padding: 8px 10px;
 	font-size: 28px;
+
+	@media screen and (max-width: 0124px) {
+		font-size: 24px;
+		padding: 5px 7px;
+		width: 100%;
+	}
 }
 
 .addNewTask {

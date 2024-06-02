@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 
 import { ID, Task } from '../../../types/types'
 import classes from './TaskCard.module.scss'
@@ -15,6 +15,8 @@ interface ITaskCardProps {
 
 const TaskCard: FC<ITaskCardProps> = ({ task, deleteTask, updateTask }) => {
 	const [editMode, setEditMode] = useState(false)
+
+	const textAreaRef = useRef<HTMLTextAreaElement>(null)
 
 	const {
 		setNodeRef,
@@ -37,6 +39,14 @@ const TaskCard: FC<ITaskCardProps> = ({ task, deleteTask, updateTask }) => {
 		transform: CSS.Transform.toString(transform),
 	}
 
+	useEffect(() => {
+		if (editMode && textAreaRef.current) {
+			const textArea = textAreaRef.current
+			textArea.focus()
+			textArea.setSelectionRange(textArea.value.length, textArea.value.length)
+		}
+	}, [editMode])
+
 	if (editMode) {
 		return (
 			<div
@@ -50,6 +60,7 @@ const TaskCard: FC<ITaskCardProps> = ({ task, deleteTask, updateTask }) => {
 				<div className={classes.taskContent} onClick={() => setEditMode(true)}>
 					<textarea
 						className={classes.taskTextArea}
+						ref={textAreaRef}
 						value={task.content}
 						onChange={e => updateTask(task.id, e.target.value)}
 						autoFocus
