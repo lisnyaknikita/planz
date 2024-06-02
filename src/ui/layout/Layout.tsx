@@ -16,6 +16,7 @@ import HabitsPage from '../../pages/habits/Habits'
 import NotesPage from '../../pages/notes/Notes'
 import NotePage from '../../pages/notes/components/note/Note'
 import ProjectsPage from '../../pages/projects/Projects'
+import ProjectPage from '../../pages/projects/components/project/Project'
 import TimerPage from '../../pages/timer/Timer'
 import TimerSettings from '../../pages/timer/components/timer-settings/TimerSettings'
 import Modal from '../modal/Modal'
@@ -48,6 +49,7 @@ const Layout: FC = () => {
 				<Route path='/timer' element={<TimerPage />} />
 				<Route path='/timer/settings' element={<TimerSettings />} />
 				<Route path='/projects' element={<ProjectsPage />} />
+				<Route path='/project/:id' element={<ProjectPage />} />
 			</Routes>
 			<button
 				className={clsx(classes.toggleButton, !isNavigationVisible && 'closed')}
