@@ -11,6 +11,7 @@ import testAvatar from '../../assets/icons/test-avatar.png'
 import clsx from 'clsx'
 
 import { Route, Routes } from 'react-router-dom'
+import { ExtendedUser } from '../../App'
 import Navigation from '../../components/navigation/Navigation'
 import HabitsPage from '../../pages/habits/Habits'
 import NotesPage from '../../pages/notes/Notes'
@@ -19,9 +20,14 @@ import ProjectsPage from '../../pages/projects/Projects'
 import ProjectPage from '../../pages/projects/components/project/Project'
 import TimerPage from '../../pages/timer/Timer'
 import TimerSettings from '../../pages/timer/components/timer-settings/TimerSettings'
+import { logoutUser } from '../../services/logoutService'
 import Modal from '../modal/Modal'
 
-const Layout: FC = () => {
+interface ILayoutProps {
+	user: ExtendedUser
+}
+
+const Layout: FC<ILayoutProps> = ({ user }) => {
 	const [isNavigationVisible, setIsNavigationVisible] = useState(true)
 	const [isSettingsModalOpened, setIsSettingsModalOpened] = useState(false)
 
@@ -70,17 +76,21 @@ const Layout: FC = () => {
 				>
 					<div className={classes.modalBody} onClick={e => e.stopPropagation()}>
 						<button className={classes.quitButton}>
-							<img src={quitBtn} alt='quit button' />
+							<img
+								src={quitBtn}
+								alt='quit button'
+								onClick={() => logoutUser()}
+							/>
 						</button>
 						<img className={classes.avatar} src={testAvatar} alt='avatar' />
 						<div className={classes.userName}>
-							<h6>John</h6>
+							<h6>{user.name}</h6>
 							<button className={classes.editBtn}>
 								<img src={editBtn} alt='edit button' />
 							</button>
 						</div>
 						<div className={classes.userEmail}>
-							<a href='mailto:test@test.ua'>test@test.ua</a>
+							<a href='mailto:test@test.ua'>{user.email}</a>
 							<button className={classes.editBtn}>
 								<img src={editBtn} alt='edit button' />
 							</button>

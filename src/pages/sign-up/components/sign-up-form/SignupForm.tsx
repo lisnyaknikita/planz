@@ -6,18 +6,26 @@ import classes from './SignupForm.module.scss'
 const SignupForm: FC = () => {
 	const [email, setEmail] = useState<string>('')
 	const [password, setPassword] = useState<string>('')
+	const [name, setName] = useState('')
 
 	const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
-		await registerUser(email, password)
+		await registerUser(email, password, name)
 	}
 
 	return (
 		<form className={classes.form} onSubmit={handleRegister}>
-			{/* <label className={classes.label}>
+			<label className={classes.label}>
 				<span className={classes.span}>Full name</span>
-				<input type='text' className={classes.input} placeholder='John' />
-			</label> */}
+				<input
+					type='text'
+					className={classes.input}
+					placeholder='John'
+					value={name}
+					onChange={e => setName(e.target.value)}
+					required
+				/>
+			</label>
 			<label className={classes.label}>
 				<span className={classes.span}>Email</span>
 				<input

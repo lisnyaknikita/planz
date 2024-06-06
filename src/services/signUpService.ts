@@ -1,16 +1,32 @@
-import { createUserWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '../../firebaseConfig.ts'
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { doc, getFirestore, setDoc } from 'firebase/firestore'
+import { app, auth } from '../../firebaseConfig.ts'
 
-const registerUser = async (email: string, password: string): Promise<void> => {
+const firestore = getFirestore(app)
+
+const registerUser = async (
+	email: string,
+	password: string,
+	name: string
+): Promise<void> => {
 	try {
 		const userCredential = await createUserWithEmailAndPassword(
 			auth,
 			email,
 			password
 		)
+
 		const user = userCredential.user
-		console.log('User registered:', user)
-		// Дополнительные действия после регистрации пользователя
+
+		// Update the user profile
+		await updateProfile(user, {
+			displayName: name,
+		})
+
+		await setDoc(doc(firestore, 'users', user.uid), {
+			name,
+			email,
+		})
 	} catch (error) {
 		console.error('Error registering user:', error)
 	}
