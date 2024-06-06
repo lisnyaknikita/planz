@@ -7,10 +7,19 @@ const SignupForm: FC = () => {
 	const [email, setEmail] = useState<string>('')
 	const [password, setPassword] = useState<string>('')
 	const [name, setName] = useState('')
+	const [error, setError] = useState<string>('')
 
 	const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
-		await registerUser(email, password, name)
+		if (password.length < 8) {
+			setError('Password must be at least 8 characters long')
+			return
+		}
+		try {
+			await registerUser(email, password, name)
+		} catch (error) {
+			setError(error.message)
+		}
 	}
 
 	return (
@@ -47,6 +56,7 @@ const SignupForm: FC = () => {
 					required
 				/>
 			</label>
+			{error && <p className={classes.error}>{error}</p>}
 			<button className={classes.button} type='submit'>
 				Create account
 			</button>

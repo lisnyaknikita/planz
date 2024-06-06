@@ -13,6 +13,7 @@ const loginUser = async (email: string, password: string): Promise<void> => {
 		// Дополнительные действия после входа пользователя
 	} catch (error) {
 		console.error('Error logging in user:', error)
+		throw error
 	}
 }
 

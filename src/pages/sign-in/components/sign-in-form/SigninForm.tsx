@@ -6,10 +6,15 @@ import classes from './SigninForm.module.scss'
 const SigninForm: FC = () => {
 	const [email, setEmail] = useState<string>('')
 	const [password, setPassword] = useState<string>('')
+	const [error, setError] = useState<string>('')
 
 	const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
-		await loginUser(email, password)
+		try {
+			await loginUser(email, password)
+		} catch (error) {
+			setError('Invalid email or password')
+		}
 	}
 
 	return (
@@ -35,6 +40,7 @@ const SigninForm: FC = () => {
 					required
 				/>
 			</label>
+			{error && <p className={classes.error}>{error}</p>}
 			<button className={classes.button} type='submit'>
 				Log in
 			</button>
