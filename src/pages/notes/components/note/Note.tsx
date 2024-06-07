@@ -15,6 +15,8 @@ const NotePage: FC = () => {
 	const [editNoteMode, setEditNoteMode] = useState<boolean>(false)
 	const [editTitleMode, setEditTitleMode] = useState<boolean>(false)
 
+	console.log(noteId)
+
 	useEffect(() => {
 		const fetchNote = async () => {
 			if (noteId) {
