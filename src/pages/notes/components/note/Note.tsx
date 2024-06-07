@@ -1,142 +1,15 @@
-// // // NotePage.tsx
-// // import { FC, useState } from 'react'
-
-// // import NotesList from '../notes-list/NotesList'
-// // import classes from './Note.module.scss'
-
-// // import searchIcon from '../../../../assets/icons/search.svg'
-
-// // const NotePage: FC = () => {
-// // 	const [noteText, setNoteText] = useState<string>(
-// // 		'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium, quod.'
-// // 	)
-// // 	const [editMode, setEditMode] = useState<boolean>(false)
-
-// // 	function toggleEditMode() {
-// // 		setEditMode(prev => !prev)
-// // 	}
-
-// // 	return (
-// // 		<div className={classes.wrapper}>
-// // 			<div className={classes.inner}>
-// // 				<label className={classes.search}>
-// // 					<input className={classes.searchInput} type='search' />
-// // 					<span className={classes.searchImage}>
-// // 						<img src={searchIcon} alt='search icon' />
-// // 					</span>
-// // 				</label>
-// // 				<div className={classes.content}>
-// // 					<NotesList isListView={true} isNoteOpened={true} />
-// // 					<div className={classes.noteItem}>
-// // 						<h3 className={classes.noteTitle}>Title of the note</h3>
-// // 						{editMode && (
-// // 							<textarea
-// // 								className={classes.noteTextArea}
-// // 								value={noteText}
-// // 								onChange={e => setNoteText(e.target.value)}
-// // 								onBlur={() => setEditMode(false)}
-// // 								onKeyDown={e => {
-// // 									if (e.key === 'Enter' && e.shiftKey) setEditMode(false)
-// // 								}}
-// // 							/>
-// // 						)}
-// // 						{!editMode && (
-// // 							<p className={classes.noteText} onClick={toggleEditMode}>
-// // 								{noteText}
-// // 							</p>
-// // 						)}
-// // 					</div>
-// // 				</div>
-// // 			</div>
-// // 		</div>
-// // 	)
-// // }
-
-// // export default NotePage
-
-// import { FC, useState } from 'react'
-
-// import NotesList from '../notes-list/NotesList'
-// import classes from './Note.module.scss'
-
-// import searchIcon from '../../../../assets/icons/search.svg'
-
-// const NotePage: FC = () => {
-// 	const [noteText, setNoteText] = useState<string>(
-// 		'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium, quod.'
-// 	)
-// 	const [noteTitle, setNoteTitle] = useState<string>('Title of the note')
-// 	const [editNoteMode, setEditNoteMode] = useState<boolean>(false)
-// 	const [editTitleMode, setEditTitleMode] = useState<boolean>(false)
-
-// 	return (
-// 		<div className={classes.wrapper}>
-// 			<div className={classes.inner}>
-// 				<label className={classes.search}>
-// 					<input className={classes.searchInput} type='search' />
-// 					<span className={classes.searchImage}>
-// 						<img src={searchIcon} alt='search icon' />
-// 					</span>
-// 				</label>
-// 				<div className={classes.content}>
-// 					<NotesList isListView={true} isNoteOpened={true} />
-// 					<div className={classes.noteItem}>
-// 						{editTitleMode ? (
-// 							<input
-// 								type='text'
-// 								className={classes.noteTitleInput}
-// 								onBlur={() => setEditTitleMode(false)}
-// 								value={noteTitle}
-// 								onChange={e => setNoteTitle(e.target.value)}
-// 								onKeyDown={e => {
-// 									if (e.key === 'Enter') setEditTitleMode(false)
-// 								}}
-// 							/>
-// 						) : (
-// 							<h3
-// 								className={classes.noteTitle}
-// 								onClick={() => setEditTitleMode(true)}
-// 							>
-// 								{noteTitle}
-// 							</h3>
-// 						)}
-// 						{editNoteMode ? (
-// 							<textarea
-// 								className={classes.noteTextArea}
-// 								value={noteText}
-// 								onChange={e => setNoteText(e.target.value)}
-// 								onBlur={() => setEditNoteMode(false)}
-// 								onKeyDown={e => {
-// 									if (e.key === 'Enter' && e.shiftKey) setEditNoteMode(false)
-// 								}}
-// 							/>
-// 						) : (
-// 							<p
-// 								className={classes.noteText}
-// 								onClick={() => setEditNoteMode(true)}
-// 								style={{ whiteSpace: 'pre-wrap' }}
-// 							>
-// 								{noteText}
-// 							</p>
-// 						)}
-// 					</div>
-// 				</div>
-// 			</div>
-// 		</div>
-// 	)
-// }
-
-// export default NotePage
-import { doc, getDoc } from 'firebase/firestore'
+import { deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore'
 import { FC, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { db } from '../../../../../firebaseConfig'
+import deleteIcon from '../../../../assets/icons/delete.svg'
 import searchIcon from '../../../../assets/icons/search.svg'
 import NotesList from '../notes-list/NotesList'
 import classes from './Note.module.scss'
 
 const NotePage: FC = () => {
 	const { noteId } = useParams<{ noteId: string }>()
+	const navigate = useNavigate()
 	const [noteText, setNoteText] = useState<string>('')
 	const [noteTitle, setNoteTitle] = useState<string>('')
 	const [editNoteMode, setEditNoteMode] = useState<boolean>(false)
@@ -168,10 +41,39 @@ const NotePage: FC = () => {
 		fetchNote()
 	}, [noteId])
 
+	const onDeleteNote = async () => {
+		if (!noteId) return
+
+		try {
+			if (confirm('Do you realy want to delete this note?')) {
+				await deleteDoc(doc(db, 'notes', noteId))
+				navigate('/') // Redirect to notes list page after deletion
+			} else return
+		} catch (error) {
+			console.error('Error deleting note:', error)
+		}
+	}
+
+	const onUpdateNote = async () => {
+		if (!noteId) return
+
+		try {
+			const noteRef = doc(db, 'notes', noteId)
+			await updateDoc(noteRef, {
+				title: noteTitle,
+				text: noteText,
+			})
+			setEditNoteMode(false)
+			setEditTitleMode(false)
+		} catch (error) {
+			console.error('Error updating note:', error)
+		}
+	}
+
 	return (
 		<div className={classes.wrapper}>
-			<button className={classes.deleteNoteButton}>
-				<img src='' alt='delete this note' />
+			<button className={classes.deleteNoteButton} onClick={onDeleteNote}>
+				<img src={deleteIcon} alt='delete this note' />
 				<span>Delete this note</span>
 			</button>
 			<div className={classes.inner}>
@@ -186,13 +88,17 @@ const NotePage: FC = () => {
 					<div className={classes.noteItem}>
 						{editTitleMode ? (
 							<input
+								autoFocus={true}
 								type='text'
 								className={classes.noteTitleInput}
-								onBlur={() => setEditTitleMode(false)}
+								onBlur={onUpdateNote}
 								value={noteTitle}
 								onChange={e => setNoteTitle(e.target.value)}
 								onKeyDown={e => {
-									if (e.key === 'Enter') setEditTitleMode(false)
+									if (e.key === 'Enter') {
+										setEditTitleMode(false)
+										onUpdateNote()
+									}
 								}}
 							/>
 						) : (
@@ -205,12 +111,16 @@ const NotePage: FC = () => {
 						)}
 						{editNoteMode ? (
 							<textarea
+								autoFocus={true}
 								className={classes.noteTextArea}
 								value={noteText}
 								onChange={e => setNoteText(e.target.value)}
-								onBlur={() => setEditNoteMode(false)}
+								onBlur={onUpdateNote}
 								onKeyDown={e => {
-									if (e.key === 'Enter' && e.shiftKey) setEditNoteMode(false)
+									if (e.key === 'Enter' && e.shiftKey) {
+										setEditNoteMode(false)
+										onUpdateNote()
+									}
 								}}
 							/>
 						) : (

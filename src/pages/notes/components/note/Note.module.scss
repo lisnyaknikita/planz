@@ -10,6 +10,27 @@
 	}
 }
 
+.deleteNoteButton {
+	position: absolute;
+	bottom: 10px;
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	border: none;
+	background-color: var(--secondary-dark);
+	color: var(--white-for-dark);
+	border-radius: 10px;
+	font-size: 20px;
+	padding: 5px 10px;
+
+	> img {
+		width: 30px;
+		height: 30px;
+	}
+}
+
 .inner {
 	display: flex;
 	flex-direction: column;
@@ -173,6 +194,7 @@
 }
 
 .noteTitleInput {
+	width: 100%;
 	font-size: 66px;
 	margin-bottom: 60px;
 	border: none;

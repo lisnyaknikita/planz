@@ -1,9 +1,9 @@
 import { FC, useEffect, useState } from 'react'
 
 import clsx from 'clsx'
-import { collection, getDocs } from 'firebase/firestore'
+import { collection, getDocs, query, where } from 'firebase/firestore'
 import { Link } from 'react-router-dom'
-import { db } from '../../../../../firebaseConfig'
+import { auth, db } from '../../../../../firebaseConfig'
 import classes from './NotesList.module.scss'
 
 interface INotesListProps {
@@ -13,13 +13,31 @@ interface INotesListProps {
 
 const NotesList: FC<INotesListProps> = ({ isListView, isNoteOpened }) => {
 	const [noteList, setNoteList] = useState([])
+	const { currentUser } = auth
 
 	const notesCollectionRef = collection(db, 'notes')
 
 	useEffect(() => {
 		const getNoteList = async () => {
+			// try {
+			// 	const data = await getDocs(notesCollectionRef)
+			// 	const filteredData = data.docs.map(doc => ({
+			// 		...doc.data(),
+			// 		id: doc.id,
+			// 	}))
+			// 	console.log(filteredData)
+			// 	setNoteList(filteredData)
+			// } catch (error) {
+			// 	console.error(error)
+			// }
 			try {
-				const data = await getDocs(notesCollectionRef)
+				// Создайте запрос, фильтрующий заметки текущего пользователя
+				const q = query(
+					notesCollectionRef,
+					where('userId', '==', currentUser?.uid)
+				)
+				const data = await getDocs(q)
+
 				const filteredData = data.docs.map(doc => ({
 					...doc.data(),
 					id: doc.id,
@@ -32,7 +50,7 @@ const NotesList: FC<INotesListProps> = ({ isListView, isNoteOpened }) => {
 		}
 
 		getNoteList()
-	}, [])
+	}, [currentUser])
 
 	return (
 		<ul

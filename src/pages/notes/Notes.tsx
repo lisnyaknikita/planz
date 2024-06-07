@@ -9,7 +9,7 @@ import searchIcon from '../../assets/icons/search.svg'
 
 import clsx from 'clsx'
 import { addDoc, collection } from 'firebase/firestore'
-import { db } from '../../../firebaseConfig'
+import { auth, db } from '../../../firebaseConfig'
 import Modal from '../../ui/modal/Modal'
 import NotesList from './components/notes-list/NotesList'
 
@@ -39,6 +39,7 @@ const NotesPage: FC = () => {
 			await addDoc(collection(db, 'notes'), {
 				title: newNoteTitle,
 				text: 'Type something...',
+				userId: auth?.currentUser?.uid,
 			})
 			setNewNoteTitle('')
 			setError('')
