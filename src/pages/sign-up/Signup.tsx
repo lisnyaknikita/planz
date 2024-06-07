@@ -13,6 +13,9 @@ const SignupPage: FC<ISignupPageProps> = ({ toggleAuthMode }) => {
 		<div className={classes.inner}>
 			<img className={classes.logo} src='/logo.png' alt='logo' />
 			<SignupForm />
+			{/* <button onClick={signInWithGoogle}>
+				<img src={googleIcon} alt='' />
+			</button> */}
 			<button className={classes.alreadyButton} onClick={toggleAuthMode}>
 				Already have an account? Login
 			</button>

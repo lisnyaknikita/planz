@@ -1,7 +1,9 @@
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 
 import clsx from 'clsx'
+import { collection, getDocs } from 'firebase/firestore'
 import { Link } from 'react-router-dom'
+import { db } from '../../../../../firebaseConfig'
 import classes from './NotesList.module.scss'
 
 interface INotesListProps {
@@ -10,6 +12,28 @@ interface INotesListProps {
 }
 
 const NotesList: FC<INotesListProps> = ({ isListView, isNoteOpened }) => {
+	const [noteList, setNoteList] = useState([])
+
+	const notesCollectionRef = collection(db, 'notes')
+
+	useEffect(() => {
+		const getNoteList = async () => {
+			try {
+				const data = await getDocs(notesCollectionRef)
+				const filteredData = data.docs.map(doc => ({
+					...doc.data(),
+					id: doc.id,
+				}))
+				console.log(filteredData)
+				setNoteList(filteredData)
+			} catch (error) {
+				console.error(error)
+			}
+		}
+
+		getNoteList()
+	}, [])
+
 	return (
 		<ul
 			className={clsx(
@@ -18,72 +42,14 @@ const NotesList: FC<INotesListProps> = ({ isListView, isNoteOpened }) => {
 				isNoteOpened && 'noteOpened'
 			)}
 		>
-			<li className={classes.note}>
-				<Link to={'/note/1'} className={classes.noteLink}>
-					<h5 className={classes.noteTitle}>Title of the note</h5>
-					<p className={classes.noteText}>Some big and important text</p>
-				</Link>
-			</li>
-			<li className={classes.note}>
-				<a className={classes.noteLink} href='#'>
-					<h5 className={classes.noteTitle}>Title of the note</h5>
-					<p className={classes.noteText}>Some big and important text</p>
-				</a>
-			</li>
-			<li className={classes.note}>
-				<a className={classes.noteLink} href='#'>
-					<h5 className={classes.noteTitle}>Title of the note</h5>
-					<p className={classes.noteText}>Some big and important text</p>
-				</a>
-			</li>
-			<li className={classes.note}>
-				<a className={classes.noteLink} href='#'>
-					<h5 className={classes.noteTitle}>Title of the note</h5>
-					<p className={classes.noteText}>Some big and important text</p>
-				</a>
-			</li>
-			<li className={classes.note}>
-				<a className={classes.noteLink} href='#'>
-					<h5 className={classes.noteTitle}>Title of the note</h5>
-					<p className={classes.noteText}>Some big and important text</p>
-				</a>
-			</li>
-			<li className={classes.note}>
-				<a className={classes.noteLink} href='#'>
-					<h5 className={classes.noteTitle}>Title of the note</h5>
-					<p className={classes.noteText}>Some big and important text</p>
-				</a>
-			</li>
-			<li className={classes.note}>
-				<a className={classes.noteLink} href='#'>
-					<h5 className={classes.noteTitle}>Title of the note</h5>
-					<p className={classes.noteText}>Some big and important text</p>
-				</a>
-			</li>
-			<li className={classes.note}>
-				<a className={classes.noteLink} href='#'>
-					<h5 className={classes.noteTitle}>Title of the note</h5>
-					<p className={classes.noteText}>Some big and important text</p>
-				</a>
-			</li>
-			<li className={classes.note}>
-				<a className={classes.noteLink} href='#'>
-					<h5 className={classes.noteTitle}>Title of the note</h5>
-					<p className={classes.noteText}>Some big and important text</p>
-				</a>
-			</li>
-			<li className={classes.note}>
-				<a className={classes.noteLink} href='#'>
-					<h5 className={classes.noteTitle}>Title of the note</h5>
-					<p className={classes.noteText}>Some big and important text</p>
-				</a>
-			</li>
-			<li className={classes.note}>
-				<a className={classes.noteLink} href='#'>
-					<h5 className={classes.noteTitle}>Title of the note</h5>
-					<p className={classes.noteText}>Some big and important text</p>
-				</a>
-			</li>
+			{noteList.map(note => (
+				<li className={classes.note} key={note.id}>
+					<Link to={`/note/${note.id}`} className={classes.noteLink}>
+						<h5 className={classes.noteTitle}>{note.title}</h5>
+						<p className={classes.noteText}>{note.text}</p>
+					</Link>
+				</li>
+			))}
 		</ul>
 	)
 }

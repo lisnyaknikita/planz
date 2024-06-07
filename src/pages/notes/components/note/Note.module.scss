@@ -124,6 +124,8 @@
 
 .noteText {
 	font-size: 26px;
+	max-height: 600px;
+	overflow-y: auto;
 
 	@media screen and (max-width: 1240px) {
 		font-size: 24px;
@@ -144,10 +146,12 @@
 
 .noteTextArea {
 	background-color: transparent;
-	border: 1px solid white;
+	border: none;
 	resize: none;
+	outline: none;
 	width: 100%;
 	height: 600px;
+	overflow-y: auto;
 	color: var(--white-for-dark);
 	font-size: 26px;
 
@@ -166,4 +170,13 @@
 	@media screen and (max-width: 425px) {
 		font-size: 16px;
 	}
+}
+
+.noteTitleInput {
+	font-size: 66px;
+	margin-bottom: 60px;
+	border: none;
+	background-color: transparent;
+	outline: none;
+	color: var(--white-for-dark);
 }

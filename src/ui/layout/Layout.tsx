@@ -50,7 +50,7 @@ const Layout: FC<ILayoutProps> = ({ user }) => {
 			</aside>
 			<Routes>
 				<Route path='/' element={<NotesPage />} />
-				<Route path='/note/:id' element={<NotePage />} />
+				<Route path='/note/:noteId' element={<NotePage />} />
 				<Route path='/habits' element={<HabitsPage />} />
 				<Route path='/timer' element={<TimerPage />} />
 				<Route path='/timer/settings' element={<TimerSettings />} />
