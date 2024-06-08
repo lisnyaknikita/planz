@@ -7,6 +7,8 @@ import { CSS } from '@dnd-kit/utilities'
 import deleteColumnButton from '../../../../../assets/icons/delete.svg'
 import { Column, ID, Task } from '../../../types/types'
 
+import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
+import { db } from '../../../../../../firebaseConfig'
 import addNewTaskIcon from '../../../../../assets/icons/add-new-column-btn.svg'
 import TaskCard from '../task-card/TaskCard'
 
@@ -65,6 +67,25 @@ const ColumnContainer: FC<IColumnContainerProps> = ({
 	// 		></div>
 	// 	)
 
+	async function handleUpdateColumn(id: ID, title: string) {
+		updateColumn(id, title)
+		try {
+			const columnRef = doc(db, 'columns', id.toString()) // Convert ID to string
+			await updateDoc(columnRef, { title })
+		} catch (error) {
+			console.error('Error updating column in Firestore: ', error)
+		}
+	}
+
+	async function handleDeleteColumn(id: ID) {
+		deleteColumn(id)
+		try {
+			await deleteDoc(doc(db, 'columns', id.toString())) // Convert ID to string
+		} catch (error) {
+			console.error('Error deleting column from Firestore: ', error)
+		}
+	}
+
 	return (
 		<div className={classes.columnContainer} ref={setNodeRef} style={style}>
 			<div
@@ -80,7 +101,7 @@ const ColumnContainer: FC<IColumnContainerProps> = ({
 							className={classes.editTitleInput}
 							type='text'
 							value={column.title}
-							onChange={e => updateColumn(column.id, e.target.value)}
+							onChange={e => handleUpdateColumn(column.id, e.target.value)}
 							autoFocus
 							onBlur={() => setEditMode(false)}
 							onKeyDown={e => {
@@ -92,7 +113,7 @@ const ColumnContainer: FC<IColumnContainerProps> = ({
 				</div>
 				<button
 					className={classes.deleteColumnButton}
-					onClick={() => deleteColumn(column.id)}
+					onClick={() => handleDeleteColumn(column.id)}
 				>
 					<img src={deleteColumnButton} alt='delete column' />
 				</button>

@@ -1,4 +1,4 @@
-import { FC, useMemo, useState } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 
 import classes from './KanbanBoard.module.scss'
 
@@ -17,7 +17,19 @@ import {
 	useSensors,
 } from '@dnd-kit/core'
 import { SortableContext, arrayMove } from '@dnd-kit/sortable'
+import {
+	addDoc,
+	collection,
+	deleteDoc,
+	doc,
+	getDocs,
+	orderBy,
+	query,
+	updateDoc,
+	writeBatch,
+} from 'firebase/firestore'
 import { createPortal } from 'react-dom'
+import { db } from '../../../../../../firebaseConfig'
 import TaskCard from '../task-card/TaskCard'
 
 const KanbanBoard: FC = () => {
@@ -36,21 +48,58 @@ const KanbanBoard: FC = () => {
 		})
 	)
 
+	useEffect(() => {
+		const fetchColumns = async () => {
+			const columnsCollectionRef = collection(db, 'columns')
+			const columnsQuery = query(columnsCollectionRef, orderBy('order'))
+			const columnsSnapshot = await getDocs(columnsQuery)
+			const columnsData = columnsSnapshot.docs.map(
+				doc =>
+					({
+						...doc.data(),
+						id: doc.id,
+					}) as Column
+			)
+			setColumns(columnsData)
+		}
+
+		fetchColumns()
+	}, [])
+
 	function generateId() {
-		/* Generate a random number between 0 and 10000 */
 		return Math.floor(Math.random() * 10001)
 	}
 
-	function createNewColumn() {
+	async function createNewColumn() {
 		const columnToAdd = {
-			id: generateId(),
+			// id: generateId(),
 			title: `Name a column...`,
+			order: columns.length,
 		}
 
-		setColumns([...columns, columnToAdd])
+		try {
+			const docRef = await addDoc(collection(db, 'columns'), columnToAdd)
+			setColumns([...columns, { ...columnToAdd, id: docRef.id }])
+		} catch (error) {
+			console.error('Error adding column: ', error)
+		}
 	}
 
-	function deleteColumn(id: ID) {
+	async function updateColumnOrder(updatedColumns: Column[]) {
+		const batch = writeBatch(db)
+		updatedColumns.forEach((column, index) => {
+			const columnRef = doc(db, 'columns', column.id.toString())
+			batch.update(columnRef, { order: index })
+		})
+
+		try {
+			await batch.commit()
+		} catch (error) {
+			console.error('Error updating column order: ', error)
+		}
+	}
+
+	async function deleteColumn(id: ID) {
 		const filteredColumns = columns.filter(column => column.id !== id)
 
 		setColumns(filteredColumns)
@@ -58,6 +107,12 @@ const KanbanBoard: FC = () => {
 		const newTasks = tasks.filter(t => t.columnId !== id)
 
 		setTasks(newTasks)
+
+		try {
+			await deleteDoc(doc(db, 'columns', id.toString()))
+		} catch (error) {
+			console.error('Error deleting column: ', error)
+		}
 	}
 
 	function onDragStart(event: DragStartEvent) {
@@ -91,7 +146,13 @@ const KanbanBoard: FC = () => {
 			)
 			const overColumnIndex = columns.findIndex(col => col.id === overColumnId)
 
-			return arrayMove(columns, activeColumnIndex, overColumnIndex)
+			const updatedColumns = arrayMove(
+				columns,
+				activeColumnIndex,
+				overColumnIndex
+			)
+			updateColumnOrder(updatedColumns)
+			return updatedColumns
 		})
 	}
 
@@ -134,13 +195,20 @@ const KanbanBoard: FC = () => {
 		}
 	}
 
-	function updateColumn(id: ID, title: string) {
+	async function updateColumn(id: ID, title: string) {
 		const newColumns = columns.map(col => {
 			if (col.id !== id) return col
 			return { ...col, title }
 		})
 
 		setColumns(newColumns)
+
+		try {
+			const columnRef = doc(db, 'columns', id.toString())
+			await updateDoc(columnRef, { title })
+		} catch (error) {
+			console.error('Error updating column: ', error)
+		}
 	}
 
 	function createTask(columnId: ID) {
