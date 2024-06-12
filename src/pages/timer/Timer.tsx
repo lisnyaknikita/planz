@@ -55,46 +55,46 @@ const TimerPage: FC = () => {
 	}
 
 	useEffect(() => {
-		let intervalId: NodeJS.Timeout
+		let intervalId: NodeJS.Timeout | null = null
 		if (timerRunning) {
 			intervalId = setInterval(() => {
 				setTimerSeconds(prevSeconds => {
 					if (prevSeconds === 0) {
-						togglePhase()
 						const audio = new Audio(timerSound)
 						audio.play()
-						if (completedSessions === numSessions) {
-							stopTimer()
+						if (currentPhase === 'flow') {
+							setCurrentPhase('break')
+							return breakDuration * 60
+						} else {
+							const newCompletedSessions = completedSessions + 1
+							setCompletedSessions(newCompletedSessions)
+							if (newCompletedSessions >= numSessions) {
+								setTimerRunning(false)
+								return 0
+							} else {
+								setCurrentPhase('flow')
+								return flowDuration * 60
+							}
 						}
-						return currentPhase === 'flow'
-							? flowDuration * 60
-							: breakDuration * 60
 					}
 					return prevSeconds - 1
 				})
-			}, 10)
-		} else {
+			}, 1000)
+		} else if (intervalId) {
 			clearInterval(intervalId)
 		}
-		return () => clearInterval(intervalId)
+		return () => {
+			if (intervalId) clearInterval(intervalId)
+		}
 	}, [
 		timerRunning,
+		timerSound,
 		flowDuration,
 		breakDuration,
 		currentPhase,
 		completedSessions,
 		numSessions,
 	])
-
-	const togglePhase = () => {
-		setCurrentPhase(prevPhase => {
-			const newPhase = prevPhase === 'flow' ? 'break' : 'flow'
-			if (newPhase === 'break') {
-				setCompletedSessions(prevSessions => prevSessions + 1)
-			}
-			return newPhase
-		})
-	}
 
 	return (
 		<div className={classes.wrapper}>
@@ -110,8 +110,14 @@ const TimerPage: FC = () => {
 					{timerSeconds % 60 < 10 ? `0${timerSeconds % 60}` : timerSeconds % 60}
 				</div>
 				<ul className={classes.circles}>
-					{Array.from({ length: numSessions }, (_, index) => (
+					{/* {Array.from({ length: numSessions }, (_, index) => (
 						<li key={index} className={classes.circle}></li>
+					))} */}
+					{Array.from({ length: numSessions }, (_, index) => (
+						<li
+							key={index}
+							className={`${classes.circle} ${index < completedSessions ? 'completed' : ''}`}
+						></li>
 					))}
 				</ul>
 				<button
