@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from 'react'
 
 import classes from './Timer.module.scss'
 
+import { getAuth } from 'firebase/auth'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { Link } from 'react-router-dom'
 import pauseButton from '../../assets/icons/pause.svg'
@@ -17,34 +18,82 @@ const TimerPage: FC = () => {
 	const [timerSeconds, setTimerSeconds] = useState<number>(0)
 	const [currentPhase, setCurrentPhase] = useState<'flow' | 'break'>('flow')
 	const [completedSessions, setCompletedSessions] = useState<number>(0)
+	const [userId, setUserId] = useState<string | null>(null)
+
+	const firestore = getFirestore()
+	const auth = getAuth()
+
+	useEffect(() => {
+		const unsubscribe = auth.onAuthStateChanged(user => {
+			if (user) {
+				setUserId(user.uid)
+			} else {
+				setUserId(null)
+			}
+		})
+		return () => unsubscribe()
+	}, [])
+
+	// useEffect(() => {
+	// 	const fetchTimerSettings = async () => {
+	// 		const db = getFirestore()
+	// 		try {
+	// 			const timerSettingsDocRef = doc(db, 'timer-settings', 'settings')
+	// 			const timerSettingsDoc = await getDoc(timerSettingsDocRef)
+	// 			if (timerSettingsDoc.exists()) {
+	// 				const {
+	// 					flowDuration: flow,
+	// 					breakDuration: breakDur,
+	// 					numSessions: sessions,
+	// 				} = timerSettingsDoc.data() as {
+	// 					flowDuration: number
+	// 					breakDuration: number
+	// 					numSessions: number
+	// 				}
+	// 				setFlowDuration(flow)
+	// 				setBreakDuration(breakDur)
+	// 				setNumSessions(sessions)
+	// 				setTimerSeconds(flow * 60) // Convert flow duration to seconds
+	// 			}
+	// 		} catch (error) {
+	// 			console.error('Error fetching timer settings:', error)
+	// 		}
+	// 	}
+	// 	fetchTimerSettings()
+	// }, [])
 
 	useEffect(() => {
 		const fetchTimerSettings = async () => {
-			const db = getFirestore()
-			try {
-				const timerSettingsDocRef = doc(db, 'timer-settings', 'settings')
-				const timerSettingsDoc = await getDoc(timerSettingsDocRef)
-				if (timerSettingsDoc.exists()) {
-					const {
-						flowDuration: flow,
-						breakDuration: breakDur,
-						numSessions: sessions,
-					} = timerSettingsDoc.data() as {
-						flowDuration: number
-						breakDuration: number
-						numSessions: number
+			if (userId) {
+				try {
+					const timerSettingsDocRef = doc(
+						firestore,
+						'timer-settings',
+						`settings-for-${userId}`
+					)
+					const timerSettingsDoc = await getDoc(timerSettingsDocRef)
+					if (timerSettingsDoc.exists()) {
+						const {
+							flowDuration: flow,
+							breakDuration: breakDur,
+							numSessions: sessions,
+						} = timerSettingsDoc.data() as {
+							flowDuration: number
+							breakDuration: number
+							numSessions: number
+						}
+						setFlowDuration(flow)
+						setBreakDuration(breakDur)
+						setNumSessions(sessions)
+						setTimerSeconds(flow * 60) // Convert flow duration to seconds
 					}
-					setFlowDuration(flow)
-					setBreakDuration(breakDur)
-					setNumSessions(sessions)
-					setTimerSeconds(flow * 60) // Convert flow duration to seconds
+				} catch (error) {
+					console.error('Error fetching timer settings:', error)
 				}
-			} catch (error) {
-				console.error('Error fetching timer settings:', error)
 			}
 		}
 		fetchTimerSettings()
-	}, [])
+	}, [userId])
 
 	const startTimer = () => {
 		setTimerRunning(true)
@@ -79,7 +128,7 @@ const TimerPage: FC = () => {
 					}
 					return prevSeconds - 1
 				})
-			}, 1000)
+			}, 10)
 		} else if (intervalId) {
 			clearInterval(intervalId)
 		}
@@ -110,9 +159,6 @@ const TimerPage: FC = () => {
 					{timerSeconds % 60 < 10 ? `0${timerSeconds % 60}` : timerSeconds % 60}
 				</div>
 				<ul className={classes.circles}>
-					{/* {Array.from({ length: numSessions }, (_, index) => (
-						<li key={index} className={classes.circle}></li>
-					))} */}
 					{Array.from({ length: numSessions }, (_, index) => (
 						<li
 							key={index}
