@@ -1,16 +1,96 @@
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 
 import classes from './Habits.module.scss'
 
+import {
+	addDoc,
+	collection,
+	deleteDoc,
+	doc,
+	getDocs,
+	getFirestore,
+	updateDoc,
+} from 'firebase/firestore'
+import { auth, db } from '../../../firebaseConfig'
 import completeButton from '../../assets/icons/complete-btn.svg'
+import deleteButton from '../../assets/icons/delete.svg'
 import plusButton from '../../assets/icons/plus.svg'
 import Modal from '../../ui/modal/Modal'
+import { Habit } from '../projects/types/types'
 
 const HabitsPage: FC = () => {
+	const [habits, setHabits] = useState<Habit[]>([])
 	const [isHabitModalOpened, setIsHabitModalOpened] = useState(false)
+	const [newHabitTitle, setNewHabitTitle] = useState<string>('')
+	const [error, setError] = useState<string>('')
+
+	const firestore = getFirestore()
 
 	function toggleModalVisibility() {
 		setIsHabitModalOpened(true)
+	}
+
+	const fetchHabits = async () => {
+		const habitsCollectionRef = collection(firestore, 'habits')
+		const habitsSnapshot = await getDocs(habitsCollectionRef)
+		const habitsData = habitsSnapshot.docs.map(doc => ({
+			id: doc.id,
+			...doc.data(),
+		})) as Habit[]
+		setHabits(habitsData)
+	}
+
+	useEffect(() => {
+		fetchHabits()
+	}, [])
+
+	const onSubmitHabit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault()
+
+		if (!newHabitTitle.trim()) {
+			setError('Title cannot be empty')
+			return
+		}
+
+		try {
+			await addDoc(collection(db, 'habits'), {
+				title: newHabitTitle,
+				completed: false,
+				userId: auth?.currentUser?.uid,
+			})
+			setNewHabitTitle('')
+			setError('')
+			setIsHabitModalOpened(false)
+			fetchHabits()
+		} catch (error) {
+			setError('Failed to create habit')
+			console.error('Error creating habit:', error)
+		}
+	}
+
+	const deleteHabit = async (id: string) => {
+		if (confirm('Do you really want to delete this habit&')) {
+			try {
+				await deleteDoc(doc(firestore, 'habits', id))
+				setHabits(habits.filter(habit => habit.id !== id))
+			} catch (error) {
+				console.error('Error deleting habit: ', error)
+			}
+		}
+	}
+
+	const toggleHabitStatus = async (id: string) => {
+		const updatedHabits = habits.map(habit =>
+			habit.id === id ? { ...habit, completed: !habit.completed } : habit
+		)
+		setHabits(updatedHabits)
+		try {
+			await updateDoc(doc(firestore, 'habits', id), {
+				completed: !habits.find(habit => habit.id === id)?.completed,
+			})
+		} catch (error) {
+			console.error('Error updating habit: ', error)
+		}
 	}
 
 	return (
@@ -24,38 +104,28 @@ const HabitsPage: FC = () => {
 				</button>
 				<div className={classes.inner}>
 					<ul className={classes.habitsList}>
-						<li className={classes.habit}>
-							<p className={classes.habitName}>Mourning routine</p>
-							<button className={classes.completeButton}>
-								<img src={completeButton} alt='complete button' />
-							</button>
-						</li>
-						<li className={classes.habit}>
-							<p className={classes.habitName}>English words</p>
-							<button className={classes.completeButton}>
-								<img src={completeButton} alt='complete button' />
-							</button>
-						</li>
-						<li className={classes.habit}>
-							<p className={classes.habitName}>English words</p>
-							<button className={classes.completeButton}>
-								<img src={completeButton} alt='complete button' />
-							</button>
-						</li>
-						<li className={classes.habit}>
-							<p className={classes.habitName}>
-								English wordEnglish words English words djslfk
-							</p>
-							<button className={classes.completeButton}>
-								<img src={completeButton} alt='complete button' />
-							</button>
-						</li>
-						<li className={classes.habit}>
-							<p className={classes.habitName}>English words</p>
-							<button className={classes.completeButton}>
-								<img src={completeButton} alt='complete button' />
-							</button>
-						</li>
+						{habits.map(habit => (
+							<li className={classes.habit}>
+								<p className={classes.habitName}>{habit.title}</p>
+								{habit.completed ? (
+									<span className={classes.completedSpan}>Completed</span>
+								) : (
+									<button
+										className={classes.completeButton}
+										onClick={() => toggleHabitStatus(habit.id)}
+									>
+										<img src={completeButton} alt='complete button' />
+									</button>
+								)}
+
+								<button
+									className={classes.deleteButton}
+									onClick={() => deleteHabit(habit.id)}
+								>
+									<img src={deleteButton} alt='delete this habit' />
+								</button>
+							</li>
+						))}
 					</ul>
 				</div>
 			</div>
@@ -65,13 +135,23 @@ const HabitsPage: FC = () => {
 					isHabitModalOpened={isHabitModalOpened}
 				>
 					<div className={classes.modalBody} onClick={e => e.stopPropagation()}>
-						<form className={classes.createNewHabitForm}>
+						<form
+							className={classes.createNewHabitForm}
+							onSubmit={onSubmitHabit}
+						>
 							<input
 								className={classes.newHabitName}
 								type='text'
 								placeholder='New habit...'
+								value={newHabitTitle}
+								onChange={e => setNewHabitTitle(e.target.value)}
+								required
+								autoFocus
 							/>
-							<button className={classes.createButton}>Create new habit</button>
+							{error && <p className={classes.error}>{error}</p>}
+							<button className={classes.createButton} type='submit'>
+								Create new habit
+							</button>
 						</form>
 					</div>
 				</Modal>

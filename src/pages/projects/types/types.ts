@@ -11,3 +11,9 @@ export type Task = {
 	columnId: ID
 	content: string
 }
+
+export type Habit = {
+	id: string
+	title: string
+	completed: boolean
+}
