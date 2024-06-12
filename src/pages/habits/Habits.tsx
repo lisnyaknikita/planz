@@ -9,7 +9,9 @@ import {
 	doc,
 	getDocs,
 	getFirestore,
+	query,
 	updateDoc,
+	where,
 } from 'firebase/firestore'
 import { auth, db } from '../../../firebaseConfig'
 import completeButton from '../../assets/icons/complete-btn.svg'
@@ -23,6 +25,9 @@ const HabitsPage: FC = () => {
 	const [isHabitModalOpened, setIsHabitModalOpened] = useState(false)
 	const [newHabitTitle, setNewHabitTitle] = useState<string>('')
 	const [error, setError] = useState<string>('')
+	const { currentUser } = auth
+
+	const habitsCollectionRef = collection(db, 'habits')
 
 	const firestore = getFirestore()
 
@@ -31,13 +36,22 @@ const HabitsPage: FC = () => {
 	}
 
 	const fetchHabits = async () => {
-		const habitsCollectionRef = collection(firestore, 'habits')
-		const habitsSnapshot = await getDocs(habitsCollectionRef)
-		const habitsData = habitsSnapshot.docs.map(doc => ({
-			id: doc.id,
-			...doc.data(),
-		})) as Habit[]
-		setHabits(habitsData)
+		try {
+			const q = query(
+				habitsCollectionRef,
+				where('userId', '==', currentUser?.uid)
+			)
+			const data = await getDocs(q)
+
+			const filteredData = data.docs.map(doc => ({
+				...doc.data(),
+				id: doc.id,
+			}))
+			console.log(filteredData)
+			setHabits(filteredData)
+		} catch (error) {
+			console.error(error)
+		}
 	}
 
 	useEffect(() => {
