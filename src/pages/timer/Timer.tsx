@@ -34,34 +34,6 @@ const TimerPage: FC = () => {
 		return () => unsubscribe()
 	}, [])
 
-	// useEffect(() => {
-	// 	const fetchTimerSettings = async () => {
-	// 		const db = getFirestore()
-	// 		try {
-	// 			const timerSettingsDocRef = doc(db, 'timer-settings', 'settings')
-	// 			const timerSettingsDoc = await getDoc(timerSettingsDocRef)
-	// 			if (timerSettingsDoc.exists()) {
-	// 				const {
-	// 					flowDuration: flow,
-	// 					breakDuration: breakDur,
-	// 					numSessions: sessions,
-	// 				} = timerSettingsDoc.data() as {
-	// 					flowDuration: number
-	// 					breakDuration: number
-	// 					numSessions: number
-	// 				}
-	// 				setFlowDuration(flow)
-	// 				setBreakDuration(breakDur)
-	// 				setNumSessions(sessions)
-	// 				setTimerSeconds(flow * 60) // Convert flow duration to seconds
-	// 			}
-	// 		} catch (error) {
-	// 			console.error('Error fetching timer settings:', error)
-	// 		}
-	// 	}
-	// 	fetchTimerSettings()
-	// }, [])
-
 	useEffect(() => {
 		const fetchTimerSettings = async () => {
 			if (userId) {
@@ -128,7 +100,7 @@ const TimerPage: FC = () => {
 					}
 					return prevSeconds - 1
 				})
-			}, 10)
+			}, 1000)
 		} else if (intervalId) {
 			clearInterval(intervalId)
 		}

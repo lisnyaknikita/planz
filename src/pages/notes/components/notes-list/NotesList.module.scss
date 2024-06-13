@@ -1,39 +1,21 @@
 .notesList {
+	margin-top: 70px;
 	list-style: none;
-	display: grid;
-	grid-template-columns: repeat(4, 1fr);
-	grid-template-rows: repeat(3, 1fr);
-	gap: 30px 35px;
+	// display: grid;
+	// grid-template-columns: repeat(4, 1fr);
+	// grid-template-rows: repeat(3, 1fr);
+	// gap: 30px 35px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 30px;
+	flex-wrap: wrap;
+	max-height: 830px;
+	overflow-y: auto;
 
 	&::-webkit-scrollbar {
 		width: 0px;
 		height: 0px;
-	}
-
-	@media screen and (max-width: 1500px) {
-		grid-template-columns: repeat(3, 1fr);
-		grid-template-rows: repeat(3, 1fr);
-		gap: 25px 30px;
-	}
-
-	@media screen and (max-width: 1165px) {
-		grid-template-columns: repeat(2, 1fr);
-		grid-template-rows: repeat(3, 1fr);
-		gap: 25px 30px;
-	}
-
-	@media screen and (max-width: 900px) {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-	}
-
-	@media screen and (max-width: 815px) {
-		margin-top: 40px;
-	}
-
-	@media screen and (max-width: 640px) {
-		margin-top: 0;
 	}
 
 	&:global(.listView) {

@@ -19,19 +19,7 @@ const NotesList: FC<INotesListProps> = ({ isListView, isNoteOpened }) => {
 
 	useEffect(() => {
 		const getNoteList = async () => {
-			// try {
-			// 	const data = await getDocs(notesCollectionRef)
-			// 	const filteredData = data.docs.map(doc => ({
-			// 		...doc.data(),
-			// 		id: doc.id,
-			// 	}))
-			// 	console.log(filteredData)
-			// 	setNoteList(filteredData)
-			// } catch (error) {
-			// 	console.error(error)
-			// }
 			try {
-				// Создайте запрос, фильтрующий заметки текущего пользователя
 				const q = query(
 					notesCollectionRef,
 					where('userId', '==', currentUser?.uid)
@@ -42,7 +30,6 @@ const NotesList: FC<INotesListProps> = ({ isListView, isNoteOpened }) => {
 					...doc.data(),
 					id: doc.id,
 				}))
-				console.log(filteredData)
 				setNoteList(filteredData)
 			} catch (error) {
 				console.error(error)
