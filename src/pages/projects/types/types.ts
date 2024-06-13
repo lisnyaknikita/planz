@@ -15,7 +15,7 @@ export type Task = {
 }
 
 export type Habit = {
-	id: string
+	id: ID
 	title: string
 	completed: boolean
 }
