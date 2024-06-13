@@ -48,7 +48,6 @@ const HabitsPage: FC = () => {
 				id: doc.id,
 			}))
 			console.log(filteredData)
-			//@ts-ignore
 			setHabits(filteredData)
 		} catch (error) {
 			console.error(error)
@@ -123,11 +122,15 @@ const HabitsPage: FC = () => {
 							<li className={classes.habit}>
 								<p className={classes.habitName}>{habit.title}</p>
 								{habit.completed ? (
-									<span className={classes.completedSpan}>Completed</span>
+									<button
+										className={classes.completedSpan}
+										onClick={() => toggleHabitStatus(habit.id)}
+									>
+										Completed
+									</button>
 								) : (
 									<button
 										className={classes.completeButton}
-										//@ts-ignore
 										onClick={() => toggleHabitStatus(habit.id)}
 									>
 										<img src={completeButton} alt='complete button' />
@@ -136,7 +139,6 @@ const HabitsPage: FC = () => {
 
 								<button
 									className={classes.deleteButton}
-									//@ts-ignore
 									onClick={() => deleteHabit(habit.id)}
 								>
 									<img src={deleteButton} alt='delete this habit' />

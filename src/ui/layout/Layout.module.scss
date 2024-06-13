@@ -188,6 +188,14 @@
 	}
 }
 
+.userNameInput {
+	font-size: 32px;
+	color: var(--white-for-dark);
+	border: none;
+	outline: none;
+	background-color: transparent;
+}
+
 .userEmail {
 	display: flex;
 	align-items: center;

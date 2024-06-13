@@ -21,6 +21,7 @@ import ProjectPage from '../../pages/projects/components/project/Project'
 import TimerPage from '../../pages/timer/Timer'
 import TimerSettings from '../../pages/timer/components/timer-settings/TimerSettings'
 import { logoutUser } from '../../services/logoutService'
+import { updateUserName } from '../../services/updateUserInfoService'
 import Modal from '../modal/Modal'
 
 interface ILayoutProps {
@@ -30,6 +31,8 @@ interface ILayoutProps {
 const Layout: FC<ILayoutProps> = ({ user }) => {
 	const [isNavigationVisible, setIsNavigationVisible] = useState(true)
 	const [isSettingsModalOpened, setIsSettingsModalOpened] = useState(false)
+	const [isEditingName, setIsEditingName] = useState(false)
+	const [newName, setNewName] = useState(user.name)
 
 	function toggleNavigationVisibility() {
 		setIsNavigationVisible(prev => !prev)
@@ -37,6 +40,24 @@ const Layout: FC<ILayoutProps> = ({ user }) => {
 
 	function toggleModalVisibility() {
 		setIsSettingsModalOpened(true)
+	}
+
+	const handleNameChange = async () => {
+		if (newName !== user.name) {
+			await updateUserName(newName)
+		}
+		setIsEditingName(false)
+	}
+
+	const handleKeyPress = async (
+		event: React.KeyboardEvent<HTMLInputElement>,
+		type: 'name' | 'email'
+	) => {
+		if (event.key === 'Enter') {
+			if (type === 'name') {
+				await handleNameChange()
+			}
+		}
 	}
 
 	return (
@@ -84,16 +105,30 @@ const Layout: FC<ILayoutProps> = ({ user }) => {
 						</button>
 						<img className={classes.avatar} src={testAvatar} alt='avatar' />
 						<div className={classes.userName}>
-							<h6>{user.name}</h6>
-							<button className={classes.editBtn}>
-								<img src={editBtn} alt='edit button' />
-							</button>
+							{isEditingName ? (
+								<input
+									className={classes.userNameInput}
+									type='text'
+									value={newName}
+									onChange={e => setNewName(e.target.value)}
+									onBlur={handleNameChange}
+									onKeyDown={e => handleKeyPress(e, 'name')}
+									autoFocus
+								/>
+							) : (
+								<>
+									<h6>{user.name}</h6>
+									<button
+										className={classes.editBtn}
+										onClick={() => setIsEditingName(true)}
+									>
+										<img src={editBtn} alt='edit button' />
+									</button>
+								</>
+							)}
 						</div>
 						<div className={classes.userEmail}>
-							<a href='mailto:test@test.ua'>{user.email}</a>
-							<button className={classes.editBtn}>
-								<img src={editBtn} alt='edit button' />
-							</button>
+							<a href={`mailto:${user.email}`}>{user.email}</a>
 						</div>
 						<div className={classes.themeButtons}>
 							<button className={classes.themeLightButton}>Light</button>
