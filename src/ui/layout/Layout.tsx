@@ -1,16 +1,18 @@
-import { FC, useState } from 'react'
+import { ChangeEvent, FC, useEffect, useState } from 'react'
 
 import classes from './Layout.module.scss'
 
+import testAvatar from '../../assets/icons/avatar.jpg'
 import editBtn from '../../assets/icons/edit.svg'
 import ToggleIcon from '../../assets/icons/nav-toggle.svg'
 import quitBtn from '../../assets/icons/quit.svg'
 import SettingsIcon from '../../assets/icons/settings.svg'
-import testAvatar from '../../assets/icons/test-avatar.png'
 
 import clsx from 'clsx'
 
+import { doc, getDoc } from 'firebase/firestore'
 import { Route, Routes } from 'react-router-dom'
+import { auth, db } from '../../../firebaseConfig'
 import { ExtendedUser } from '../../App'
 import Navigation from '../../components/navigation/Navigation'
 import HabitsPage from '../../pages/habits/Habits'
@@ -22,6 +24,7 @@ import TimerPage from '../../pages/timer/Timer'
 import TimerSettings from '../../pages/timer/components/timer-settings/TimerSettings'
 import { logoutUser } from '../../services/logoutService'
 import { updateUserName } from '../../services/updateUserInfoService'
+import { uploadAvatar } from '../../services/uploadAvatarService'
 import Modal from '../modal/Modal'
 
 interface ILayoutProps {
@@ -33,6 +36,23 @@ const Layout: FC<ILayoutProps> = ({ user }) => {
 	const [isSettingsModalOpened, setIsSettingsModalOpened] = useState(false)
 	const [isEditingName, setIsEditingName] = useState(false)
 	const [newName, setNewName] = useState(user.name)
+	const [avatar, setAvatar] = useState<string>(testAvatar)
+
+	useEffect(() => {
+		const fetchUserData = async () => {
+			if (auth.currentUser) {
+				const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid))
+				if (userDoc.exists()) {
+					const userData = userDoc.data()
+					if (userData.avatar) {
+						setAvatar(userData.avatar)
+					}
+				}
+			}
+		}
+
+		fetchUserData()
+	}, [auth.currentUser])
 
 	function toggleNavigationVisibility() {
 		setIsNavigationVisible(prev => !prev)
@@ -57,6 +77,13 @@ const Layout: FC<ILayoutProps> = ({ user }) => {
 			if (type === 'name') {
 				await handleNameChange()
 			}
+		}
+	}
+	const handleAvatarChange = async (event: ChangeEvent<HTMLInputElement>) => {
+		if (event.target.files && event.target.files[0]) {
+			const file = event.target.files[0]
+			const photoURL = await uploadAvatar(file)
+			setAvatar(photoURL)
 		}
 	}
 
@@ -103,7 +130,13 @@ const Layout: FC<ILayoutProps> = ({ user }) => {
 								onClick={() => logoutUser()}
 							/>
 						</button>
-						<img className={classes.avatar} src={testAvatar} alt='avatar' />
+						<img className={classes.avatar} src={avatar} alt='avatar' />
+						<input
+							type='file'
+							accept='image/*'
+							onChange={handleAvatarChange}
+							className={classes.uploadInput}
+						/>
 						<div className={classes.userName}>
 							{isEditingName ? (
 								<input
