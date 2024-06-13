@@ -10,10 +10,31 @@
 	}
 }
 
+.deleteNoteButton {
+	position: absolute;
+	bottom: 10px;
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	border: none;
+	background-color: var(--secondary-dark);
+	color: var(--white-for-dark);
+	border-radius: 10px;
+	font-size: 20px;
+	padding: 5px 10px;
+
+	> img {
+		width: 30px;
+		height: 30px;
+	}
+}
+
 .inner {
 	display: flex;
 	flex-direction: column;
-	align-items: center;
+	// align-items: center;
 	gap: 19px;
 	width: 100%;
 
@@ -124,6 +145,8 @@
 
 .noteText {
 	font-size: 26px;
+	max-height: 600px;
+	overflow-y: auto;
 
 	@media screen and (max-width: 1240px) {
 		font-size: 24px;
@@ -140,4 +163,42 @@
 	@media screen and (max-width: 425px) {
 		font-size: 16px;
 	}
+}
+
+.noteTextArea {
+	background-color: transparent;
+	border: none;
+	resize: none;
+	outline: none;
+	width: 100%;
+	height: 600px;
+	overflow-y: auto;
+	color: var(--white-for-dark);
+	font-size: 26px;
+
+	@media screen and (max-width: 1240px) {
+		font-size: 24px;
+	}
+
+	@media screen and (max-width: 900px) {
+		font-size: 20px;
+	}
+
+	@media screen and (max-width: 650px) {
+		font-size: 18px;
+	}
+
+	@media screen and (max-width: 425px) {
+		font-size: 16px;
+	}
+}
+
+.noteTitleInput {
+	width: 100%;
+	font-size: 66px;
+	margin-bottom: 60px;
+	border: none;
+	background-color: transparent;
+	outline: none;
+	color: var(--white-for-dark);
 }

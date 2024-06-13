@@ -11,9 +11,17 @@ interface ITaskCardProps {
 	task: Task
 	deleteTask: (id: ID) => void
 	updateTask: (id: ID, content: string) => void
+	// moveTaskLeft: (taskId: string) => void
+	// moveTaskRight: (taskId: string) => void
 }
 
-const TaskCard: FC<ITaskCardProps> = ({ task, deleteTask, updateTask }) => {
+const TaskCard: FC<ITaskCardProps> = ({
+	task,
+	deleteTask,
+	updateTask,
+	// moveTaskLeft,
+	// moveTaskRight,
+}) => {
 	const [editMode, setEditMode] = useState(false)
 
 	const textAreaRef = useRef<HTMLTextAreaElement>(null)
@@ -70,6 +78,8 @@ const TaskCard: FC<ITaskCardProps> = ({ task, deleteTask, updateTask }) => {
 						}}
 					></textarea>
 				</div>
+				{/* <button onClick={() => moveTaskLeft(String(task.id))}>Left</button>
+				<button onClick={() => moveTaskRight(String(task.id))}>Right</button> */}
 			</div>
 		)
 	}

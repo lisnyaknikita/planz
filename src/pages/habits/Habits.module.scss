@@ -66,6 +66,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	position: relative;
 
 	@media screen and (max-width: 1120px) {
 		min-width: 0;
@@ -197,4 +198,20 @@
 	@media screen and (max-width: 540px) {
 		font-size: 18px;
 	}
+}
+
+.deleteButton {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+
+	> img {
+		width: 20px;
+		height: 20px;
+	}
+}
+
+.completedSpan {
+	font-size: 24px;
+	color: #16c347;
 }
