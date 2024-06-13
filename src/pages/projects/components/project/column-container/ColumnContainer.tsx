@@ -20,6 +20,8 @@ interface IColumnContainerProps {
 	createTask: (columnId: ID) => void
 	deleteTask: (id: ID) => void
 	updateTask: (id: ID, content: string) => void
+	// moveTaskLeft: (taskId: string) => void
+	// moveTaskRight: (taskId: string) => void
 }
 
 const ColumnContainer: FC<IColumnContainerProps> = ({
@@ -30,6 +32,8 @@ const ColumnContainer: FC<IColumnContainerProps> = ({
 	createTask,
 	deleteTask,
 	updateTask,
+	// moveTaskLeft,
+	// moveTaskRight,
 }) => {
 	const [editMode, setEditMode] = useState(false)
 
@@ -37,35 +41,20 @@ const ColumnContainer: FC<IColumnContainerProps> = ({
 		return tasks.map(task => task.id)
 	}, [tasks])
 
-	const {
-		setNodeRef,
-		attributes,
-		listeners,
-		transform,
-		transition,
-		// isDragging,
-	} = useSortable({
-		id: column.id,
-		data: {
-			type: 'Column',
-			column,
-		},
-		disabled: editMode,
-	})
+	const { setNodeRef, attributes, listeners, transform, transition } =
+		useSortable({
+			id: column.id,
+			data: {
+				type: 'Column',
+				column,
+			},
+			disabled: editMode,
+		})
 
 	const style = {
 		transition,
 		transform: CSS.Transform.toString(transform),
 	}
-
-	// if (isDragging)
-	// 	return (
-	// 		<div
-	// 			className={classes.columnContainer}
-	// 			ref={setNodeRef}
-	// 			style={(style, { border: '1px solid white' })}
-	// 		></div>
-	// 	)
 
 	async function handleUpdateColumn(id: ID, title: string) {
 		updateColumn(id, title)
@@ -126,6 +115,8 @@ const ColumnContainer: FC<IColumnContainerProps> = ({
 							task={task}
 							deleteTask={deleteTask}
 							updateTask={updateTask}
+							// moveTaskLeft={moveTaskLeft}
+							// moveTaskRight={moveTaskRight}
 						/>
 					))}
 				</SortableContext>

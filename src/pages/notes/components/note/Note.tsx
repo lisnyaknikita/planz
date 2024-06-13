@@ -3,7 +3,6 @@ import { FC, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { db } from '../../../../../firebaseConfig'
 import deleteIcon from '../../../../assets/icons/delete.svg'
-import searchIcon from '../../../../assets/icons/search.svg'
 import NotesList from '../notes-list/NotesList'
 import classes from './Note.module.scss'
 
@@ -79,12 +78,12 @@ const NotePage: FC = () => {
 				<span>Delete this note</span>
 			</button>
 			<div className={classes.inner}>
-				<label className={classes.search}>
+				{/* <label className={classes.search}>
 					<input className={classes.searchInput} type='search' />
 					<span className={classes.searchImage}>
 						<img src={searchIcon} alt='search icon' />
 					</span>
-				</label>
+				</label> */}
 				<div className={classes.content}>
 					<NotesList isListView={true} isNoteOpened={true} />
 					<div className={classes.noteItem}>

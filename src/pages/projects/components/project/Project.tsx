@@ -14,8 +14,6 @@ const ProjectPage: FC = () => {
 	const navigate = useNavigate()
 	const [projectTitle, setProjectTitle] = useState<string>('')
 
-	// console.log(params.id)
-
 	useEffect(() => {
 		const fetchNote = async () => {
 			if (projectId) {
@@ -76,7 +74,7 @@ const ProjectPage: FC = () => {
 					</div>
 					// TODO: доделать изменение названия проекта
 				)}
-				<KanbanBoard />
+				<KanbanBoard projectId={projectId} />
 			</div>
 		</div>
 	)

@@ -26,13 +26,18 @@ import {
 	orderBy,
 	query,
 	updateDoc,
+	where,
 	writeBatch,
 } from 'firebase/firestore'
 import { createPortal } from 'react-dom'
 import { db } from '../../../../../../firebaseConfig'
 import TaskCard from '../task-card/TaskCard'
 
-const KanbanBoard: FC = () => {
+interface IKanbanBoardProps {
+	projectId: string
+}
+
+const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 	const [columns, setColumns] = useState<Column[]>([])
 	const [tasks, setTasks] = useState<Task[]>([])
 	const [activeColumn, setActiveColumn] = useState<Column | null>(null)
@@ -48,10 +53,34 @@ const KanbanBoard: FC = () => {
 		})
 	)
 
+	// useEffect(() => {
+	// 	const fetchColumns = async () => {
+	// 		const columnsCollectionRef = collection(db, 'columns')
+	// 		const columnsQuery = query(columnsCollectionRef, orderBy('order'))
+	// 		const columnsSnapshot = await getDocs(columnsQuery)
+	// 		const columnsData = columnsSnapshot.docs.map(
+	// 			doc =>
+	// 				({
+	// 					...doc.data(),
+	// 					id: doc.id,
+	// 				}) as Column
+	// 		)
+	// 		setColumns(columnsData)
+	// 	}
+
+	// 	fetchColumns()
+	// }, [])
+
 	useEffect(() => {
-		const fetchColumns = async () => {
+		const fetchColumnsAndTasks = async () => {
+			if (!projectId) return
+
 			const columnsCollectionRef = collection(db, 'columns')
-			const columnsQuery = query(columnsCollectionRef, orderBy('order'))
+			const columnsQuery = query(
+				columnsCollectionRef,
+				where('projectId', '==', projectId),
+				orderBy('order')
+			)
 			const columnsSnapshot = await getDocs(columnsQuery)
 			const columnsData = columnsSnapshot.docs.map(
 				doc =>
@@ -61,20 +90,37 @@ const KanbanBoard: FC = () => {
 					}) as Column
 			)
 			setColumns(columnsData)
+
+			const tasksCollectionRef = collection(db, 'tasks')
+			const tasksQuery = query(
+				tasksCollectionRef,
+				where('projectId', '==', projectId),
+				orderBy('order')
+			)
+			const tasksSnapshot = await getDocs(tasksQuery)
+			const tasksData = tasksSnapshot.docs.map(
+				doc =>
+					({
+						...doc.data(),
+						id: doc.id,
+					}) as Task
+			)
+			setTasks(tasksData)
 		}
 
-		fetchColumns()
-	}, [])
-
-	function generateId() {
-		return Math.floor(Math.random() * 10001)
-	}
+		fetchColumnsAndTasks()
+	}, [projectId])
 
 	async function createNewColumn() {
+		if (!projectId) {
+			console.error('Project ID is not defined')
+			return
+		}
+
 		const columnToAdd = {
-			// id: generateId(),
 			title: `Name a column...`,
 			order: columns.length,
+			projectId: projectId,
 		}
 
 		try {
@@ -123,37 +169,101 @@ const KanbanBoard: FC = () => {
 
 		if (event.active.data.current?.type === 'Task') {
 			setActiveTask(event.active.data.current.task)
+			console.log(event.active.data.current?.task)
+
 			return
 		}
 	}
 
-	function onDragEnd(event: DragEndEvent) {
+	// function onDragEnd(event: DragEndEvent) {
+	// 	setActiveColumn(null)
+	// 	setActiveTask(null)
+
+	// 	const { active, over } = event
+
+	// 	if (!over) return
+
+	// 	const activeColumnId = active.id
+	// 	const overColumnId = over.id
+
+	// 	if (activeColumnId === overColumnId) return
+
+	// 	setColumns(columns => {
+	// 		const activeColumnIndex = columns.findIndex(
+	// 			col => col.id === activeColumnId
+	// 		)
+	// 		const overColumnIndex = columns.findIndex(col => col.id === overColumnId)
+
+	// 		const updatedColumns = arrayMove(
+	// 			columns,
+	// 			activeColumnIndex,
+	// 			overColumnIndex
+	// 		)
+	// 		updateColumnOrder(updatedColumns)
+	// 		return updatedColumns
+	// 	})
+	// }
+	async function onDragEnd(event: DragEndEvent) {
 		setActiveColumn(null)
 		setActiveTask(null)
 
 		const { active, over } = event
 
+		console.log(
+			'drag ended',
+			event.active.data.current?.task.columnId,
+			event.over?.data.current?.task.columnId
+		)
 		if (!over) return
+
+		if (active.id === over.id) return
 
 		const activeColumnId = active.id
 		const overColumnId = over.id
 
-		if (activeColumnId === overColumnId) return
+		if (
+			active.data.current?.type === 'Column' &&
+			over.data.current?.type === 'Column'
+		) {
+			const activeIndex = columns.findIndex(col => col.id === activeColumnId)
+			const overIndex = columns.findIndex(col => col.id === overColumnId)
 
-		setColumns(columns => {
-			const activeColumnIndex = columns.findIndex(
-				col => col.id === activeColumnId
-			)
-			const overColumnIndex = columns.findIndex(col => col.id === overColumnId)
+			if (activeIndex !== -1 && overIndex !== -1) {
+				const updatedColumns = arrayMove(columns, activeIndex, overIndex)
+				setColumns(updatedColumns)
+				await updateColumnOrder(updatedColumns)
+			}
+		}
 
-			const updatedColumns = arrayMove(
-				columns,
-				activeColumnIndex,
-				overColumnIndex
-			)
-			updateColumnOrder(updatedColumns)
-			return updatedColumns
-		})
+		if (active.data.current?.type === 'Task') {
+			const activeTask = active.data.current.task as Task
+
+			if (over.data.current?.type === 'Task') {
+				const overTask = over.data.current.task as Task
+
+				if (activeTask.columnId !== overTask.columnId) {
+					const newTasks = tasks.map(task =>
+						task.id === activeTask.id
+							? { ...task, columnId: overTask.columnId }
+							: task
+					)
+					setTasks(newTasks)
+					await updateTaskColumn(activeTask.id, overTask.columnId)
+				}
+			} else if (over.data.current?.type === 'Column') {
+				const overColumn = over.data.current.column as Column
+
+				if (activeTask.columnId !== overColumn.id) {
+					const newTasks = tasks.map(task =>
+						task.id === activeTask.id
+							? { ...task, columnId: overColumn.id }
+							: task
+					)
+					setTasks(newTasks)
+					await updateTaskColumn(activeTask.id, overColumn.id)
+				}
+			}
+		}
 	}
 
 	function onDragOver(event: DragOverEvent) {
@@ -211,31 +321,80 @@ const KanbanBoard: FC = () => {
 		}
 	}
 
-	function createTask(columnId: ID) {
-		const newTask: Task = {
-			id: generateId(),
+	async function createTask(columnId: ID) {
+		const tasksInColumn = tasks.filter(task => task.columnId === columnId)
+		const newTask: Omit<Task, 'id'> = {
 			columnId,
 			content: `Name a task...`,
+			order: tasksInColumn.length, // Порядок задачи в колонке
+			projectId: projectId,
 		}
 
-		setTasks([...tasks, newTask])
+		try {
+			const docRef = await addDoc(collection(db, 'tasks'), newTask)
+			setTasks([...tasks, { ...newTask, id: docRef.id }])
+		} catch (error) {
+			console.error('Error creating task: ', error)
+		}
 	}
 
-	function deleteTask(id: ID) {
-		const filteresTasks = tasks.filter(task => task.id !== id)
+	async function deleteTask(id: ID) {
+		const filteredTasks = tasks.filter(task => task.id !== id)
+		setTasks(filteredTasks)
 
-		setTasks(filteresTasks)
+		try {
+			await deleteDoc(doc(db, 'tasks', id.toString()))
+		} catch (error) {
+			console.error('Error deleting task: ', error)
+		}
 	}
 
-	function updateTask(id: ID, content: string) {
+	async function updateTask(id: ID, content: string) {
 		const newTasks = tasks.map(task => {
 			if (task.id !== id) return task
-
 			return { ...task, content }
 		})
 
 		setTasks(newTasks)
+
+		try {
+			const taskRef = doc(db, 'tasks', id.toString())
+			await updateDoc(taskRef, { content })
+		} catch (error) {
+			console.error('Error updating task: ', error)
+		}
 	}
+
+	async function updateTaskColumn(taskId: ID, newColumnId: ID) {
+		const taskRef = doc(db, 'tasks', taskId.toString())
+		try {
+			await updateDoc(taskRef, { columnId: newColumnId })
+		} catch (error) {
+			console.error('Error updating task column: ', error)
+		}
+	}
+
+	// function moveTaskLeft(taskId: string) {
+	// 	const task = tasks.find(t => t.id === taskId)
+	// 	if (!task) return
+
+	// 	const currentColumnIndex = columns.findIndex(c => c.id === task.columnId)
+	// 	if (currentColumnIndex > 0) {
+	// 		const newColumnId = columns[currentColumnIndex - 1].id
+	// 		updateTaskColumn(taskId, newColumnId)
+	// 	}
+	// }
+
+	// function moveTaskRight(taskId: string) {
+	// 	const task = tasks.find(t => t.id === taskId)
+	// 	if (!task) return
+
+	// 	const currentColumnIndex = columns.findIndex(c => c.id === task.columnId)
+	// 	if (currentColumnIndex < columns.length - 1) {
+	// 		const newColumnId = columns[currentColumnIndex + 1].id
+	// 		updateTaskColumn(taskId, newColumnId)
+	// 	}
+	// }
 
 	return (
 		<div className={classes.inner}>
@@ -255,6 +414,8 @@ const KanbanBoard: FC = () => {
 								createTask={createTask}
 								deleteTask={deleteTask}
 								updateTask={updateTask}
+								// moveTaskLeft={moveTaskLeft}
+								// moveTaskRight={moveTaskRight}
 								tasks={tasks.filter(task => task.columnId === column.id)}
 								key={column.id}
 							/>
@@ -279,6 +440,8 @@ const KanbanBoard: FC = () => {
 								createTask={createTask}
 								deleteTask={deleteTask}
 								updateTask={updateTask}
+								// moveTaskLeft={moveTaskLeft}
+								// moveTaskRight={moveTaskRight}
 								tasks={tasks.filter(task => task.columnId === activeColumn.id)}
 							/>
 						)}
@@ -287,6 +450,8 @@ const KanbanBoard: FC = () => {
 								task={activeTask}
 								deleteTask={deleteTask}
 								updateTask={updateTask}
+								// moveTaskLeft={moveTaskLeft}
+								// moveTaskRight={moveTaskRight}
 							/>
 						)}
 					</DragOverlay>,

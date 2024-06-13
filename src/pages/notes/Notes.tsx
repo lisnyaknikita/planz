@@ -5,7 +5,6 @@ import classes from './Notes.module.scss'
 import cardViewButton from '../../assets/icons/cards-view.svg'
 import listViewButton from '../../assets/icons/list-view.svg'
 import plusButton from '../../assets/icons/plus.svg'
-import searchIcon from '../../assets/icons/search.svg'
 
 import clsx from 'clsx'
 import { addDoc, collection } from 'firebase/firestore'
@@ -77,20 +76,20 @@ const NotesPage: FC = () => {
 				<img src={plusButton} alt='add new project' />
 			</button>
 			<div className={classes.inner}>
-				<label className={classes.search}>
+				{/* <label className={classes.search}>
 					<input className={classes.searchInput} type='search' />
 					<span className={classes.searchImage}>
 						<img src={searchIcon} alt='search icon' />
 					</span>
-				</label>
+				</label> */}
 				<NotesList isListView={isListView} />
-				{!isListView && (
+				{/* {!isListView && (
 					<ul className={classes.pagination}>
 						<li className={classes.paginationItem}>1</li>
 						<li className={classes.paginationItem}>2</li>
 						<li className={classes.paginationItem}>3</li>
 					</ul>
-				)}
+				)} */}
 			</div>
 			{isNotesModalOpened && (
 				<Modal

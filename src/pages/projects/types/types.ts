@@ -10,6 +10,8 @@ export type Task = {
 	id: ID
 	columnId: ID
 	content: string
+	order: number
+	projectId: string
 }
 
 export type Habit = {
