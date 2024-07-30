@@ -112,8 +112,10 @@ const Layout: FC<ILayoutProps> = ({ user }) => {
             <button className={classes.quitButton}>
               <img src={quitBtn} alt='quit button' onClick={() => logoutUser()} />
             </button>
-            <img className={classes.avatar} src={avatar} alt='avatar' />
-            <input type='file' accept='image/*' onChange={handleAvatarChange} className={classes.uploadInput} />
+            <div className={classes.avatarContainer}>
+              <img className={classes.avatar} src={avatar} alt='avatar' />
+              <input type='file' accept='image/*' onChange={handleAvatarChange} className={classes.uploadInput} />
+            </div>
             <div className={classes.userName}>
               {isEditingName ? (
                 <input
