@@ -141,7 +141,7 @@ const Layout: FC<ILayoutProps> = ({ user }) => {
               <button className={classes.themeLightButton}>Light</button>
               <button className={classes.themeDarkButton}>Dark</button>
             </div>
-            <a className={classes.projectLink} href='https://github.com/lisnyaknikita/planz'>
+            <a className={classes.projectLink} href='https://github.com/lisnyaknikita/planz' target='_blank'>
               Link to project's github
             </a>
           </div>
