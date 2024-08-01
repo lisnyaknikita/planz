@@ -66,6 +66,7 @@ const Layout: FC<ILayoutProps> = ({ user }) => {
     if (newName !== user.name) {
       await updateUserName(newName);
     }
+
     setIsEditingName(false);
   };
 
@@ -76,6 +77,7 @@ const Layout: FC<ILayoutProps> = ({ user }) => {
       }
     }
   };
+
   const handleAvatarChange = async (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];

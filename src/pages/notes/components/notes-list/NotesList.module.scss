@@ -1,142 +1,146 @@
 .notesList {
-	margin-top: 70px;
-	list-style: none;
-	// display: grid;
-	// grid-template-columns: repeat(4, 1fr);
-	// grid-template-rows: repeat(3, 1fr);
-	// gap: 30px 35px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 30px;
-	flex-wrap: wrap;
-	max-height: 830px;
-	overflow-y: auto;
+  margin-top: 70px;
+  list-style: none;
+  // display: grid;
+  // grid-template-columns: repeat(4, 1fr);
+  // grid-template-rows: repeat(3, 1fr);
+  // gap: 30px 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  max-height: 830px;
+  overflow-y: auto;
 
-	&::-webkit-scrollbar {
-		width: 0px;
-		height: 0px;
-	}
+  &::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+  }
 
-	&:global(.listView) {
-		display: flex;
-		flex-direction: column;
-		gap: 20px;
-		max-height: 850px;
-		overflow: auto;
-		width: 100%;
+  &:global(.listView) {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-height: 850px;
+    overflow: auto;
+    width: 100%;
 
-		@media screen and (max-width: 900px) {
-			flex-wrap: nowrap;
-			justify-content: flex-start;
-		}
+    @media screen and (max-width: 900px) {
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+    }
 
-		& .note {
-			width: 100%;
-			height: 150px;
-			border: none;
+    & .note {
+      width: 100%;
+      height: 150px;
+      border: none;
 
-			@media screen and (max-width: 1024px) {
-				& .noteLink {
-					padding: 10px;
-				}
-			}
+      @media screen and (max-width: 1024px) {
+        & .noteLink {
+          padding: 10px;
+        }
+      }
 
-			@media screen and (max-width: 560px) {
-				.noteTitle {
-					font-size: 20px;
-				}
+      @media screen and (max-width: 560px) {
+        .noteTitle {
+          font-size: 20px;
+        }
 
-				.noteText {
-					font-size: 16px;
-				}
-			}
-		}
-	}
+        .noteText {
+          font-size: 16px;
+        }
+      }
+    }
+  }
 
-	&:global(.noteOpened) {
-		gap: 0px;
-		overflow: auto;
-		width: 20%;
-		border-right: 1px solid var(--main-gray);
+  &:global(.noteOpened) {
+    gap: 0px;
+    overflow: auto;
+    width: 20%;
+    border-right: 1px solid var(--main-gray);
 
-		@media screen and (max-width: 1240px) {
-			width: 30%;
-		}
+    @media screen and (max-width: 1240px) {
+      width: 30%;
+    }
 
-		@media screen and (max-width: 1124px) {
-			width: 25%;
-		}
+    @media screen and (max-width: 1124px) {
+      width: 25%;
+    }
 
-		@media screen and (max-width: 1024px) {
-			display: none;
-		}
+    @media screen and (max-width: 1024px) {
+      display: none;
+    }
 
-		& .note {
-			border-radius: 0;
-			background-color: transparent;
-			border: none;
-		}
+    & .note {
+      border-radius: 0;
+      background-color: transparent;
+      border: none;
 
-		& .note .noteLink {
-			padding: 5px 30px;
+      &:global(.activeNote) {
+        background-color: var(--secondary-dark);
+      }
+    }
 
-			@media screen and (max-width: 1240px) {
-				padding: 5px 15px;
-			}
-		}
+    & .note .noteLink {
+      padding: 5px 30px;
 
-		& .note .noteLink .noteTitle {
-			font-size: 32px;
-			font-weight: 400;
-			margin-bottom: 15px;
+      @media screen and (max-width: 1240px) {
+        padding: 5px 15px;
+      }
+    }
 
-			@media screen and (max-width: 1240px) {
-				font-size: 26px;
-			}
-		}
-	}
+    & .note .noteLink .noteTitle {
+      font-size: 32px;
+      font-weight: 400;
+      margin-bottom: 15px;
+
+      @media screen and (max-width: 1240px) {
+        font-size: 26px;
+      }
+    }
+  }
 }
 
 .note {
-	width: 250px;
-	height: 250px;
-	background-color: var(--secondary-dark);
-	border: 1px solid var(--main-gray);
-	border-radius: 10px;
+  width: 250px;
+  height: 250px;
+  background-color: var(--secondary-dark);
+  border: 1px solid var(--main-gray);
+  border-radius: 10px;
 
-	@media screen and (max-width: 1165px) {
-		width: 200px;
-		height: 200px;
-	}
+  @media screen and (max-width: 1165px) {
+    width: 200px;
+    height: 200px;
+  }
 
-	@media screen and (max-width: 900px) {
-		width: 160px;
-		height: 160px;
-	}
+  @media screen and (max-width: 900px) {
+    width: 160px;
+    height: 160px;
+  }
 }
 
 .noteLink {
-	padding: 21px 15px;
-	width: 100%;
-	height: 100%;
-	display: inline-block;
+  padding: 21px 15px;
+  width: 100%;
+  height: 100%;
+  display: inline-block;
 }
 
 .noteTitle {
-	margin-bottom: 25px;
-	text-align: center;
-	font-size: 28px;
+  margin-bottom: 25px;
+  text-align: center;
+  font-size: 28px;
 
-	@media screen and (max-width: 1165px) {
-		font-size: 24px;
-	}
+  @media screen and (max-width: 1165px) {
+    font-size: 24px;
+  }
 }
 
 .noteText {
-	font-size: 20px;
+  font-size: 20px;
 
-	@media screen and (max-width: 1165px) {
-		font-size: 18px;
-	}
+  @media screen and (max-width: 1165px) {
+    font-size: 18px;
+  }
 }
