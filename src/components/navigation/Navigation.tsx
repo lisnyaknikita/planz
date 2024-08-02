@@ -14,7 +14,6 @@ const Navigation: FC = () => {
   const location = useLocation();
 
   const isActive = (path: string) => location.pathname.startsWith(path);
-  console.log(isActive('/note'));
 
   return (
     <nav className={classes.navigation}>
