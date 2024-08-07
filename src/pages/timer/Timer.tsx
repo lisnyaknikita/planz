@@ -69,6 +69,7 @@ const TimerPage: FC = () => {
 
   const stopTimer = () => {
     setTimerRunning(false);
+    document.title = 'Planz | Timer';
   };
 
   useEffect(() => {
@@ -87,6 +88,7 @@ const TimerPage: FC = () => {
               setCompletedSessions(newCompletedSessions);
               if (newCompletedSessions >= numSessions) {
                 setTimerRunning(false);
+                document.title = 'Planz | Timer';
                 return 0;
               } else {
                 setCurrentPhase('flow');
@@ -94,7 +96,9 @@ const TimerPage: FC = () => {
               }
             }
           }
-          return prevSeconds - 1;
+          const newTime = prevSeconds - 1;
+          document.title = `Timer: ${Math.floor(newTime / 60)}:${newTime % 60 < 10 ? `0${newTime % 60}` : newTime % 60}`;
+          return newTime;
         });
       }, 1000);
     } else if (intervalId) {
