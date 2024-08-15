@@ -47,6 +47,7 @@ const TimerSettings: FC = () => {
         setUserId(null);
       }
     });
+    document.title = 'Planz | Timer settings';
     return () => unsubscribe();
   }, []);
 

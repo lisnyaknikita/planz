@@ -42,6 +42,7 @@ const HabitsPage: FC = () => {
 
   useEffect(() => {
     fetchHabits();
+    document.title = 'Planz | Habits';
   }, []);
 
   const onSubmitHabit = async (e: React.FormEvent<HTMLFormElement>) => {

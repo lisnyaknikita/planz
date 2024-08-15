@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import classes from './Notes.module.scss';
 
@@ -48,6 +48,10 @@ const NotesPage: FC = () => {
       console.error('Error creating note:', error);
     }
   };
+
+  useEffect(() => {
+    document.title = 'Planz | Notes';
+  }, []);
 
   return (
     <div className={classes.wrapper}>
