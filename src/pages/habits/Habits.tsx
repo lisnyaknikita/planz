@@ -233,13 +233,23 @@ const HabitsPage: FC = () => {
 		fetchHabits()
 		document.title = 'Planz | Habits'
 
-		// Проверяем время последнего сброса
 		const lastReset = localStorage.getItem('lastReset')
-		const now = Date.now()
+		const now = new Date()
+		const resetTime = new Date(
+			now.getFullYear(),
+			now.getMonth(),
+			now.getDate(),
+			0,
+			0,
+			0
+		)
 
-		// Если время последнего сброса не установлено или прошло 24 часа
-		if (!lastReset || now - Number(lastReset) > 24 * 60 * 60 * 1000) {
-			resetHabitStatuses()
+		// Проверяем, если последний сброс был до установленного времени сброса
+		if (!lastReset || new Date(Number(lastReset)) < resetTime) {
+			// Если текущее время меньше, чем время сброса, не вызываем сброс
+			if (now >= resetTime) {
+				resetHabitStatuses()
+			}
 		}
 	}, [])
 
