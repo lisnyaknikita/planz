@@ -53,24 +53,6 @@ const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 		})
 	)
 
-	// useEffect(() => {
-	// 	const fetchColumns = async () => {
-	// 		const columnsCollectionRef = collection(db, 'columns')
-	// 		const columnsQuery = query(columnsCollectionRef, orderBy('order'))
-	// 		const columnsSnapshot = await getDocs(columnsQuery)
-	// 		const columnsData = columnsSnapshot.docs.map(
-	// 			doc =>
-	// 				({
-	// 					...doc.data(),
-	// 					id: doc.id,
-	// 				}) as Column
-	// 		)
-	// 		setColumns(columnsData)
-	// 	}
-
-	// 	fetchColumns()
-	// }, [])
-
 	useEffect(() => {
 		const fetchColumnsAndTasks = async () => {
 			if (!projectId) return
@@ -175,34 +157,6 @@ const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 		}
 	}
 
-	// function onDragEnd(event: DragEndEvent) {
-	// 	setActiveColumn(null)
-	// 	setActiveTask(null)
-
-	// 	const { active, over } = event
-
-	// 	if (!over) return
-
-	// 	const activeColumnId = active.id
-	// 	const overColumnId = over.id
-
-	// 	if (activeColumnId === overColumnId) return
-
-	// 	setColumns(columns => {
-	// 		const activeColumnIndex = columns.findIndex(
-	// 			col => col.id === activeColumnId
-	// 		)
-	// 		const overColumnIndex = columns.findIndex(col => col.id === overColumnId)
-
-	// 		const updatedColumns = arrayMove(
-	// 			columns,
-	// 			activeColumnIndex,
-	// 			overColumnIndex
-	// 		)
-	// 		updateColumnOrder(updatedColumns)
-	// 		return updatedColumns
-	// 	})
-	// }
 	async function onDragEnd(event: DragEndEvent) {
 		setActiveColumn(null)
 		setActiveTask(null)
@@ -373,28 +327,6 @@ const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 			console.error('Error updating task column: ', error)
 		}
 	}
-
-	// function moveTaskLeft(taskId: string) {
-	// 	const task = tasks.find(t => t.id === taskId)
-	// 	if (!task) return
-
-	// 	const currentColumnIndex = columns.findIndex(c => c.id === task.columnId)
-	// 	if (currentColumnIndex > 0) {
-	// 		const newColumnId = columns[currentColumnIndex - 1].id
-	// 		updateTaskColumn(taskId, newColumnId)
-	// 	}
-	// }
-
-	// function moveTaskRight(taskId: string) {
-	// 	const task = tasks.find(t => t.id === taskId)
-	// 	if (!task) return
-
-	// 	const currentColumnIndex = columns.findIndex(c => c.id === task.columnId)
-	// 	if (currentColumnIndex < columns.length - 1) {
-	// 		const newColumnId = columns[currentColumnIndex + 1].id
-	// 		updateTaskColumn(taskId, newColumnId)
-	// 	}
-	// }
 
 	return (
 		<div className={classes.inner}>
