@@ -151,11 +151,82 @@ const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 
 		if (event.active.data.current?.type === 'Task') {
 			setActiveTask(event.active.data.current.task)
-			console.log(event.active.data.current?.task)
+			// console.log(event.active.data.current?.task)
 
 			return
 		}
 	}
+
+	// async function onDragEnd(event: DragEndEvent) {
+	// 	setActiveColumn(null)
+	// 	setActiveTask(null)
+
+	// 	const { active, over } = event
+
+	// 	// console.log(
+	// 	// 	'drag ended',
+	// 	// 	event.active.data.current?.task.columnId,
+	// 	// 	event.over?.data.current?.task.columnId
+	// 	// )
+	// 	if (!over) return
+
+	// 	if (active.id === over.id) return
+	// 	console.log(
+	// 		'drag ended',
+	// 		event.active.data.current?.task.columnId,
+	// 		event.over?.data.current?.task.columnId
+	// 	)
+
+	// 	const activeColumnId = active.id
+	// 	const overColumnId = over.id
+
+	// 	if (
+	// 		active.data.current?.type === 'Column' &&
+	// 		over.data.current?.type === 'Column'
+	// 	) {
+	// 		const activeIndex = columns.findIndex(col => col.id === activeColumnId)
+	// 		const overIndex = columns.findIndex(col => col.id === overColumnId)
+
+	// 		if (activeIndex !== -1 && overIndex !== -1) {
+	// 			const updatedColumns = arrayMove(columns, activeIndex, overIndex)
+	// 			setColumns(updatedColumns)
+	// 			await updateColumnOrder(updatedColumns)
+	// 		}
+	// 	}
+
+	// 	if (active.data.current?.type === 'Task') {
+	// 		const activeTask = active.data.current.task as Task
+
+	// 		console.log(activeTask)
+
+	// 		if (over.data.current?.type === 'Task') {
+	// 			const overTask = over.data.current.task as Task
+
+	// 			if (activeTask.columnId !== overTask.columnId) {
+	// 				const newTasks = tasks.map(task =>
+	// 					task.id === activeTask.id
+	// 						? { ...task, columnId: overTask.columnId }
+	// 						: task
+	// 				)
+	// 				setTasks(newTasks)
+
+	// 				await updateTaskColumn(activeTask.id, overTask.columnId)
+	// 			}
+	// 		} else if (over.data.current?.type === 'Column') {
+	// 			const overColumn = over.data.current.column as Column
+
+	// 			if (activeTask.columnId !== overColumn.id) {
+	// 				const newTasks = tasks.map(task =>
+	// 					task.id === activeTask.id
+	// 						? { ...task, columnId: overColumn.id }
+	// 						: task
+	// 				)
+	// 				setTasks(newTasks)
+	// 				await updateTaskColumn(activeTask.id, overColumn.id)
+	// 			}
+	// 		}
+	// 	}
+	// }
 
 	async function onDragEnd(event: DragEndEvent) {
 		setActiveColumn(null)
@@ -163,18 +234,21 @@ const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 
 		const { active, over } = event
 
-		console.log(
-			'drag ended',
-			event.active.data.current?.task.columnId,
-			event.over?.data.current?.task.columnId
-		)
 		if (!over) return
 
-		if (active.id === over.id) return
+		// Если элемент не был перемещен, возвращаемся (актуально только для колонок)
+		// if (active.id === over.id && active.data.current?.type === 'Column') return
+
+		console.log(
+			'drag ended',
+			event.active.data.current?.task?.columnId,
+			event.over?.data.current?.task?.columnId
+		)
 
 		const activeColumnId = active.id
 		const overColumnId = over.id
 
+		// Перемещение колонок
 		if (
 			active.data.current?.type === 'Column' &&
 			over.data.current?.type === 'Column'
@@ -189,24 +263,31 @@ const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 			}
 		}
 
+		// Перемещение задач
 		if (active.data.current?.type === 'Task') {
 			const activeTask = active.data.current.task as Task
+			console.log(activeTask)
 
 			if (over.data.current?.type === 'Task') {
 				const overTask = over.data.current.task as Task
+				console.log(overTask)
+				// console.log(activeTask.columnId !== overTask.columnId)
 
-				if (activeTask.columnId !== overTask.columnId) {
+				// Если задача перемещается в другую колонку
+				if (activeTask.columnId === overTask.columnId) {
 					const newTasks = tasks.map(task =>
 						task.id === activeTask.id
 							? { ...task, columnId: overTask.columnId }
 							: task
 					)
 					setTasks(newTasks)
+
 					await updateTaskColumn(activeTask.id, overTask.columnId)
 				}
 			} else if (over.data.current?.type === 'Column') {
 				const overColumn = over.data.current.column as Column
 
+				// Если задача перемещается в другую колонку
 				if (activeTask.columnId !== overColumn.id) {
 					const newTasks = tasks.map(task =>
 						task.id === activeTask.id
@@ -320,6 +401,8 @@ const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 	}
 
 	async function updateTaskColumn(taskId: ID, newColumnId: ID) {
+		console.log('working')
+
 		const taskRef = doc(db, 'tasks', taskId.toString())
 		try {
 			await updateDoc(taskRef, { columnId: newColumnId })

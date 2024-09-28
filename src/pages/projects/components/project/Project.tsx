@@ -18,12 +18,12 @@ const ProjectPage: FC = () => {
 		const fetchNote = async () => {
 			if (projectId) {
 				try {
-					console.log('Fetching project with ID:', projectId)
+					// console.log('Fetching project with ID:', projectId)
 					const projectRef = doc(db, 'projects', projectId)
 					const projectSnap = await getDoc(projectRef)
 					if (projectSnap.exists()) {
 						const projectData = projectSnap.data()
-						console.log('Project data:', projectData)
+						// console.log('Project data:', projectData)
 						setProjectTitle(projectData.title || '') // Provide default value if undefined
 					} else {
 						console.error('No such document!')
