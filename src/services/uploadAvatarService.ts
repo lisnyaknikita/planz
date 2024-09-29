@@ -9,11 +9,10 @@ const uploadAvatar = async (file: File): Promise<string> => {
 		if (!auth.currentUser) throw new Error('User not authenticated')
 
 		const user = auth.currentUser
-		const storageRef = ref(storage, `avatars/${user.uid}`) // Используем user.uid как имя файла
+		const storageRef = ref(storage, `avatars/${user.uid}`)
 		await uploadBytes(storageRef, file)
 		const photoURL = await getDownloadURL(storageRef)
 
-		// Обновляем аватар пользователя в Firestore
 		await updateDoc(doc(db, 'users', user.uid), { avatar: photoURL })
 
 		return photoURL
