@@ -55,7 +55,7 @@ const HabitsPage: FC = () => {
 			const data = await getDocs(q)
 
 			const filteredData = data.docs.map(doc => ({
-				...doc.data(),
+				...(doc.data() as Habit),
 				id: doc.id,
 			}))
 			setHabits(filteredData)
