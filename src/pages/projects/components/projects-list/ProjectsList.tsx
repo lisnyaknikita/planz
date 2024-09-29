@@ -97,27 +97,31 @@ const ProjectsList: FC = () => {
 
 	return (
 		<ul className={classes.projectsList}>
-			{projectList.map(project => (
-				<li
-					className={classes.projectCard}
-					key={project.id}
-					style={{ backgroundColor: project.color }}
-				>
-					<button
-						className={classes.deleteProjectButton}
-						onClick={() => deleteProject(project.id)}
+			{projectList.length ? (
+				projectList.map(project => (
+					<li
+						className={classes.projectCard}
+						key={project.id}
+						style={{ backgroundColor: project.color }}
 					>
-						<img src={deleteButton} alt='delete project' />
-					</button>
-					{/* <div className={classes.progress}>
+						<button
+							className={classes.deleteProjectButton}
+							onClick={() => deleteProject(project.id)}
+						>
+							<img src={deleteButton} alt='delete project' />
+						</button>
+						{/* <div className={classes.progress}>
 						<span className={classes.percent}>25%</span>
 					</div> */}
-					<Link to={`/project/${project.id}`} className={classes.projectName}>
-						<h4>{project.title}</h4>
-					</Link>
-					<p className={classes.projectDescription}>{project.description}</p>
-				</li>
-			))}
+						<Link to={`/project/${project.id}`} className={classes.projectName}>
+							<h4>{project.title}</h4>
+						</Link>
+						<p className={classes.projectDescription}>{project.description}</p>
+					</li>
+				))
+			) : (
+				<p style={{ fontSize: 30 }}>Create your first project</p>
+			)}
 		</ul>
 	)
 }

@@ -146,32 +146,36 @@ const HabitsPage: FC = () => {
 				</button>
 				<div className={classes.inner}>
 					<ul className={classes.habitsList}>
-						{habits.map(habit => (
-							<li className={classes.habit} key={habit.id}>
-								<p className={classes.habitName}>{habit.title}</p>
-								{habit.completed ? (
+						{habits.length ? (
+							habits.map(habit => (
+								<li className={classes.habit} key={habit.id}>
+									<p className={classes.habitName}>{habit.title}</p>
+									{habit.completed ? (
+										<button
+											className={classes.completedSpan}
+											onClick={() => toggleHabitStatus(habit.id)}
+										>
+											Completed
+										</button>
+									) : (
+										<button
+											className={classes.completeButton}
+											onClick={() => toggleHabitStatus(habit.id)}
+										>
+											<img src={completeButton} alt='complete button' />
+										</button>
+									)}
 									<button
-										className={classes.completedSpan}
-										onClick={() => toggleHabitStatus(habit.id)}
+										className={classes.deleteButton}
+										onClick={() => deleteHabit(habit.id)}
 									>
-										Completed
+										<img src={deleteButton} alt='delete this habit' />
 									</button>
-								) : (
-									<button
-										className={classes.completeButton}
-										onClick={() => toggleHabitStatus(habit.id)}
-									>
-										<img src={completeButton} alt='complete button' />
-									</button>
-								)}
-								<button
-									className={classes.deleteButton}
-									onClick={() => deleteHabit(habit.id)}
-								>
-									<img src={deleteButton} alt='delete this habit' />
-								</button>
-							</li>
-						))}
+								</li>
+							))
+						) : (
+							<p style={{ fontSize: 30 }}>Create your first habit to track</p>
+						)}
 					</ul>
 				</div>
 			</div>

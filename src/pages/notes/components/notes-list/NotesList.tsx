@@ -53,20 +53,24 @@ const NotesList: FC<INotesListProps> = ({
 				isNoteOpened && 'noteOpened'
 			)}
 		>
-			{noteList.map(note => (
-				<li
-					className={clsx(
-						classes.note,
-						note.id === currentNoteId && 'activeNote'
-					)}
-					key={note.id}
-				>
-					<Link to={`/note/${note.id}`} className={classes.noteLink}>
-						<h5 className={classes.noteTitle}>{note.title}</h5>
-						<p className={classes.noteText}>{note.text}</p>
-					</Link>
-				</li>
-			))}
+			{noteList.length ? (
+				noteList.map(note => (
+					<li
+						className={clsx(
+							classes.note,
+							note.id === currentNoteId && 'activeNote'
+						)}
+						key={note.id}
+					>
+						<Link to={`/note/${note.id}`} className={classes.noteLink}>
+							<h5 className={classes.noteTitle}>{note.title}</h5>
+							<p className={classes.noteText}>{note.text}</p>
+						</Link>
+					</li>
+				))
+			) : (
+				<p style={{ fontSize: 30 }}>Create your first note</p>
+			)}
 		</ul>
 	)
 }
