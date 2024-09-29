@@ -17,7 +17,7 @@ const SignupForm: FC = () => {
 		}
 		try {
 			await registerUser(email, password, name)
-		} catch (error) {
+		} catch (error: any) {
 			setError(error.message)
 		}
 	}
