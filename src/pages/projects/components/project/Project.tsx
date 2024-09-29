@@ -24,6 +24,7 @@ const ProjectPage: FC = () => {
 					if (projectSnap.exists()) {
 						const projectData = projectSnap.data()
 						setProjectTitle(projectData.title || '') // Provide default value if undefined
+						document.title = `Planz | ${projectData.title}`
 					} else {
 						console.error('No such document!')
 					}
