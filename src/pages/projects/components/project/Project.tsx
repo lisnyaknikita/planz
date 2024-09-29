@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react'
 
-import { deleteDoc, doc, getDoc } from 'firebase/firestore'
+import { deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore'
 import { useNavigate, useParams } from 'react-router-dom'
 import { db } from '../../../../../firebaseConfig'
 import deleteProjectButton from '../../../../assets/icons/delete.svg'
@@ -13,18 +13,18 @@ const ProjectPage: FC = () => {
 	const [editMode, setEditMode] = useState(false)
 	const navigate = useNavigate()
 	const [projectTitle, setProjectTitle] = useState<string>('')
+	const [newTitle, setNewTitle] = useState<string>('')
 
 	useEffect(() => {
 		const fetchNote = async () => {
 			if (projectId) {
 				try {
-					console.log('Fetching project with ID:', projectId)
 					const projectRef = doc(db, 'projects', projectId)
 					const projectSnap = await getDoc(projectRef)
 					if (projectSnap.exists()) {
 						const projectData = projectSnap.data()
-						console.log('Project data:', projectData)
-						setProjectTitle(projectData.title || '') // Provide default value if undefined
+						setProjectTitle(projectData.title || '')
+						document.title = `Planz | ${projectData.title}`
 					} else {
 						console.error('No such document!')
 					}
@@ -45,10 +45,40 @@ const ProjectPage: FC = () => {
 		try {
 			if (confirm('Do you realy want to delete this project?')) {
 				await deleteDoc(doc(db, 'projects', projectId))
-				navigate('/projects') // Redirect to project list page after deletion
+				navigate('/projects')
 			} else return
 		} catch (error) {
 			console.error('Error deleting project:', error)
+		}
+	}
+
+	const handleEditClick = () => {
+		setNewTitle(projectTitle)
+		setEditMode(true)
+	}
+
+	const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setNewTitle(e.target.value)
+	}
+
+	const handleTitleSave = async () => {
+		if (!projectId || newTitle.trim() === '') return
+
+		try {
+			const projectRef = doc(db, 'projects', projectId)
+			await updateDoc(projectRef, { title: newTitle })
+			setProjectTitle(newTitle)
+			setEditMode(false)
+		} catch (error) {
+			console.error('Error updating project title:', error)
+		}
+	}
+
+	const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === 'Enter') {
+			handleTitleSave()
+		} else if (e.key === 'Escape') {
+			setEditMode(false)
 		}
 	}
 
@@ -58,7 +88,10 @@ const ProjectPage: FC = () => {
 				{!editMode ? (
 					<div className={classes.projectTitle}>
 						<h2>{projectTitle}</h2>
-						<button className={classes.editTitleButton}>
+						<button
+							className={classes.editTitleButton}
+							onClick={handleEditClick}
+						>
 							<img src={editTitleButton} alt='edit title' />
 						</button>
 						<button
@@ -70,11 +103,18 @@ const ProjectPage: FC = () => {
 					</div>
 				) : (
 					<div className={classes.projectTitle}>
-						<input type='text' />
+						<input
+							type='text'
+							className={classes.editTitleInput}
+							value={newTitle}
+							onChange={handleTitleChange}
+							onKeyDown={handleKeyPress}
+							onBlur={handleTitleSave}
+							autoFocus
+						/>
 					</div>
-					// TODO: доделать изменение названия проекта
 				)}
-				<KanbanBoard projectId={projectId} />
+				<KanbanBoard projectId={projectId as string} />
 			</div>
 		</div>
 	)

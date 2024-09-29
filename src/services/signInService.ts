@@ -10,7 +10,6 @@ const loginUser = async (email: string, password: string): Promise<void> => {
 		)
 		const user = userCredential.user
 		console.log('User logged in:', user)
-		// Дополнительные действия после входа пользователя
 	} catch (error) {
 		console.error('Error logging in user:', error)
 		throw error

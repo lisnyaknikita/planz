@@ -20,8 +20,6 @@ interface IColumnContainerProps {
 	createTask: (columnId: ID) => void
 	deleteTask: (id: ID) => void
 	updateTask: (id: ID, content: string) => void
-	// moveTaskLeft: (taskId: string) => void
-	// moveTaskRight: (taskId: string) => void
 }
 
 const ColumnContainer: FC<IColumnContainerProps> = ({
@@ -32,8 +30,6 @@ const ColumnContainer: FC<IColumnContainerProps> = ({
 	createTask,
 	deleteTask,
 	updateTask,
-	// moveTaskLeft,
-	// moveTaskRight,
 }) => {
 	const [editMode, setEditMode] = useState(false)
 
@@ -59,7 +55,7 @@ const ColumnContainer: FC<IColumnContainerProps> = ({
 	async function handleUpdateColumn(id: ID, title: string) {
 		updateColumn(id, title)
 		try {
-			const columnRef = doc(db, 'columns', id.toString()) // Convert ID to string
+			const columnRef = doc(db, 'columns', id.toString())
 			await updateDoc(columnRef, { title })
 		} catch (error) {
 			console.error('Error updating column in Firestore: ', error)
@@ -69,7 +65,7 @@ const ColumnContainer: FC<IColumnContainerProps> = ({
 	async function handleDeleteColumn(id: ID) {
 		deleteColumn(id)
 		try {
-			await deleteDoc(doc(db, 'columns', id.toString())) // Convert ID to string
+			await deleteDoc(doc(db, 'columns', id.toString()))
 		} catch (error) {
 			console.error('Error deleting column from Firestore: ', error)
 		}
@@ -115,8 +111,6 @@ const ColumnContainer: FC<IColumnContainerProps> = ({
 							task={task}
 							deleteTask={deleteTask}
 							updateTask={updateTask}
-							// moveTaskLeft={moveTaskLeft}
-							// moveTaskRight={moveTaskRight}
 						/>
 					))}
 				</SortableContext>

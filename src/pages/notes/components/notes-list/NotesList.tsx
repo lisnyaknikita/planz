@@ -1,54 +1,78 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react'
 
-import clsx from 'clsx';
-import { collection, getDocs, query, where } from 'firebase/firestore';
-import { Link } from 'react-router-dom';
-import { auth, db } from '../../../../../firebaseConfig';
-import classes from './NotesList.module.scss';
+import clsx from 'clsx'
+import { collection, getDocs, query, where } from 'firebase/firestore'
+import { Link } from 'react-router-dom'
+import { auth, db } from '../../../../../firebaseConfig'
+import { Note } from '../../../projects/types/types'
+import classes from './NotesList.module.scss'
 
 interface INotesListProps {
-  isListView: boolean;
-  isNoteOpened?: boolean;
-  currentNoteId?: string;
+	isListView: boolean
+	isNoteOpened?: boolean
+	currentNoteId?: string
 }
 
-const NotesList: FC<INotesListProps> = ({ isListView, isNoteOpened, currentNoteId }) => {
-  const [noteList, setNoteList] = useState([]);
-  const { currentUser } = auth;
+const NotesList: FC<INotesListProps> = ({
+	isListView,
+	isNoteOpened,
+	currentNoteId,
+}) => {
+	const [noteList, setNoteList] = useState<Note[]>([])
+	const { currentUser } = auth
 
-  const notesCollectionRef = collection(db, 'notes');
+	const notesCollectionRef = collection(db, 'notes')
 
-  useEffect(() => {
-    const getNoteList = async () => {
-      try {
-        const q = query(notesCollectionRef, where('userId', '==', currentUser?.uid));
-        const data = await getDocs(q);
+	useEffect(() => {
+		const getNoteList = async () => {
+			try {
+				const q = query(
+					notesCollectionRef,
+					where('userId', '==', currentUser?.uid)
+				)
+				const data = await getDocs(q)
 
-        const filteredData = data.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }));
-        setNoteList(filteredData);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+				const filteredData = data.docs.map(doc => ({
+					...(doc.data() as Note),
+					id: doc.id,
+				}))
+				setNoteList(filteredData)
+			} catch (error) {
+				console.error(error)
+			}
+		}
 
-    getNoteList();
-  }, [currentUser]);
+		getNoteList()
+	}, [currentUser])
 
-  return (
-    <ul className={clsx(classes.notesList, isListView && 'listView', isNoteOpened && 'noteOpened')}>
-      {noteList.map((note) => (
-        <li className={clsx(classes.note, note.id === currentNoteId && 'activeNote')} key={note.id}>
-          <Link to={`/note/${note.id}`} className={classes.noteLink}>
-            <h5 className={classes.noteTitle}>{note.title}</h5>
-            <p className={classes.noteText}>{note.text}</p>
-          </Link>
-        </li>
-      ))}
-    </ul>
-  );
-};
+	return (
+		<ul
+			className={clsx(
+				classes.notesList,
+				isListView && 'listView',
+				isNoteOpened && 'noteOpened'
+			)}
+		>
+			{noteList.length ? (
+				noteList.map(note => (
+					<li
+						className={clsx(
+							classes.note,
+							note.id === currentNoteId && 'activeNote'
+						)}
+						key={note.id}
+					>
+						<Link to={`/note/${note.id}`} className={classes.noteLink}>
+							<h5 className={classes.noteTitle}>{note.title}</h5>
+							<p className={classes.noteText}>{note.text}</p>
+						</Link>
+					</li>
+				))
+			) : (
+				<p style={{ fontSize: 30 }}>Create your first note</p>
+			)}
+		</ul>
+	)
+}
 
-export default NotesList;
+export default NotesList

@@ -18,7 +18,6 @@ const registerUser = async (
 
 		const user = userCredential.user
 
-		// Update the user profile
 		await updateProfile(user, {
 			displayName: name,
 		})

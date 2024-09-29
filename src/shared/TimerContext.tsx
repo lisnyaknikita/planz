@@ -10,7 +10,6 @@ import React, {
 
 import timerSound from '../assets/timer-sound.mp3'
 
-// Типы данных для контекста
 type TimerContextType = {
 	timerRunning: boolean
 	timerSeconds: number
@@ -39,26 +38,22 @@ export const useTimer = () => {
 export const TimerProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
-	// Состояния для длительности фаз и количества сессий
-	const [flowDuration, setFlowDuration] = useState<number>(0) // В минутах
-	const [breakDuration, setBreakDuration] = useState<number>(0) // В минутах
-	const [numSessions, setNumSessions] = useState<number>(4) // Количество сессий
+	const [flowDuration, setFlowDuration] = useState<number>(0)
+	const [breakDuration, setBreakDuration] = useState<number>(0)
+	const [numSessions, setNumSessions] = useState<number>(4)
 	const [completedSessions, setCompletedSessions] = useState<number>(0)
 
-	// Состояния таймера
 	const [timerRunning, setTimerRunning] = useState<boolean>(false)
 	const [timerSeconds, setTimerSeconds] = useState<number>(flowDuration * 60)
-	const [remainingSeconds, setRemainingSeconds] = useState<number | null>(null) // Изначально 25 минут
+	const [remainingSeconds, setRemainingSeconds] = useState<number | null>(null)
 	const [currentPhase, setCurrentPhase] = useState<'flow' | 'break'>('flow')
 
-	// Firebase auth and firestore
 	const [userId, setUserId] = useState<string | null>(null)
 	const firestore = getFirestore()
 	const auth = getAuth()
 
 	const workerRef = useRef<Worker | null>(null)
 
-	// Инициализация веб-воркера
 	useEffect(() => {
 		workerRef.current = new Worker(
 			new URL('../pages/timer/timerWorker.ts', import.meta.url),
@@ -73,7 +68,6 @@ export const TimerProvider: React.FC<{ children: React.ReactNode }> = ({
 				audio.play()
 
 				if (phase === 'flow') {
-					// Переключаемся на фазу перерыва
 					setCurrentPhase('break')
 					const breakTime = breakDuration * 60
 					setTimerSeconds(breakTime)
@@ -83,15 +77,12 @@ export const TimerProvider: React.FC<{ children: React.ReactNode }> = ({
 						phase: 'break',
 					})
 				} else if (phase === 'break') {
-					// Завершился перерыв, увеличиваем счетчик завершённых сессий
 					const newCompletedSessions = completedSessions + 1
 					setCompletedSessions(newCompletedSessions)
 
 					if (newCompletedSessions >= numSessions) {
-						// Все сессии завершены, сбрасываем таймер
-						resetTimer() // Вызов функции сброса
+						resetTimer()
 					} else {
-						// Если ещё не все сессии завершены, возвращаемся к фазе flow
 						setCurrentPhase('flow')
 						const flowTime = flowDuration * 60
 						setTimerSeconds(flowTime)
@@ -114,10 +105,10 @@ export const TimerProvider: React.FC<{ children: React.ReactNode }> = ({
 
 		const resetTimer = () => {
 			setTimerRunning(false)
-			setTimerSeconds(flowDuration * 60) // Установим таймер на начало flow
+			setTimerSeconds(flowDuration * 60)
 			setRemainingSeconds(null)
-			setCompletedSessions(0) // Сбросим количество завершённых сессий
-			setCurrentPhase('flow') // Вернёмся к фазе flow
+			setCompletedSessions(0)
+			setCurrentPhase('flow')
 			if (workerRef.current) {
 				workerRef.current.postMessage({ action: 'stop' })
 			}
@@ -131,32 +122,27 @@ export const TimerProvider: React.FC<{ children: React.ReactNode }> = ({
 		}
 	}, [completedSessions, flowDuration, breakDuration, numSessions])
 
-	// Функция для запуска веб-воркера
 	const startWorker = (duration: number, phase: 'flow' | 'break') => {
 		if (workerRef.current) {
 			workerRef.current.postMessage({
 				action: 'start',
 				duration: duration,
-				phase: phase, // Передаем текущую фазу (flow или break)
+				phase: phase,
 			})
 		}
 		setTimerRunning(true)
 	}
 	const startTimer = () => {
-		// Если таймер уже запущен, ничего не делаем
 		if (timerRunning) return
 
 		setCurrentPhase('flow')
 		if (remainingSeconds !== null) {
-			// Если таймер был приостановлен, продолжаем с того места
 			startWorker(remainingSeconds, currentPhase)
-			setRemainingSeconds(null) // Сбрасываем оставшееся время
+			setRemainingSeconds(null)
 		} else {
-			// Если это первый запуск таймера, начинаем с полного времени
 			startWorker(flowDuration * 60, 'flow')
 		}
 
-		// Устанавливаем состояние таймера в true
 		setTimerRunning(true)
 	}
 
@@ -165,10 +151,8 @@ export const TimerProvider: React.FC<{ children: React.ReactNode }> = ({
 			workerRef.current.postMessage({ action: 'stop' })
 		}
 
-		// Сохраняем текущее оставшееся время
 		setRemainingSeconds(timerSeconds)
 
-		// Устанавливаем состояние таймера в false (для кнопки)
 		setTimerRunning(false)
 	}
 
@@ -183,7 +167,6 @@ export const TimerProvider: React.FC<{ children: React.ReactNode }> = ({
 		return () => unsubscribe()
 	}, [])
 
-	// Эффект для загрузки настроек таймера из Firebase
 	useEffect(() => {
 		const fetchTimerSettings = async () => {
 			if (userId) {
@@ -204,11 +187,10 @@ export const TimerProvider: React.FC<{ children: React.ReactNode }> = ({
 							breakDuration: number
 							numSessions: number
 						}
-						// Устанавливаем загруженные данные в состояние
 						setFlowDuration(flow)
 						setBreakDuration(breakDur)
 						setNumSessions(sessions)
-						setTimerSeconds(flow * 60) // Переводим flowDuration в секунды
+						setTimerSeconds(flow * 60)
 					}
 				} catch (error) {
 					console.error('Error fetching timer settings:', error)
@@ -220,7 +202,7 @@ export const TimerProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	const updateFlowDuration = (newFlowDuration: number) => {
 		setFlowDuration(newFlowDuration)
-		setTimerSeconds(newFlowDuration * 60) // Обновляем оставшееся время
+		setTimerSeconds(newFlowDuration * 60)
 	}
 
 	const updateBreakDuration = (newBreakDuration: number) => {

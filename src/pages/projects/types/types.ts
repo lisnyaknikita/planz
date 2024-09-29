@@ -11,11 +11,26 @@ export type Task = {
 	columnId: ID
 	content: string
 	order: number
+	priority: string
 	projectId: string
 }
 
 export type Habit = {
-	id: ID
+	id: string
 	title: string
 	completed: boolean
+}
+
+export type Note = {
+	id: ID
+	title: string
+	text: string
+	userId: string
+}
+
+export type Project = {
+	id: ID
+	title: string
+	description: string
+	userId: string
 }

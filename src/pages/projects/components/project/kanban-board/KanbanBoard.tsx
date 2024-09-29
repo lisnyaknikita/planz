@@ -53,24 +53,6 @@ const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 		})
 	)
 
-	// useEffect(() => {
-	// 	const fetchColumns = async () => {
-	// 		const columnsCollectionRef = collection(db, 'columns')
-	// 		const columnsQuery = query(columnsCollectionRef, orderBy('order'))
-	// 		const columnsSnapshot = await getDocs(columnsQuery)
-	// 		const columnsData = columnsSnapshot.docs.map(
-	// 			doc =>
-	// 				({
-	// 					...doc.data(),
-	// 					id: doc.id,
-	// 				}) as Column
-	// 		)
-	// 		setColumns(columnsData)
-	// 	}
-
-	// 	fetchColumns()
-	// }, [])
-
 	useEffect(() => {
 		const fetchColumnsAndTasks = async () => {
 			if (!projectId) return
@@ -169,54 +151,24 @@ const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 
 		if (event.active.data.current?.type === 'Task') {
 			setActiveTask(event.active.data.current.task)
-			console.log(event.active.data.current?.task)
 
 			return
 		}
 	}
 
-	// function onDragEnd(event: DragEndEvent) {
-	// 	setActiveColumn(null)
-	// 	setActiveTask(null)
-
-	// 	const { active, over } = event
-
-	// 	if (!over) return
-
-	// 	const activeColumnId = active.id
-	// 	const overColumnId = over.id
-
-	// 	if (activeColumnId === overColumnId) return
-
-	// 	setColumns(columns => {
-	// 		const activeColumnIndex = columns.findIndex(
-	// 			col => col.id === activeColumnId
-	// 		)
-	// 		const overColumnIndex = columns.findIndex(col => col.id === overColumnId)
-
-	// 		const updatedColumns = arrayMove(
-	// 			columns,
-	// 			activeColumnIndex,
-	// 			overColumnIndex
-	// 		)
-	// 		updateColumnOrder(updatedColumns)
-	// 		return updatedColumns
-	// 	})
-	// }
 	async function onDragEnd(event: DragEndEvent) {
 		setActiveColumn(null)
 		setActiveTask(null)
 
 		const { active, over } = event
 
-		console.log(
-			'drag ended',
-			event.active.data.current?.task.columnId,
-			event.over?.data.current?.task.columnId
-		)
 		if (!over) return
 
-		if (active.id === over.id) return
+		console.log(
+			'drag ended',
+			event.active.data.current?.task?.columnId,
+			event.over?.data.current?.task?.columnId
+		)
 
 		const activeColumnId = active.id
 		const overColumnId = over.id
@@ -237,17 +189,20 @@ const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 
 		if (active.data.current?.type === 'Task') {
 			const activeTask = active.data.current.task as Task
+			console.log(activeTask)
 
 			if (over.data.current?.type === 'Task') {
 				const overTask = over.data.current.task as Task
+				console.log(overTask)
 
-				if (activeTask.columnId !== overTask.columnId) {
+				if (activeTask.columnId === overTask.columnId) {
 					const newTasks = tasks.map(task =>
 						task.id === activeTask.id
 							? { ...task, columnId: overTask.columnId }
 							: task
 					)
 					setTasks(newTasks)
+
 					await updateTaskColumn(activeTask.id, overTask.columnId)
 				}
 			} else if (over.data.current?.type === 'Column') {
@@ -326,7 +281,8 @@ const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 		const newTask: Omit<Task, 'id'> = {
 			columnId,
 			content: `Name a task...`,
-			order: tasksInColumn.length, // Порядок задачи в колонке
+			order: tasksInColumn.length,
+			priority: 'A1. High priority',
 			projectId: projectId,
 		}
 
@@ -366,6 +322,8 @@ const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 	}
 
 	async function updateTaskColumn(taskId: ID, newColumnId: ID) {
+		console.log('working')
+
 		const taskRef = doc(db, 'tasks', taskId.toString())
 		try {
 			await updateDoc(taskRef, { columnId: newColumnId })
@@ -373,28 +331,6 @@ const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 			console.error('Error updating task column: ', error)
 		}
 	}
-
-	// function moveTaskLeft(taskId: string) {
-	// 	const task = tasks.find(t => t.id === taskId)
-	// 	if (!task) return
-
-	// 	const currentColumnIndex = columns.findIndex(c => c.id === task.columnId)
-	// 	if (currentColumnIndex > 0) {
-	// 		const newColumnId = columns[currentColumnIndex - 1].id
-	// 		updateTaskColumn(taskId, newColumnId)
-	// 	}
-	// }
-
-	// function moveTaskRight(taskId: string) {
-	// 	const task = tasks.find(t => t.id === taskId)
-	// 	if (!task) return
-
-	// 	const currentColumnIndex = columns.findIndex(c => c.id === task.columnId)
-	// 	if (currentColumnIndex < columns.length - 1) {
-	// 		const newColumnId = columns[currentColumnIndex + 1].id
-	// 		updateTaskColumn(taskId, newColumnId)
-	// 	}
-	// }
 
 	return (
 		<div className={classes.inner}>
@@ -414,8 +350,6 @@ const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 								createTask={createTask}
 								deleteTask={deleteTask}
 								updateTask={updateTask}
-								// moveTaskLeft={moveTaskLeft}
-								// moveTaskRight={moveTaskRight}
 								tasks={tasks.filter(task => task.columnId === column.id)}
 								key={column.id}
 							/>
@@ -440,8 +374,6 @@ const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 								createTask={createTask}
 								deleteTask={deleteTask}
 								updateTask={updateTask}
-								// moveTaskLeft={moveTaskLeft}
-								// moveTaskRight={moveTaskRight}
 								tasks={tasks.filter(task => task.columnId === activeColumn.id)}
 							/>
 						)}
@@ -450,8 +382,6 @@ const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 								task={activeTask}
 								deleteTask={deleteTask}
 								updateTask={updateTask}
-								// moveTaskLeft={moveTaskLeft}
-								// moveTaskRight={moveTaskRight}
 							/>
 						)}
 					</DragOverlay>,
