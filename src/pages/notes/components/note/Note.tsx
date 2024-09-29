@@ -26,8 +26,8 @@ const NotePage: FC = () => {
 					const noteSnap = await getDoc(noteRef)
 					if (noteSnap.exists()) {
 						const noteData = noteSnap.data()
-						setNoteTitle(noteData.title || '') // Provide default value if undefined
-						setNoteText(noteData.text || '') // Provide default value if undefined
+						setNoteTitle(noteData.title || '')
+						setNoteText(noteData.text || '')
 					} else {
 						console.error('No such document!')
 					}
@@ -48,7 +48,7 @@ const NotePage: FC = () => {
 		try {
 			if (confirm('Do you realy want to delete this note?')) {
 				await deleteDoc(doc(db, 'notes', noteId))
-				navigate('/') // Redirect to notes list page after deletion
+				navigate('/')
 			} else return
 		} catch (error) {
 			console.error('Error deleting note:', error)

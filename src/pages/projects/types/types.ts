@@ -20,3 +20,10 @@ export type Habit = {
 	title: string
 	completed: boolean
 }
+
+export type Note = {
+	id: ID
+	title: string
+	text: string
+	userId: string
+}
