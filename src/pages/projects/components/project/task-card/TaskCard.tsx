@@ -5,6 +5,8 @@ import classes from './TaskCard.module.scss'
 
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { doc, updateDoc } from 'firebase/firestore'
+import { db } from '../../../../../../firebaseConfig'
 import deleteTaskButton from '../../../../../assets/icons/delete.svg'
 
 interface ITaskCardProps {
@@ -23,8 +25,17 @@ const TaskCard: FC<ITaskCardProps> = ({
 	// moveTaskRight,
 }) => {
 	const [editMode, setEditMode] = useState(false)
+	const [priority, setPriority] = useState<string>(
+		task.priority || 'A1. High priority'
+	)
 
 	const textAreaRef = useRef<HTMLTextAreaElement>(null)
+
+	const priorities = [
+		'A1. High priority',
+		'A2. Medium priority',
+		'A3. Low priority',
+	]
 
 	const {
 		setNodeRef,
@@ -47,6 +58,29 @@ const TaskCard: FC<ITaskCardProps> = ({
 		transform: CSS.Transform.toString(transform),
 	}
 
+	const priorityColors: { [key: string]: string } = {
+		'A1. High priority': '#63D471', // Зеленый
+		'A2. Medium priority': '#FF7D00', // Оранжевый
+		'A3. Low priority': '#03CEA4', // Голубой
+	}
+
+	const handlePriorityChange = () => {
+		const currentPriorityIndex = priorities.indexOf(priority)
+		const nextPriority =
+			priorities[(currentPriorityIndex + 1) % priorities.length]
+		setPriority(nextPriority) // Локальное обновление приоритета
+		updateTaskPriority(task.id, nextPriority) // Обновление в базе данных
+	}
+
+	async function updateTaskPriority(id: ID, newPriority: string) {
+		try {
+			const taskRef = doc(db, 'tasks', id.toString())
+			await updateDoc(taskRef, { priority: newPriority }) // Обновление приоритета в базе данных
+		} catch (error) {
+			console.error('Error updating task priority: ', error)
+		}
+	}
+
 	useEffect(() => {
 		if (editMode && textAreaRef.current) {
 			const textArea = textAreaRef.current
@@ -64,7 +98,13 @@ const TaskCard: FC<ITaskCardProps> = ({
 				{...attributes}
 				{...listeners}
 			>
-				<div className={classes.priority}>A1. High priority</div>
+				<div
+					className={classes.priority}
+					onClick={handlePriorityChange}
+					style={{ backgroundColor: priorityColors[priority] }}
+				>
+					{priority}
+				</div>
 				<div className={classes.taskContent} onClick={() => setEditMode(true)}>
 					<textarea
 						className={classes.taskTextArea}
@@ -92,7 +132,13 @@ const TaskCard: FC<ITaskCardProps> = ({
 			{...attributes}
 			{...listeners}
 		>
-			<div className={classes.priority}>A1. High priority</div>
+			<div
+				className={classes.priority}
+				onClick={handlePriorityChange}
+				style={{ backgroundColor: priorityColors[priority] }}
+			>
+				{priority}
+			</div>
 			<div className={classes.taskContent} onClick={() => setEditMode(true)}>
 				<p className={classes.taskContentWrapper}>{task.content}</p>
 			</div>

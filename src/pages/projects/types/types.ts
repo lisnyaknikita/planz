@@ -11,6 +11,7 @@ export type Task = {
 	columnId: ID
 	content: string
 	order: number
+	priority: string
 	projectId: string
 }
 

@@ -361,7 +361,8 @@ const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 		const newTask: Omit<Task, 'id'> = {
 			columnId,
 			content: `Name a task...`,
-			order: tasksInColumn.length, // Порядок задачи в колонке
+			order: tasksInColumn.length,
+			priority: 'A1. High priority',
 			projectId: projectId,
 		}
 
