@@ -37,6 +37,17 @@ const ProjectsList: FC = () => {
 		'#EB6424',
 		'#4381C1',
 		'#4E4B5C',
+		'#846C5B',
+		'#443742',
+		'#514B23',
+		'#6761A8',
+		'#F26430',
+		'#2A2D34',
+		'#113537',
+		'#595F72',
+		'#00823D',
+		'#1E1919',
+		'#323F28',
 	]
 
 	const getRandomColor = (colorsArray: string[]) => {
