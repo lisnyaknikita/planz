@@ -11,6 +11,7 @@ import timerButton from '../../assets/icons/timer.svg'
 import { useTimer } from '../../shared/TimerContext'
 
 const TimerPage: FC = () => {
+	//@ts-ignore
 	const [userId, setUserId] = useState<string | null>(null)
 	const {
 		timerRunning,
@@ -21,7 +22,7 @@ const TimerPage: FC = () => {
 		startTimer,
 		stopTimer,
 	} = useTimer()
-
+	//@ts-ignore
 	const firestore = getFirestore()
 	const auth = getAuth()
 
