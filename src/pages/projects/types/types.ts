@@ -27,3 +27,10 @@ export type Note = {
 	text: string
 	userId: string
 }
+
+export type Project = {
+	id: ID
+	title: string
+	description: string
+	userId: string
+}

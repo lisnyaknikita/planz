@@ -13,6 +13,7 @@ import {
 } from 'firebase/firestore'
 import { Link } from 'react-router-dom'
 import { auth, db } from '../../../../../firebaseConfig'
+import { Project } from '../../types/types'
 
 const ProjectsList: FC = () => {
 	const { currentUser } = auth
@@ -70,7 +71,7 @@ const ProjectsList: FC = () => {
 				const data = await getDocs(q)
 
 				const filteredData = data.docs.map(doc => ({
-					...doc.data(),
+					...(doc.data() as Project),
 					id: doc.id,
 					color: getRandomColor(colorsArray),
 				}))

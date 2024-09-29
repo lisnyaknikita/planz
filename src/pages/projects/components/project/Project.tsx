@@ -23,7 +23,7 @@ const ProjectPage: FC = () => {
 					const projectSnap = await getDoc(projectRef)
 					if (projectSnap.exists()) {
 						const projectData = projectSnap.data()
-						setProjectTitle(projectData.title || '') // Provide default value if undefined
+						setProjectTitle(projectData.title || '')
 						document.title = `Planz | ${projectData.title}`
 					} else {
 						console.error('No such document!')
@@ -45,7 +45,7 @@ const ProjectPage: FC = () => {
 		try {
 			if (confirm('Do you realy want to delete this project?')) {
 				await deleteDoc(doc(db, 'projects', projectId))
-				navigate('/projects') // Redirect to project list page after deletion
+				navigate('/projects')
 			} else return
 		} catch (error) {
 			console.error('Error deleting project:', error)
@@ -53,7 +53,7 @@ const ProjectPage: FC = () => {
 	}
 
 	const handleEditClick = () => {
-		setNewTitle(projectTitle) // Заполним инпут текущим заголовком
+		setNewTitle(projectTitle)
 		setEditMode(true)
 	}
 
@@ -66,9 +66,9 @@ const ProjectPage: FC = () => {
 
 		try {
 			const projectRef = doc(db, 'projects', projectId)
-			await updateDoc(projectRef, { title: newTitle }) // Обновляем заголовок в базе данных
-			setProjectTitle(newTitle) // Обновляем локально
-			setEditMode(false) // Выключаем режим редактирования
+			await updateDoc(projectRef, { title: newTitle })
+			setProjectTitle(newTitle)
+			setEditMode(false)
 		} catch (error) {
 			console.error('Error updating project title:', error)
 		}
@@ -76,9 +76,9 @@ const ProjectPage: FC = () => {
 
 	const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		if (e.key === 'Enter') {
-			handleTitleSave() // Сохраняем при нажатии Enter
+			handleTitleSave()
 		} else if (e.key === 'Escape') {
-			setEditMode(false) // Отменяем редактирование при нажатии Escape
+			setEditMode(false)
 		}
 	}
 
@@ -114,7 +114,7 @@ const ProjectPage: FC = () => {
 						/>
 					</div>
 				)}
-				<KanbanBoard projectId={projectId} />
+				<KanbanBoard projectId={projectId as string} />
 			</div>
 		</div>
 	)
