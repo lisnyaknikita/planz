@@ -63,6 +63,31 @@
 	}
 }
 
+.editTitleInput {
+	background-color: transparent;
+	border: none;
+	color: var(--white-for-dark);
+	outline: none;
+	font-size: 42px;
+
+	@media screen and (max-width: 1440px) {
+		font-size: 36px;
+	}
+
+	@media screen and (max-width: 768px) {
+		font-size: 32px;
+	}
+
+	@media screen and (max-width: 650px) {
+		font-size: 28px;
+		max-width: 230px;
+	}
+
+	@media screen and (max-width: 600px) {
+		max-width: 100%;
+	}
+}
+
 .editTitleButton {
 	> img {
 		width: 30px;
