@@ -1,5 +1,7 @@
 # Project Name: Planz
 
+![kanban](https://i.ibb.co/C5BdDzH/image.png)
+
 ## Description
 
 This is a web application designed to help users manage their projects and personal time efficiently. It integrates several essential productivity tools into one seamless interface, allowing users to keep track of tasks, habits, and focus sessions all in one place.
@@ -17,7 +19,7 @@ The application is built for individuals managing solo projects or those looking
 
 ## Technology Stack
 
-- **Frontend**: React, TypeScript, DnD Kit
+- **Frontend**: React, TypeScript, DnD Kit, Web Workers
 - **Backend**: Firebase Firestore for real-time database management
 - **Authentication**: Firebase Authentication
 - **Hosting**: Netlify
