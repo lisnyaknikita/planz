@@ -9,8 +9,7 @@ import Modal from '../../ui/modal/Modal'
 import ProjectsList from './components/projects-list/ProjectsList'
 
 const ProjectsPage: FC = () => {
-	const [isProjectModalOpened, setIsProjectModalOpened] =
-		useState<boolean>(false)
+	const [isProjectModalOpened, setIsProjectModalOpened] = useState<boolean>(false)
 	const [newProjectTitle, setNewProjectTitle] = useState<string>('')
 	const [newProjectDescription, setNewProjectDescription] = useState<string>('')
 	const [error, setError] = useState<string>('')
@@ -50,10 +49,7 @@ const ProjectsPage: FC = () => {
 	return (
 		<>
 			<div className={classes.wrapper}>
-				<button
-					className={classes.addProjectButton}
-					onClick={toggleModalVisibility}
-				>
+				<button className={classes.addProjectButton} onClick={toggleModalVisibility}>
 					<img src={plusButton} alt='add new project' />
 				</button>
 				<div className={classes.inner}>
@@ -67,15 +63,9 @@ const ProjectsPage: FC = () => {
 				</div>
 			</div>
 			{isProjectModalOpened && (
-				<Modal
-					setIsProjectModalOpened={setIsProjectModalOpened}
-					isProjectModalOpened={isProjectModalOpened}
-				>
+				<Modal setIsProjectModalOpened={setIsProjectModalOpened} isProjectModalOpened={isProjectModalOpened}>
 					<div className={classes.modalBody} onClick={e => e.stopPropagation()}>
-						<form
-							className={classes.createNewProjectForm}
-							onSubmit={onSubmitProject}
-						>
+						<form className={classes.createNewProjectForm} onSubmit={onSubmitProject}>
 							<input
 								className={classes.newProjectName}
 								type='text'
@@ -83,6 +73,7 @@ const ProjectsPage: FC = () => {
 								value={newProjectTitle}
 								onChange={e => setNewProjectTitle(e.target.value)}
 								required
+								autoFocus
 							/>
 							<textarea
 								className={classes.newProjectDescription}

@@ -75,7 +75,7 @@ const NotePage: FC = () => {
 		<div className={classes.wrapper}>
 			<button className={classes.deleteNoteButton} onClick={onDeleteNote}>
 				<img src={deleteIcon} alt='delete this note' />
-				<span>Delete this note</span>
+				<span>Delete</span>
 			</button>
 			<div className={classes.inner}>
 				{/* <label className={classes.search}>
@@ -85,11 +85,7 @@ const NotePage: FC = () => {
 					</span>
 				</label> */}
 				<div className={classes.content}>
-					<NotesList
-						isListView={true}
-						isNoteOpened={true}
-						currentNoteId={noteId}
-					/>
+					<NotesList isListView={true} isNoteOpened={true} currentNoteId={noteId} />
 					<div className={classes.noteItem}>
 						{editTitleMode ? (
 							<input
@@ -107,10 +103,7 @@ const NotePage: FC = () => {
 								}}
 							/>
 						) : (
-							<h3
-								className={classes.noteTitle}
-								onClick={() => setEditTitleMode(true)}
-							>
+							<h3 className={classes.noteTitle} onClick={() => setEditTitleMode(true)}>
 								{noteTitle}
 							</h3>
 						)}
@@ -130,10 +123,7 @@ const NotePage: FC = () => {
 							/>
 						) : (
 							<p
-								className={clsx(
-									classes.noteText,
-									noteText.length === 0 && 'empty'
-								)}
+								className={clsx(classes.noteText, noteText.length === 0 && 'empty')}
 								onClick={() => setEditNoteMode(true)}
 								style={{ whiteSpace: 'pre-wrap' }}
 							>
