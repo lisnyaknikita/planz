@@ -17,6 +17,8 @@
 	&:global(.listView) {
 		display: flex;
 		flex-direction: column;
+		justify-content: start;
+		flex-wrap: nowrap;
 		gap: 20px;
 		max-height: 850px;
 		overflow: auto;
