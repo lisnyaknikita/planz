@@ -50,6 +50,7 @@
 	align-items: center;
 	gap: 19px;
 	width: 100%;
+	height: calc(100% - 105px);
 
 	@media screen and (max-width: 640px) {
 		margin-top: 50px;
