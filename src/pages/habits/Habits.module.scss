@@ -40,8 +40,9 @@
 .inner {
 	margin-top: 100px;
 
-	@media screen and (max-width: 900px) {
+	@media screen and (max-width: 1120px) {
 		width: 100%;
+		overflow-y: auto;
 	}
 }
 
@@ -54,6 +55,7 @@
 
 	@media screen and (max-width: 900px) {
 		gap: 15px;
+		// max-height: 720px;
 	}
 }
 
@@ -81,6 +83,10 @@
 	@media screen and (max-width: 768px) {
 		padding: 10px 5px 10px 10px;
 	}
+
+	@media screen and (max-width: 460px) {
+		padding: 10px 25px 10px 15px;
+	}
 }
 
 .habitName {
@@ -88,6 +94,10 @@
 	color: var(--white-for-dark);
 	// padding-right: 15px;
 	max-width: 80%;
+	margin-right: 10px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 
 	@media screen and (max-width: 1120px) {
 		font-size: 28px;
@@ -109,7 +119,6 @@
 
 .completeButton {
 	background-color: var(--main-gray);
-	// background-color: #16c347;
 	border-radius: 10px;
 	padding: 8px;
 
@@ -117,7 +126,7 @@
 		width: 50px;
 		height: 50px;
 
-		@media screen and (max-width: 900px) {
+		@media screen and (max-width: 1120px) {
 			width: 40px;
 			height: 40px;
 		}
@@ -134,7 +143,12 @@
 	}
 
 	@media screen and (max-width: 1120px) {
-		padding: 6px;
+		padding: 2px 4px;
+		margin-right: 20px;
+	}
+
+	@media screen and (max-width: 460px) {
+		margin-right: 0;
 	}
 }
 
@@ -209,9 +223,23 @@
 		width: 20px;
 		height: 20px;
 	}
+
+	@media screen and (max-width: 768px) {
+		top: 2px;
+
+		> img {
+			width: 16px;
+			height: 16px;
+		}
+	}
 }
 
 .completedSpan {
-	font-size: 24px;
+	font-size: 12px;
 	color: #16c347;
+	margin-right: 20px;
+
+	@media screen and (max-width: 460px) {
+		margin-right: 0;
+	}
 }
