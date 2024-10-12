@@ -1,10 +1,6 @@
 .notesList {
 	margin-top: 70px;
 	list-style: none;
-	// display: grid;
-	// grid-template-columns: repeat(4, 1fr);
-	// grid-template-rows: repeat(3, 1fr);
-	// gap: 30px 35px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -136,10 +132,12 @@
 	background-color: var(--secondary-dark);
 	border: 1px solid var(--main-gray);
 	border-radius: 10px;
+	padding: 11px;
 
 	@media screen and (max-width: 1165px) {
 		width: 200px;
 		height: 200px;
+		padding: 15px;
 	}
 
 	@media screen and (max-width: 900px) {
@@ -149,7 +147,6 @@
 }
 
 .noteLink {
-	padding: 21px 15px;
 	width: 100%;
 	height: 100%;
 	display: inline-block;
@@ -165,6 +162,11 @@
 
 	@media screen and (max-width: 1165px) {
 		font-size: 24px;
+		margin-bottom: 10px;
+	}
+
+	@media screen and (max-width: 900px) {
+		font-size: 20px;
 	}
 }
 
@@ -175,5 +177,9 @@
 
 	@media screen and (max-width: 1165px) {
 		font-size: 18px;
+	}
+
+	@media screen and (max-width: 900px) {
+		font-size: 16px;
 	}
 }
