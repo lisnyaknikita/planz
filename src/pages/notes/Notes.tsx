@@ -96,10 +96,7 @@ const NotesPage: FC = () => {
 				)} */}
 			</div>
 			{isNotesModalOpened && (
-				<Modal
-					setIsNotesModalOpened={setIsNotesModalOpened}
-					isNotesModalOpened={isNotesModalOpened}
-				>
+				<Modal setIsNotesModalOpened={setIsNotesModalOpened} isNotesModalOpened={isNotesModalOpened}>
 					<div className={classes.modalBody} onClick={e => e.stopPropagation()}>
 						<form className={classes.createNewNoteForm} onSubmit={onSubmitNote}>
 							<input
@@ -107,6 +104,7 @@ const NotesPage: FC = () => {
 								type='text'
 								placeholder='Enter the note title'
 								required
+								autoFocus
 								value={newNoteTitle}
 								onChange={e => setNewNoteTitle(e.target.value)}
 							/>
