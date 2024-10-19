@@ -19,6 +19,14 @@
 	display: flex;
 	align-items: center;
 
+	@media screen and (min-width: 768px) {
+		transition: transform 0.2s ease-in-out;
+
+		&:hover {
+			transform: scale(1.05);
+		}
+	}
+
 	@media screen and (max-width: 1024px) {
 		top: 13px;
 
@@ -129,6 +137,14 @@
 }
 
 .timerButton {
+	@media screen and (min-width: 768px) {
+		transition: transform 0.2s ease-in-out;
+
+		&:hover {
+			transform: scale(1.05);
+		}
+	}
+
 	> img {
 		width: 75px;
 		height: 75px;

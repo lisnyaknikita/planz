@@ -33,6 +33,22 @@
 	gap: 10px;
 	margin-left: 71px;
 
+	> img {
+		transition: transform 0.3s ease-in-out;
+	}
+
+	@media screen and (min-width: 768px) {
+		&:hover {
+			> img {
+				transform: scale(1.01);
+			}
+
+			> span {
+				color: var(--main-gray);
+			}
+		}
+	}
+
 	@media screen and (max-width: 1440px) {
 		margin-left: 55px;
 	}
@@ -63,6 +79,7 @@
 		font-size: 28px;
 		color: var(--white-for-dark);
 		white-space: nowrap;
+		transition: color 0.3s ease-in-out;
 
 		@media screen and (max-width: 1440px) {
 			font-size: 26px;

@@ -11,7 +11,7 @@ import SettingsIcon from '../../assets/icons/settings.svg'
 import clsx from 'clsx'
 
 import { doc, getDoc } from 'firebase/firestore'
-import { Route, Routes } from 'react-router-dom'
+import { Link, Route, Routes } from 'react-router-dom'
 import { auth, db } from '../../../firebaseConfig'
 import { ExtendedUser } from '../../App'
 import Navigation from '../../components/navigation/Navigation'
@@ -94,7 +94,9 @@ const Layout: FC<ILayoutProps> = ({ user }) => {
 	return (
 		<div className={classes.layout}>
 			<aside className={clsx(classes.sidebar, !isNavigationVisible && 'hidden')}>
-				<img className={classes.logo} src='/logo.png' alt='logo' />
+				<Link to={'/'} className={classes.logo}>
+					<img src='/logo.png' alt='logo' />
+				</Link>
 				<Navigation />
 				<img className={classes.brain} src='/brain.svg' alt='brain image' />
 			</aside>

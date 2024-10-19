@@ -89,6 +89,14 @@
 }
 
 .editTitleButton {
+	@media screen and (min-width: 768px) {
+		transition: transform 0.2s ease-in-out;
+
+		&:hover {
+			transform: scale(1.05);
+		}
+	}
+
 	> img {
 		width: 30px;
 		height: 30px;
@@ -96,6 +104,14 @@
 }
 
 .deleteProjectButton {
+	@media screen and (min-width: 768px) {
+		transition: transform 0.2s ease-in-out;
+
+		&:hover {
+			transform: scale(1.05);
+		}
+	}
+
 	> img {
 		width: 30px;
 		height: 30px;

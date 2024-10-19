@@ -57,6 +57,14 @@
 }
 
 .deleteColumnButton {
+	@media screen and (min-width: 768px) {
+		transition: transform 0.2s ease-in-out;
+
+		&:hover {
+			transform: scale(1.03);
+		}
+	}
+
 	> img {
 		width: 24px;
 		height: 24px;
@@ -90,11 +98,25 @@
 	> img {
 		width: 33px;
 		height: 33px;
+		transition: transform 0.3s ease-in-out;
 	}
 
 	> span {
 		font-size: 22px;
 		color: var(--white-for-dark);
+		transition: color 0.3s ease-in-out;
+	}
+
+	@media screen and (min-width: 768px) {
+		&:hover {
+			> img {
+				transform: scale(1.01);
+			}
+
+			> span {
+				color: var(--main-gray);
+			}
+		}
 	}
 }
 
