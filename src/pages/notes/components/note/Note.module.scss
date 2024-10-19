@@ -156,10 +156,16 @@
 .noteText {
 	font-size: 26px;
 	max-height: 600px;
-	// min-height: 20px;
-	// border: 1px solid #fff;
-
 	overflow-y: auto;
+
+	&::-webkit-scrollbar {
+		width: 4px;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background-color: var(--secondary-dark);
+		border-radius: 10px;
+	}
 
 	@media screen and (max-width: 1240px) {
 		font-size: 24px;
@@ -200,6 +206,15 @@
 	overflow-y: auto;
 	color: var(--white-for-dark);
 	font-size: 26px;
+
+	&::-webkit-scrollbar {
+		width: 4px;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background-color: var(--secondary-dark);
+		border-radius: 10px;
+	}
 
 	@media screen and (max-width: 1240px) {
 		font-size: 24px;
