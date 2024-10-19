@@ -60,6 +60,14 @@
 	top: 20px;
 	right: 20px;
 
+	@media screen and (min-width: 768px) {
+		transition: transform 0.2s ease-in-out;
+
+		&:hover {
+			transform: scale(1.05);
+		}
+	}
+
 	@media screen and (max-width: 1600px) {
 		top: 15px;
 		right: 15px;
@@ -137,6 +145,14 @@
 
 	> h4 {
 		max-width: 87%;
+	}
+
+	@media screen and (min-width: 768px) {
+		transition: color 0.3s ease-in-out;
+
+		&:hover {
+			color: var(--main-gray);
+		}
 	}
 
 	@media screen and (max-width: 1600px) {

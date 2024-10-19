@@ -14,12 +14,14 @@ const NotePage: FC = () => {
 	const [noteTitle, setNoteTitle] = useState<string>('')
 	const [editNoteMode, setEditNoteMode] = useState<boolean>(false)
 	const [editTitleMode, setEditTitleMode] = useState<boolean>(false)
+	const [isNoteLoading, setIsNoteLoading] = useState<boolean>(false)
 
 	console.log(noteId)
 
 	useEffect(() => {
 		const fetchNote = async () => {
 			if (noteId) {
+				setIsNoteLoading(true)
 				try {
 					console.log('Fetching note with ID:', noteId)
 					const noteRef = doc(db, 'notes', noteId)
@@ -33,6 +35,8 @@ const NotePage: FC = () => {
 					}
 				} catch (error) {
 					console.error('Error fetching note:', error)
+				} finally {
+					setIsNoteLoading(false)
 				}
 			} else {
 				console.error('No noteId provided')
@@ -71,6 +75,22 @@ const NotePage: FC = () => {
 		}
 	}
 
+	if (isNoteLoading) {
+		return (
+			<p
+				style={{
+					fontSize: 30,
+					position: 'absolute',
+					top: '50%',
+					left: '50%',
+					transform: 'translate(-50%, -50%)',
+				}}
+			>
+				Loading note...
+			</p>
+		)
+	}
+
 	return (
 		<div className={classes.wrapper}>
 			<button className={classes.deleteNoteButton} onClick={onDeleteNote}>
@@ -78,12 +98,6 @@ const NotePage: FC = () => {
 				<span>Delete</span>
 			</button>
 			<div className={classes.inner}>
-				{/* <label className={classes.search}>
-					<input className={classes.searchInput} type='search' />
-					<span className={classes.searchImage}>
-						<img src={searchIcon} alt='search icon' />
-					</span>
-				</label> */}
 				<div className={classes.content}>
 					<NotesList isListView={true} isNoteOpened={true} currentNoteId={noteId} />
 					<div className={classes.noteItem}>

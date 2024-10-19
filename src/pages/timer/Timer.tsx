@@ -11,17 +11,9 @@ import timerButton from '../../assets/icons/timer.svg'
 import { useTimer } from '../../shared/TimerContext'
 
 const TimerPage: FC = () => {
-	//@ts-ignore
-	const [userId, setUserId] = useState<string | null>(null)
-	const {
-		timerRunning,
-		timerSeconds,
-		currentPhase,
-		numSessions,
-		completedSessions,
-		startTimer,
-		stopTimer,
-	} = useTimer()
+	const [_userId, setUserId] = useState<string | null>(null)
+	const { timerRunning, timerSeconds, currentPhase, numSessions, completedSessions, startTimer, stopTimer, isLoading } =
+		useTimer()
 	//@ts-ignore
 	const firestore = getFirestore()
 	const auth = getAuth()
@@ -50,27 +42,22 @@ const TimerPage: FC = () => {
 				<img src={timerButton} alt='Настройки таймера' />
 			</Link>
 			<div className={classes.inner}>
-				<h6 className={classes.timerLabel}>
-					{currentPhase === 'flow' ? 'Flow' : 'Break'}
-				</h6>
-				<div className={classes.timer}>{formatTime(timerSeconds)}</div>
-				<ul className={classes.circles}>
-					{Array.from({ length: numSessions }, (_, index) => (
-						<li
-							key={index}
-							className={`${classes.circle} ${index < completedSessions ? 'completed' : ''}`}
-						></li>
-					))}
-				</ul>
-				<button
-					className={classes.timerButton}
-					onClick={timerRunning ? stopTimer : startTimer}
-				>
-					<img
-						src={timerRunning ? pauseButton : playButton}
-						alt={timerRunning ? 'Пауза' : 'Старт'}
-					/>
-				</button>
+				{isLoading ? (
+					<p style={{ fontSize: 30 }}>Loading...</p>
+				) : (
+					<>
+						<h6 className={classes.timerLabel}>{currentPhase === 'flow' ? 'Flow' : 'Break'}</h6>
+						<div className={classes.timer}>{formatTime(timerSeconds)}</div>
+						<ul className={classes.circles}>
+							{Array.from({ length: numSessions }, (_, index) => (
+								<li key={index} className={`${classes.circle} ${index < completedSessions ? 'completed' : ''}`}></li>
+							))}
+						</ul>
+						<button className={classes.timerButton} onClick={timerRunning ? stopTimer : startTimer}>
+							<img src={timerRunning ? pauseButton : playButton} alt={timerRunning ? 'Пауза' : 'Старт'} />
+						</button>
+					</>
+				)}
 			</div>
 		</div>
 	)

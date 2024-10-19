@@ -3,6 +3,7 @@ import { FC, useEffect, useState } from 'react'
 import classes from './Projects.module.scss'
 
 import { addDoc, collection } from 'firebase/firestore'
+import { useNavigate } from 'react-router-dom'
 import { auth, db } from '../../../firebaseConfig'
 import plusButton from '../../assets/icons/plus.svg'
 import Modal from '../../ui/modal/Modal'
@@ -13,6 +14,8 @@ const ProjectsPage: FC = () => {
 	const [newProjectTitle, setNewProjectTitle] = useState<string>('')
 	const [newProjectDescription, setNewProjectDescription] = useState<string>('')
 	const [error, setError] = useState<string>('')
+
+	const navigate = useNavigate()
 
 	function toggleModalVisibility() {
 		setIsProjectModalOpened(true)
@@ -27,11 +30,14 @@ const ProjectsPage: FC = () => {
 		}
 
 		try {
-			await addDoc(collection(db, 'projects'), {
+			const newProjectRef = await addDoc(collection(db, 'projects'), {
 				title: newProjectTitle,
 				description: newProjectDescription,
 				userId: auth?.currentUser?.uid,
 			})
+
+			navigate(`/project/${newProjectRef.id}`)
+
 			setNewProjectTitle('')
 			setNewProjectDescription('')
 			setError('')

@@ -8,6 +8,7 @@ import plusButton from '../../assets/icons/plus.svg'
 
 import clsx from 'clsx'
 import { addDoc, collection, doc, getDoc, setDoc } from 'firebase/firestore'
+import { useNavigate } from 'react-router-dom'
 import { auth, db } from '../../../firebaseConfig'
 import Modal from '../../ui/modal/Modal'
 import NotesList from './components/notes-list/NotesList'
@@ -19,6 +20,7 @@ const NotesPage: FC = () => {
 	const [error, setError] = useState<string>('')
 
 	const currentUser = auth?.currentUser
+	const navigate = useNavigate()
 
 	const fetchUserViewPreference = async () => {
 		if (!currentUser) return
@@ -70,11 +72,14 @@ const NotesPage: FC = () => {
 		}
 
 		try {
-			await addDoc(collection(db, 'notes'), {
+			const newNoteRef = await addDoc(collection(db, 'notes'), {
 				title: newNoteTitle,
 				text: 'Type something...',
 				userId: auth?.currentUser?.uid,
 			})
+
+			navigate(`/note/${newNoteRef.id}`)
+
 			setNewNoteTitle('')
 			setError('')
 			setIsNotesModalOpened(false)

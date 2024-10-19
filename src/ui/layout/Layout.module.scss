@@ -1,294 +1,358 @@
 .layout {
-  position: relative;
-  display: flex;
-  height: 100vh;
+	position: relative;
+	display: flex;
+	height: 100vh;
 }
 
 .sidebar {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-  padding-left: 40px;
-  padding-right: 40px;
-  border-right: 1px solid var(--main-gray);
-  border-radius: 30px;
-  transition: all 0.3s;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 100%;
+	padding-left: 40px;
+	padding-right: 40px;
+	border-right: 1px solid var(--main-gray);
+	border-radius: 30px;
+	transition: all 0.3s;
 
-  &:global(.hidden) {
-    width: 0;
-    transform: translateX(-1000%);
-  }
+	&:global(.hidden) {
+		width: 0;
+		transform: translateX(-1000%);
+	}
 
-  @media screen and (max-width: 1440px) {
-    padding-left: 20px;
-    padding-right: 20px;
-  }
+	@media screen and (max-width: 1440px) {
+		padding-left: 20px;
+		padding-right: 20px;
+	}
 
-  @media screen and (max-width: 1024px) {
-    padding-left: 10px;
-    padding-right: 10px;
-  }
+	@media screen and (max-width: 1024px) {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
 
-  @media screen and (max-width: 900px) {
-    // position: absolute;
-    // left: -1000%;
-  }
+	@media screen and (max-width: 900px) {
+		// position: absolute;
+		// left: -1000%;
+	}
 
-  @media screen and (max-width: 450px) {
-    padding-left: 5px;
-    padding-right: 5px;
-  }
+	@media screen and (max-width: 450px) {
+		padding-left: 5px;
+		padding-right: 5px;
+	}
 }
 
 .logo {
-  @media screen and (max-width: 1024px) {
-    max-width: 75%;
-    align-self: center;
-  }
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
-  @media screen and (max-width: 480px) {
-    // max-width: 65%;
-  }
+	@media screen and (max-width: 1024px) {
+		> img {
+			max-width: 75%;
+			align-self: center;
+		}
+	}
+
+	@media screen and (max-width: 480px) {
+		// max-width: 65%;
+	}
 }
 
 .toggleButton {
-  display: none;
-  transform: translateX(500%);
-  transition: transform 0.3s;
+	display: none;
+	transform: translateX(500%);
+	transition: transform 0.3s;
 
-  &:global(.closed) {
-    transform: rotate(180deg);
+	&:global(.closed) {
+		transform: rotate(180deg);
 
-    @media screen and (max-width: 450px) {
-      top: 10px;
-    }
-  }
+		@media screen and (max-width: 450px) {
+			top: 10px;
+		}
+	}
 
-  @media screen and (max-width: 900px) {
-    display: block;
-    position: absolute;
-    top: 10px;
-    left: 15px;
-  }
+	@media screen and (max-width: 900px) {
+		display: block;
+		position: absolute;
+		top: 10px;
+		left: 15px;
+	}
 
-  @media screen and (max-width: 450px) {
-    top: 80px;
-    transform: translateX(150%);
-  }
+	@media screen and (max-width: 450px) {
+		top: 80px;
+		transform: translateX(150%);
+	}
 
-  @media screen and (max-width: 375px) {
-    left: 0;
-  }
+	@media screen and (max-width: 375px) {
+		left: 0;
+	}
 }
 
 .settingsButton {
-  position: absolute;
-  top: 15px;
-  right: 40px;
+	position: absolute;
+	top: 15px;
+	right: 40px;
 
-  @media screen and (max-width: 1440px) {
-    right: 30px;
-  }
+	@media screen and (max-width: 1440px) {
+		right: 30px;
+	}
 
-  @media screen and (max-width: 1024px) {
-    top: 13px;
-    right: 15px;
-    > img {
-      width: 40px;
-      height: 40px;
-    }
-  }
+	@media screen and (max-width: 1024px) {
+		top: 13px;
+		right: 15px;
+		> img {
+			width: 40px;
+			height: 40px;
+		}
+	}
+
+	@media screen and (min-width: 768px) {
+		transition: transform 0.2s ease-in-out;
+
+		&:hover {
+			transform: scale(1.05);
+		}
+	}
 }
 
 .brain {
-  width: 138px;
-  height: 138px;
-  margin-bottom: 57px;
-  align-self: center;
+	width: 138px;
+	height: 138px;
+	margin-bottom: 57px;
+	align-self: center;
 
-  @media screen and (max-width: 1440px) {
-    width: 120px;
-    height: 120px;
-    margin-bottom: 45px;
-  }
+	@media screen and (max-width: 1440px) {
+		width: 120px;
+		height: 120px;
+		margin-bottom: 45px;
+	}
 
-  @media screen and (max-width: 1024px) {
-    width: 90px;
-    height: 90px;
-    margin-bottom: 20px;
-  }
+	@media screen and (max-width: 1024px) {
+		width: 90px;
+		height: 90px;
+		margin-bottom: 20px;
+	}
 }
 
 .modalBody {
-  padding: 30px 40px;
-  width: 425px;
-  height: 441px;
-  background-color: var(--secondary-dark);
-  border-radius: 10px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+	padding: 30px 40px;
+	width: 425px;
+	height: 441px;
+	background-color: var(--secondary-dark);
+	border-radius: 10px;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 
-  @media screen and (max-width: 768px) {
-    padding: 15px 20px;
-    width: 380px;
-    height: 400px;
-  }
+	@media screen and (max-width: 768px) {
+		padding: 15px 20px;
+		width: 380px;
+		height: 400px;
+	}
 
-  @media screen and (max-width: 480px) {
-    width: 300px;
-    height: 320px;
-  }
+	@media screen and (max-width: 480px) {
+		width: 300px;
+		height: 320px;
+	}
 }
 
 .quitButton {
-  position: absolute;
-  top: 12px;
-  right: 12px;
+	position: absolute;
+	top: 12px;
+	right: 12px;
 
-  @media screen and (max-width: 480px) {
-    > img {
-      max-width: 80%;
-    }
-  }
+	@media screen and (min-width: 768px) {
+		transition: transform 0.2s ease-in-out;
+
+		&:hover {
+			transform: scale(1.05);
+		}
+	}
+
+	@media screen and (max-width: 480px) {
+		> img {
+			max-width: 80%;
+		}
+	}
 }
 
 .avatarContainer {
-  position: relative;
-  width: 124px;
-  height: 124px;
-  border-radius: 50%;
-  margin-bottom: 25px;
-  overflow: hidden;
-  cursor: pointer;
+	position: relative;
+	width: 124px;
+	height: 124px;
+	border-radius: 50%;
+	margin-bottom: 25px;
+	overflow: hidden;
+	cursor: pointer;
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background-color: rgba(0, 0, 0, 0.5);
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
+	&::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		border-radius: 50%;
+		background-color: rgba(0, 0, 0, 0.5);
+		opacity: 0;
+		transition: opacity 0.3s;
+	}
 
-  &:hover::before {
-    opacity: 1;
-  }
+	&:hover::before {
+		opacity: 1;
+	}
 
-  @media screen and (max-width: 768px) {
-    width: 100px;
-    height: 100px;
-    margin-bottom: 15px;
-  }
+	@media screen and (max-width: 768px) {
+		width: 100px;
+		height: 100px;
+		margin-bottom: 15px;
+	}
 
-  @media screen and (max-width: 480px) {
-    width: 80px;
-    height: 80px;
-  }
+	@media screen and (max-width: 480px) {
+		width: 80px;
+		height: 80px;
+	}
 }
 
 .avatar {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	object-fit: cover;
 }
 
 .uploadInput {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0;
-  cursor: pointer;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	opacity: 0;
+	cursor: pointer;
 }
 
 .userName {
-  display: flex;
-  align-items: center;
-  margin-left: 20px;
-  gap: 5px;
-  margin-bottom: 11px;
+	display: flex;
+	align-items: center;
+	margin-left: 20px;
+	gap: 5px;
+	margin-bottom: 11px;
 
-  > h6 {
-    font-size: 32px;
-    color: var(--white-for-dark);
+	> h6 {
+		font-size: 32px;
+		color: var(--white-for-dark);
 
-    @media screen and (max-width: 768px) {
-      font-size: 26px;
-    }
-  }
+		@media screen and (max-width: 768px) {
+			font-size: 26px;
+		}
+	}
+
+	> button {
+		@media screen and (min-width: 768px) {
+			transition: transform 0.2s ease-in-out;
+
+			&:hover {
+				transform: scale(1.15);
+			}
+		}
+	}
 }
 
 .userNameInput {
-  font-size: 32px;
-  color: var(--white-for-dark);
-  border: none;
-  outline: none;
-  background-color: transparent;
-  width: 94px;
+	font-size: 32px;
+	color: var(--white-for-dark);
+	border: none;
+	outline: none;
+	background-color: transparent;
+	width: 94px;
 }
 
 .userEmail {
-  display: flex;
-  align-items: center;
-  margin-left: 20px;
-  margin-bottom: 25px;
-  gap: 5px;
+	display: flex;
+	align-items: center;
+	margin-left: 20px;
+	margin-bottom: 25px;
+	gap: 5px;
 
-  > a {
-    font-size: 24px;
-    color: var(--white-for-dark);
+	> a {
+		font-size: 24px;
+		color: var(--white-for-dark);
 
-    @media screen and (max-width: 768px) {
-      font-size: 20px;
-    }
-  }
+		@media screen and (min-width: 768px) {
+			transition: color 0.3s ease-in-out;
+
+			&:hover {
+				color: var(--main-gray);
+			}
+		}
+
+		@media screen and (max-width: 768px) {
+			font-size: 20px;
+		}
+	}
 }
 
 .themeButtons {
-  display: flex;
-  align-items: center;
+	display: flex;
+	align-items: center;
 
-  > button {
-    font-size: 26px;
-    padding: 18px 50px 23px 50px;
-    border-radius: 10px;
+	> button {
+		font-size: 26px;
+		padding: 18px 50px 23px 50px;
+		border-radius: 10px;
 
-    @media screen and (max-width: 768px) {
-      padding: 14px 50px 18px 50px;
-    }
+		@media screen and (max-width: 768px) {
+			padding: 14px 50px 18px 50px;
+		}
 
-    @media screen and (max-width: 480px) {
-      padding: 12px 30px 16px 30px;
-    }
-  }
+		@media screen and (max-width: 480px) {
+			padding: 12px 30px 16px 30px;
+		}
+	}
 
-  & .themeLightButton {
-    color: var(--main-dark);
-    background-color: var(--main-gray);
-  }
+	& .themeLightButton {
+		color: var(--main-dark);
+		background-color: var(--main-gray);
 
-  & .themeDarkButton {
-    color: var(--white-for-dark);
-    background-color: #2b2a27;
-  }
+		@media screen and (min-width: 768px) {
+			transition: background-color 0.3s ease-in-out;
+
+			&:hover {
+				background-color: #858585;
+			}
+		}
+	}
+
+	& .themeDarkButton {
+		color: var(--white-for-dark);
+		background-color: #2b2a27;
+
+		@media screen and (min-width: 768px) {
+			transition: background-color 0.3s ease-in-out;
+
+			&:hover {
+				background-color: #34322f;
+			}
+		}
+	}
 }
 
 .projectLink {
-  margin-top: auto;
-  font-size: 22px;
-  color: var(--white-for-dark);
-  text-decoration: underline;
+	margin-top: auto;
+	font-size: 22px;
+	color: var(--white-for-dark);
+	text-decoration: underline;
 
-  @media screen and (max-width: 768px) {
-    font-size: 18px;
-  }
+	@media screen and (min-width: 768px) {
+		transition: color 0.3s ease-in-out;
+
+		&:hover {
+			color: var(--main-gray);
+		}
+	}
+
+	@media screen and (max-width: 768px) {
+		font-size: 18px;
+	}
 }

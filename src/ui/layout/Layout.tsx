@@ -11,7 +11,7 @@ import SettingsIcon from '../../assets/icons/settings.svg'
 import clsx from 'clsx'
 
 import { doc, getDoc } from 'firebase/firestore'
-import { Route, Routes } from 'react-router-dom'
+import { Link, Route, Routes } from 'react-router-dom'
 import { auth, db } from '../../../firebaseConfig'
 import { ExtendedUser } from '../../App'
 import Navigation from '../../components/navigation/Navigation'
@@ -41,14 +41,18 @@ const Layout: FC<ILayoutProps> = ({ user }) => {
 
 	useEffect(() => {
 		const fetchUserData = async () => {
-			if (auth.currentUser) {
-				const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid))
-				if (userDoc.exists()) {
-					const userData = userDoc.data()
-					if (userData.avatar) {
-						setAvatar(userData.avatar)
+			try {
+				if (auth.currentUser) {
+					const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid))
+					if (userDoc.exists()) {
+						const userData = userDoc.data()
+						if (userData.avatar) {
+							setAvatar(userData.avatar)
+						}
 					}
 				}
+			} catch (error) {
+				console.error(error)
 			}
 		}
 
@@ -71,10 +75,7 @@ const Layout: FC<ILayoutProps> = ({ user }) => {
 		setIsEditingName(false)
 	}
 
-	const handleKeyPress = async (
-		event: React.KeyboardEvent<HTMLInputElement>,
-		type: 'name' | 'email'
-	) => {
+	const handleKeyPress = async (event: React.KeyboardEvent<HTMLInputElement>, type: 'name' | 'email') => {
 		if (event.key === 'Enter') {
 			if (type === 'name') {
 				await handleNameChange()
@@ -92,10 +93,10 @@ const Layout: FC<ILayoutProps> = ({ user }) => {
 
 	return (
 		<div className={classes.layout}>
-			<aside
-				className={clsx(classes.sidebar, !isNavigationVisible && 'hidden')}
-			>
-				<img className={classes.logo} src='/logo.png' alt='logo' />
+			<aside className={clsx(classes.sidebar, !isNavigationVisible && 'hidden')}>
+				<Link to={'/'} className={classes.logo}>
+					<img src='/logo.png' alt='logo' />
+				</Link>
 				<Navigation />
 				<img className={classes.brain} src='/brain.svg' alt='brain image' />
 			</aside>
@@ -116,33 +117,18 @@ const Layout: FC<ILayoutProps> = ({ user }) => {
 			>
 				<img src={ToggleIcon} alt='toggle navigation visibility' />
 			</button>
-			<button
-				className={classes.settingsButton}
-				onClick={toggleModalVisibility}
-			>
+			<button className={classes.settingsButton} onClick={toggleModalVisibility}>
 				<img src={SettingsIcon} alt='settings' />
 			</button>
 			{isSettingsModalOpened && (
-				<Modal
-					setIsSettingsModalOpened={setIsSettingsModalOpened}
-					isSettingsModalOpened={isSettingsModalOpened}
-				>
+				<Modal setIsSettingsModalOpened={setIsSettingsModalOpened} isSettingsModalOpened={isSettingsModalOpened}>
 					<div className={classes.modalBody} onClick={e => e.stopPropagation()}>
 						<button className={classes.quitButton}>
-							<img
-								src={quitBtn}
-								alt='quit button'
-								onClick={() => logoutUser()}
-							/>
+							<img src={quitBtn} alt='quit button' onClick={() => logoutUser()} />
 						</button>
 						<div className={classes.avatarContainer}>
 							<img className={classes.avatar} src={avatar} alt='avatar' />
-							<input
-								type='file'
-								accept='image/*'
-								onChange={handleAvatarChange}
-								className={classes.uploadInput}
-							/>
+							<input type='file' accept='image/*' onChange={handleAvatarChange} className={classes.uploadInput} />
 						</div>
 						<div className={classes.userName}>
 							{isEditingName ? (
@@ -158,10 +144,7 @@ const Layout: FC<ILayoutProps> = ({ user }) => {
 							) : (
 								<>
 									<h6>{user.name}</h6>
-									<button
-										className={classes.editBtn}
-										onClick={() => setIsEditingName(true)}
-									>
+									<button className={classes.editBtn} onClick={() => setIsEditingName(true)}>
 										<img src={editBtn} alt='edit button' />
 									</button>
 								</>
@@ -174,11 +157,7 @@ const Layout: FC<ILayoutProps> = ({ user }) => {
 							<button className={classes.themeLightButton}>Light</button>
 							<button className={classes.themeDarkButton}>Dark</button>
 						</div>
-						<a
-							className={classes.projectLink}
-							href='https://github.com/lisnyaknikita/planz'
-							target='_blank'
-						>
+						<a className={classes.projectLink} href='https://github.com/lisnyaknikita/planz' target='_blank'>
 							Link to project's github
 						</a>
 					</div>

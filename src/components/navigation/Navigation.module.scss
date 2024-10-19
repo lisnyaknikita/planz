@@ -1,30 +1,35 @@
 .navigationList {
-  display: flex;
-  flex-direction: column;
-  gap: 50px;
-  list-style: none;
+	display: flex;
+	flex-direction: column;
+	gap: 50px;
+	list-style: none;
 
-  @media screen and (max-width: 1024px) {
-    gap: 40px;
-  }
+	@media screen and (max-width: 1024px) {
+		gap: 40px;
+	}
 }
 
 .navigationIcon {
-  width: 40px;
-  height: 40px;
+	width: 40px;
+	height: 40px;
 }
 
 .navigationLink {
-  font-size: 28px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+	font-size: 28px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	transition: color 0.3s ease-in-out;
 
-  &:global(.active) {
-    font-weight: 700;
-  }
+	&:global(.active) {
+		font-weight: 700;
+	}
 
-  @media screen and (max-width: 480px) {
-    font-size: 24px;
-  }
+	&:hover {
+		color: var(--main-gray);
+	}
+
+	@media screen and (max-width: 480px) {
+		font-size: 24px;
+	}
 }

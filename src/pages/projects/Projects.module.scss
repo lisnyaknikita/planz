@@ -19,6 +19,14 @@
 	display: flex;
 	align-items: center;
 
+	@media screen and (min-width: 768px) {
+		transition: transform 0.2s ease-in-out;
+
+		&:hover {
+			transform: scale(1.05);
+		}
+	}
+
 	@media screen and (max-width: 1024px) {
 		> img {
 			width: 50px;
@@ -180,6 +188,14 @@
 	border: none;
 	color: var(--main-dark);
 	font-size: 20px;
+
+	@media screen and (min-width: 768px) {
+		transition: background-color 0.3s ease-in-out;
+
+		&:hover {
+			background-color: rgb(130, 130, 130);
+		}
+	}
 
 	@media screen and (max-width: 540px) {
 		font-size: 18px;
