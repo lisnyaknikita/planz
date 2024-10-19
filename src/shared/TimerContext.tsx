@@ -1,16 +1,11 @@
 import { getAuth } from 'firebase/auth'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
-import React, {
-	createContext,
-	useContext,
-	useEffect,
-	useRef,
-	useState,
-} from 'react'
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
 
 import timerSound from '../assets/timer-sound.mp3'
 
 type TimerContextType = {
+	isLoading: boolean
 	timerRunning: boolean
 	timerSeconds: number
 	currentPhase: 'flow' | 'break'
@@ -35,9 +30,7 @@ export const useTimer = () => {
 	return context
 }
 
-export const TimerProvider: React.FC<{ children: React.ReactNode }> = ({
-	children,
-}) => {
+export const TimerProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const [flowDuration, setFlowDuration] = useState<number>(0)
 	const [breakDuration, setBreakDuration] = useState<number>(0)
 	const [numSessions, setNumSessions] = useState<number>(4)
@@ -48,6 +41,8 @@ export const TimerProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [remainingSeconds, setRemainingSeconds] = useState<number | null>(null)
 	const [currentPhase, setCurrentPhase] = useState<'flow' | 'break'>('flow')
 
+	const [isLoading, setIsLoading] = useState(false)
+
 	const [userId, setUserId] = useState<string | null>(null)
 	const firestore = getFirestore()
 	const auth = getAuth()
@@ -55,10 +50,7 @@ export const TimerProvider: React.FC<{ children: React.ReactNode }> = ({
 	const workerRef = useRef<Worker | null>(null)
 
 	useEffect(() => {
-		workerRef.current = new Worker(
-			new URL('../pages/timer/timerWorker.ts', import.meta.url),
-			{ type: 'module' }
-		)
+		workerRef.current = new Worker(new URL('../pages/timer/timerWorker.ts', import.meta.url), { type: 'module' })
 
 		workerRef.current.onmessage = e => {
 			const { duration, phase, action } = e.data
@@ -170,12 +162,9 @@ export const TimerProvider: React.FC<{ children: React.ReactNode }> = ({
 	useEffect(() => {
 		const fetchTimerSettings = async () => {
 			if (userId) {
+				setIsLoading(true)
 				try {
-					const timerSettingsDocRef = doc(
-						firestore,
-						'timer-settings',
-						`settings-for-${userId}`
-					)
+					const timerSettingsDocRef = doc(firestore, 'timer-settings', `settings-for-${userId}`)
 					const timerSettingsDoc = await getDoc(timerSettingsDocRef)
 					if (timerSettingsDoc.exists()) {
 						const {
@@ -194,6 +183,8 @@ export const TimerProvider: React.FC<{ children: React.ReactNode }> = ({
 					}
 				} catch (error) {
 					console.error('Error fetching timer settings:', error)
+				} finally {
+					setIsLoading(false)
 				}
 			}
 		}
@@ -228,6 +219,7 @@ export const TimerProvider: React.FC<{ children: React.ReactNode }> = ({
 				updateFlowDuration,
 				updateBreakDuration,
 				updateNumSessions,
+				isLoading,
 			}}
 		>
 			{children}

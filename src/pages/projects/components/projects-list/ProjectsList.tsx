@@ -9,6 +9,8 @@ import { auth, db } from '../../../../../firebaseConfig'
 import { Project } from '../../types/types'
 
 const ProjectsList: FC = () => {
+	const [isProjectsLoading, setIsProjectsLoading] = useState<boolean>(false)
+
 	const { currentUser } = auth
 	const [projectList, setProjectList] = useState<{ id: string; title: string; description: string }[]>([])
 
@@ -29,6 +31,7 @@ const ProjectsList: FC = () => {
 
 	useEffect(() => {
 		const getProjectList = async () => {
+			setIsProjectsLoading(true)
 			try {
 				const q = query(projectsCollectionRef, where('userId', '==', currentUser?.uid))
 				const data = await getDocs(q)
@@ -40,11 +43,29 @@ const ProjectsList: FC = () => {
 				setProjectList(filteredData)
 			} catch (error) {
 				console.error(error)
+			} finally {
+				setIsProjectsLoading(false)
 			}
 		}
 
 		getProjectList()
 	}, [currentUser])
+
+	if (isProjectsLoading) {
+		return (
+			<p
+				style={{
+					fontSize: 30,
+					position: 'absolute',
+					top: '50%',
+					left: '50%',
+					transform: 'translate(-50%, -50%)',
+				}}
+			>
+				Loading projects...
+			</p>
+		)
+	}
 
 	return (
 		<ul className={classes.projectsList}>
@@ -54,9 +75,6 @@ const ProjectsList: FC = () => {
 						<button className={classes.deleteProjectButton} onClick={() => deleteProject(project.id)}>
 							<img src={deleteButton} alt='delete project' />
 						</button>
-						{/* <div className={classes.progress}>
-						<span className={classes.percent}>25%</span>
-					</div> */}
 						<Link to={`/project/${project.id}`} className={classes.projectName}>
 							<h4>{project.title}</h4>
 						</Link>

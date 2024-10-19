@@ -2,17 +2,7 @@ import { FC, useEffect, useState } from 'react'
 
 import classes from './Habits.module.scss'
 
-import {
-	addDoc,
-	collection,
-	deleteDoc,
-	doc,
-	getDocs,
-	getFirestore,
-	query,
-	updateDoc,
-	where,
-} from 'firebase/firestore'
+import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore, query, updateDoc, where } from 'firebase/firestore'
 import { auth, db } from '../../../firebaseConfig'
 import completeButton from '../../assets/icons/complete-btn.svg'
 import deleteButton from '../../assets/icons/delete.svg'
@@ -25,6 +15,8 @@ const HabitsPage: FC = () => {
 	const [isHabitModalOpened, setIsHabitModalOpened] = useState(false)
 	const [newHabitTitle, setNewHabitTitle] = useState<string>('')
 	const [error, setError] = useState<string>('')
+	const [isHabitsLoading, setIsHabitsLoading] = useState<boolean>(false)
+
 	const { currentUser } = auth
 
 	const habitsCollectionRef = collection(db, 'habits')
@@ -47,11 +39,9 @@ const HabitsPage: FC = () => {
 	}
 
 	const fetchHabits = async () => {
+		setIsHabitsLoading(true)
 		try {
-			const q = query(
-				habitsCollectionRef,
-				where('userId', '==', currentUser?.uid)
-			)
+			const q = query(habitsCollectionRef, where('userId', '==', currentUser?.uid))
 			const data = await getDocs(q)
 
 			const filteredData = data.docs.map(doc => ({
@@ -61,6 +51,8 @@ const HabitsPage: FC = () => {
 			setHabits(filteredData)
 		} catch (error) {
 			console.error(error)
+		} finally {
+			setIsHabitsLoading(false)
 		}
 	}
 
@@ -70,14 +62,7 @@ const HabitsPage: FC = () => {
 
 		const lastReset = localStorage.getItem('lastReset')
 		const now = new Date()
-		const resetTime = new Date(
-			now.getFullYear(),
-			now.getMonth(),
-			now.getDate(),
-			0,
-			0,
-			0
-		)
+		const resetTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0)
 
 		if (!lastReset || new Date(Number(lastReset)) < resetTime) {
 			if (now >= resetTime) {
@@ -122,9 +107,7 @@ const HabitsPage: FC = () => {
 	}
 
 	const toggleHabitStatus = async (id: string) => {
-		const updatedHabits = habits.map(habit =>
-			habit.id === id ? { ...habit, completed: !habit.completed } : habit
-		)
+		const updatedHabits = habits.map(habit => (habit.id === id ? { ...habit, completed: !habit.completed } : habit))
 		setHabits(updatedHabits)
 		try {
 			await updateDoc(doc(firestore, 'habits', id), {
@@ -138,57 +121,53 @@ const HabitsPage: FC = () => {
 	return (
 		<>
 			<div className={classes.wrapper}>
-				<button
-					className={classes.addHabitButton}
-					onClick={() => setIsHabitModalOpened(true)}
-				>
+				<button className={classes.addHabitButton} onClick={() => setIsHabitModalOpened(true)}>
 					<img src={plusButton} alt='add new habit' />
 				</button>
 				<div className={classes.inner}>
-					<ul className={classes.habitsList}>
-						{habits.length ? (
-							habits.map(habit => (
-								<li className={classes.habit} key={habit.id}>
-									<p className={classes.habitName}>{habit.title}</p>
-									{habit.completed ? (
-										<button
-											className={classes.completedSpan}
-											onClick={() => toggleHabitStatus(habit.id)}
-										>
-											Completed
+					{isHabitsLoading ? (
+						<p
+							style={{
+								fontSize: 30,
+								position: 'absolute',
+								top: '50%',
+								left: '50%',
+								transform: 'translate(-50%, -50%)',
+							}}
+						>
+							Loading habits...
+						</p>
+					) : (
+						<ul className={classes.habitsList}>
+							{habits.length ? (
+								habits.map(habit => (
+									<li className={classes.habit} key={habit.id}>
+										<p className={classes.habitName}>{habit.title}</p>
+										{habit.completed ? (
+											<button className={classes.completedSpan} onClick={() => toggleHabitStatus(habit.id)}>
+												Completed
+											</button>
+										) : (
+											<button className={classes.completeButton} onClick={() => toggleHabitStatus(habit.id)}>
+												<img src={completeButton} alt='complete button' />
+											</button>
+										)}
+										<button className={classes.deleteButton} onClick={() => deleteHabit(habit.id)}>
+											<img src={deleteButton} alt='delete this habit' />
 										</button>
-									) : (
-										<button
-											className={classes.completeButton}
-											onClick={() => toggleHabitStatus(habit.id)}
-										>
-											<img src={completeButton} alt='complete button' />
-										</button>
-									)}
-									<button
-										className={classes.deleteButton}
-										onClick={() => deleteHabit(habit.id)}
-									>
-										<img src={deleteButton} alt='delete this habit' />
-									</button>
-								</li>
-							))
-						) : (
-							<p style={{ fontSize: 30 }}>Create your first habit to track</p>
-						)}
-					</ul>
+									</li>
+								))
+							) : (
+								<p style={{ fontSize: 30 }}>Create your first habit to track</p>
+							)}
+						</ul>
+					)}
 				</div>
 			</div>
 			{isHabitModalOpened && (
-				<Modal
-					setIsHabitModalOpened={setIsHabitModalOpened}
-					isHabitModalOpened={isHabitModalOpened}
-				>
+				<Modal setIsHabitModalOpened={setIsHabitModalOpened} isHabitModalOpened={isHabitModalOpened}>
 					<div className={classes.modalBody} onClick={e => e.stopPropagation()}>
-						<form
-							className={classes.createNewHabitForm}
-							onSubmit={onSubmitHabit}
-						>
+						<form className={classes.createNewHabitForm} onSubmit={onSubmitHabit}>
 							<input
 								className={classes.newHabitName}
 								type='text'
