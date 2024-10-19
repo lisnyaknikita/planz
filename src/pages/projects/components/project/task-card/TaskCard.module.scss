@@ -3,12 +3,8 @@
 	border-radius: 10px;
 	background-color: var(--secondary-dark);
 	width: 100%;
-	height: 145px;
+	height: auto;
 	position: relative;
-
-	@media screen and (max-width: 1024px) {
-		height: 133px;
-	}
 }
 
 .priority {
@@ -74,7 +70,6 @@
 
 .taskContentWrapper {
 	width: 100%;
-	height: 84px;
 	overflow-y: auto;
 	overflow-x: hidden;
 	white-space: pre-wrap;
