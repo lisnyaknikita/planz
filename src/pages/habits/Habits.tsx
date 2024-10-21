@@ -1,65 +1,25 @@
 import { FC, useEffect, useState } from 'react'
-
-import classes from './Habits.module.scss'
-
-import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore, query, updateDoc, where } from 'firebase/firestore'
-import { auth, db } from '../../../firebaseConfig'
 import completeButton from '../../assets/icons/complete-btn.svg'
 import deleteButton from '../../assets/icons/delete.svg'
 import plusButton from '../../assets/icons/plus.svg'
 import Modal from '../../ui/modal/Modal'
-import { Habit } from '../projects/types/types'
+import classes from './Habits.module.scss'
+import useHabits from './hooks/use-habits'
 
 const HabitsPage: FC = () => {
-	const [habits, setHabits] = useState<Habit[]>([])
 	const [isHabitModalOpened, setIsHabitModalOpened] = useState(false)
 	const [newHabitTitle, setNewHabitTitle] = useState<string>('')
-	const [error, setError] = useState<string>('')
-	const [isHabitsLoading, setIsHabitsLoading] = useState<boolean>(false)
 
-	const { currentUser } = auth
+	const { habits, isHabitsLoading, error, addHabit, deleteHabit, resetHabitStatuses, toggleHabitStatus } = useHabits()
 
-	const habitsCollectionRef = collection(db, 'habits')
-	const firestore = getFirestore()
-
-	const resetHabitStatuses = async () => {
-		try {
-			const snapshot = await getDocs(habitsCollectionRef)
-
-			const updates = snapshot.docs.map(async doc => {
-				await updateDoc(doc.ref, { completed: false })
-			})
-
-			await Promise.all(updates)
-			fetchHabits()
-			localStorage.setItem('lastReset', Date.now().toString())
-		} catch (error) {
-			console.error('Error resetting habit statuses: ', error)
-		}
-	}
-
-	const fetchHabits = async () => {
-		setIsHabitsLoading(true)
-		try {
-			const q = query(habitsCollectionRef, where('userId', '==', currentUser?.uid))
-			const data = await getDocs(q)
-
-			const filteredData = data.docs.map(doc => ({
-				...(doc.data() as Habit),
-				id: doc.id,
-			}))
-			setHabits(filteredData)
-		} catch (error) {
-			console.error(error)
-		} finally {
-			setIsHabitsLoading(false)
-		}
+	const onSubmitHabit = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault()
+		addHabit(newHabitTitle)
+		setNewHabitTitle('')
+		setIsHabitModalOpened(false)
 	}
 
 	useEffect(() => {
-		fetchHabits()
-		document.title = 'Planz | Habits'
-
 		const lastReset = localStorage.getItem('lastReset')
 		const now = new Date()
 		const resetTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0)
@@ -69,54 +29,7 @@ const HabitsPage: FC = () => {
 				resetHabitStatuses()
 			}
 		}
-	}, [])
-
-	const onSubmitHabit = async (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault()
-
-		if (!newHabitTitle.trim()) {
-			setError('Title cannot be empty')
-			return
-		}
-
-		try {
-			await addDoc(collection(db, 'habits'), {
-				title: newHabitTitle,
-				completed: false,
-				userId: auth?.currentUser?.uid,
-			})
-			setNewHabitTitle('')
-			setError('')
-			setIsHabitModalOpened(false)
-			fetchHabits()
-		} catch (error) {
-			setError('Failed to create habit')
-			console.error('Error creating habit:', error)
-		}
-	}
-
-	const deleteHabit = async (id: string) => {
-		if (confirm('Do you really want to delete this habit?')) {
-			try {
-				await deleteDoc(doc(firestore, 'habits', id))
-				setHabits(habits.filter(habit => habit.id !== id))
-			} catch (error) {
-				console.error('Error deleting habit: ', error)
-			}
-		}
-	}
-
-	const toggleHabitStatus = async (id: string) => {
-		const updatedHabits = habits.map(habit => (habit.id === id ? { ...habit, completed: !habit.completed } : habit))
-		setHabits(updatedHabits)
-		try {
-			await updateDoc(doc(firestore, 'habits', id), {
-				completed: !habits.find(habit => habit.id === id)?.completed,
-			})
-		} catch (error) {
-			console.error('Error updating habit: ', error)
-		}
-	}
+	}, [resetHabitStatuses])
 
 	return (
 		<>
@@ -124,6 +37,7 @@ const HabitsPage: FC = () => {
 				<button className={classes.addHabitButton} onClick={() => setIsHabitModalOpened(true)}>
 					<img src={plusButton} alt='add new habit' />
 				</button>
+
 				<div className={classes.inner}>
 					{isHabitsLoading ? (
 						<p
@@ -164,6 +78,7 @@ const HabitsPage: FC = () => {
 					)}
 				</div>
 			</div>
+
 			{isHabitModalOpened && (
 				<Modal setIsHabitModalOpened={setIsHabitModalOpened} isHabitModalOpened={isHabitModalOpened}>
 					<div className={classes.modalBody} onClick={e => e.stopPropagation()}>
