@@ -2,7 +2,19 @@ import { FC, useEffect, useState } from 'react'
 
 import classes from './Habits.module.scss'
 
-import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore, query, updateDoc, where } from 'firebase/firestore'
+import {
+	Timestamp,
+	addDoc,
+	collection,
+	deleteDoc,
+	doc,
+	getDocs,
+	getFirestore,
+	orderBy,
+	query,
+	updateDoc,
+	where,
+} from 'firebase/firestore'
 import { auth, db } from '../../../firebaseConfig'
 import completeButton from '../../assets/icons/complete-btn.svg'
 import deleteButton from '../../assets/icons/delete.svg'
@@ -41,7 +53,12 @@ const HabitsPage: FC = () => {
 	const fetchHabits = async () => {
 		setIsHabitsLoading(true)
 		try {
-			const q = query(habitsCollectionRef, where('userId', '==', currentUser?.uid))
+			const q = query(
+				habitsCollectionRef,
+				where('userId', '==', currentUser?.uid),
+				orderBy('createdAt', 'asc'),
+				orderBy('completed')
+			)
 			const data = await getDocs(q)
 
 			const filteredData = data.docs.map(doc => ({
@@ -84,6 +101,7 @@ const HabitsPage: FC = () => {
 				title: newHabitTitle,
 				completed: false,
 				userId: auth?.currentUser?.uid,
+				createdAt: Timestamp.now(),
 			})
 			setNewHabitTitle('')
 			setError('')

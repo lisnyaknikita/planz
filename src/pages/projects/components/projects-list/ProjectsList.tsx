@@ -3,7 +3,7 @@ import { FC, useEffect, useState } from 'react'
 import deleteButton from '../../../../assets/icons/delete.svg'
 import classes from './ProjectsList.module.scss'
 
-import { collection, deleteDoc, doc, getDocs, query, where } from 'firebase/firestore'
+import { collection, deleteDoc, doc, getDocs, orderBy, query, where } from 'firebase/firestore'
 import { Link } from 'react-router-dom'
 import { auth, db } from '../../../../../firebaseConfig'
 import { Project } from '../../types/types'
@@ -33,7 +33,7 @@ const ProjectsList: FC = () => {
 		const getProjectList = async () => {
 			setIsProjectsLoading(true)
 			try {
-				const q = query(projectsCollectionRef, where('userId', '==', currentUser?.uid))
+				const q = query(projectsCollectionRef, where('userId', '==', currentUser?.uid), orderBy('createdAt', 'asc'))
 				const data = await getDocs(q)
 
 				const filteredData = data.docs.map(doc => ({

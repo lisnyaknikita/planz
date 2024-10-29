@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from 'react'
 
 import classes from './Projects.module.scss'
 
-import { addDoc, collection } from 'firebase/firestore'
+import { Timestamp, addDoc, collection } from 'firebase/firestore'
 import { useNavigate } from 'react-router-dom'
 import { auth, db } from '../../../firebaseConfig'
 import plusButton from '../../assets/icons/plus.svg'
@@ -34,6 +34,7 @@ const ProjectsPage: FC = () => {
 				title: newProjectTitle,
 				description: newProjectDescription,
 				userId: auth?.currentUser?.uid,
+				createdAt: Timestamp.now(),
 			})
 
 			navigate(`/project/${newProjectRef.id}`)
