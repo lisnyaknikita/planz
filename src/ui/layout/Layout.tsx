@@ -11,7 +11,7 @@ import SettingsIcon from '../../assets/icons/settings.svg'
 import clsx from 'clsx'
 
 import { doc, getDoc } from 'firebase/firestore'
-import { Link, Route, Routes } from 'react-router-dom'
+import { Link, Route, Routes, useNavigate } from 'react-router-dom'
 import { auth, db } from '../../../firebaseConfig'
 import { ExtendedUser } from '../../App'
 import Navigation from '../../components/navigation/Navigation'
@@ -38,6 +38,8 @@ const Layout: FC<ILayoutProps> = ({ user }) => {
 	const [isEditingName, setIsEditingName] = useState(false)
 	const [newName, setNewName] = useState(user.name)
 	const [avatar, setAvatar] = useState<string>(testAvatar)
+
+	const navigate = useNavigate()
 
 	useEffect(() => {
 		const fetchUserData = async () => {
@@ -124,7 +126,14 @@ const Layout: FC<ILayoutProps> = ({ user }) => {
 				<Modal setIsSettingsModalOpened={setIsSettingsModalOpened} isSettingsModalOpened={isSettingsModalOpened}>
 					<div className={classes.modalBody} onClick={e => e.stopPropagation()}>
 						<button className={classes.quitButton}>
-							<img src={quitBtn} alt='quit button' onClick={() => logoutUser()} />
+							<img
+								src={quitBtn}
+								alt='quit button'
+								onClick={() => {
+									logoutUser()
+									navigate('/')
+								}}
+							/>
 						</button>
 						<div className={classes.avatarContainer}>
 							<img className={classes.avatar} src={avatar} alt='avatar' />
