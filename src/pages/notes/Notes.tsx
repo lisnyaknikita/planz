@@ -7,7 +7,7 @@ import listViewButton from '../../assets/icons/list-view.svg'
 import plusButton from '../../assets/icons/plus.svg'
 
 import clsx from 'clsx'
-import { addDoc, collection, doc, getDoc, setDoc } from 'firebase/firestore'
+import { Timestamp, addDoc, collection, doc, getDoc, setDoc } from 'firebase/firestore'
 import { useNavigate } from 'react-router-dom'
 import { auth, db } from '../../../firebaseConfig'
 import Modal from '../../ui/modal/Modal'
@@ -76,6 +76,7 @@ const NotesPage: FC = () => {
 				title: newNoteTitle,
 				text: 'Type something...',
 				userId: auth?.currentUser?.uid,
+				createdAt: Timestamp.now(),
 			})
 
 			navigate(`/note/${newNoteRef.id}`)

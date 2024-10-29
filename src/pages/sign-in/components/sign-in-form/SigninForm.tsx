@@ -1,46 +1,82 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
 
+import { SubmitHandler, useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 import { loginUser } from '../../../../services/signInService'
 import classes from './SigninForm.module.scss'
 
-const SigninForm: FC = () => {
-	const [email, setEmail] = useState<string>('')
-	const [password, setPassword] = useState<string>('')
-	const [error, setError] = useState<string>('')
+interface IFormValues {
+	name: string
+	email: string
+	password: string
+}
 
-	const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault()
+const SigninForm: FC = () => {
+	// const [email, setEmail] = useState<string>('')
+	// const [password, setPassword] = useState<string>('')
+	// const [error, setError] = useState<string>('')
+
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<IFormValues>({ mode: 'onChange' })
+
+	// const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+	// 	e.preventDefault()
+	// 	try {
+	// 		await loginUser(email, password)
+	// 		toast.success('You have successfully logged in!')
+	// 	} catch (error) {
+	// 		setError('Invalid email or password')
+	// 		toast.error('Login error: Please check your email and password.')
+	// 	}
+	// }
+
+	const onSubmit: SubmitHandler<IFormValues> = async data => {
 		try {
-			await loginUser(email, password)
+			await loginUser(data.email, data.password)
+			toast.success('You have successfully logged in!')
 		} catch (error) {
-			setError('Invalid email or password')
+			toast.error('Login error: Please check your email and password.')
 		}
 	}
 
 	return (
-		<form className={classes.form} onSubmit={handleLogin}>
+		<form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
 			<label className={classes.label}>
 				<span className={classes.span}>Email</span>
 				<input
 					type='email'
 					className={classes.input}
 					placeholder='john123@gmail.com'
-					value={email}
-					onChange={e => setEmail(e.target.value)}
-					required
+					{...register('email', {
+						required: 'Email is required',
+						pattern: {
+							value: /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/,
+							message: 'Invalid email address',
+						},
+					})}
 				/>
+				{errors.email && <p className={classes.error}>{errors.email.message}</p>}
 			</label>
 			<label className={classes.label}>
 				<span className={classes.span}>Password</span>
 				<input
 					type='password'
 					className={classes.input}
-					value={password}
-					onChange={e => setPassword(e.target.value)}
-					required
+					placeholder='Your password'
+					{...register('password', {
+						required: 'Password is required',
+						minLength: {
+							value: 8,
+							message: 'Password must be at least 8 characters long',
+						},
+					})}
 				/>
+				{errors.password && <p className={classes.error}>{errors.password.message}</p>}
 			</label>
-			{error && <p className={classes.error}>{error}</p>}
+			{/* {error && <p className={classes.error}>{error}</p>} */}
 			<button className={classes.button} type='submit'>
 				Log in
 			</button>

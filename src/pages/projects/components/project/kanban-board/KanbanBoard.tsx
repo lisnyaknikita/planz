@@ -18,6 +18,7 @@ import {
 } from '@dnd-kit/core'
 import { SortableContext, arrayMove } from '@dnd-kit/sortable'
 import {
+	Timestamp,
 	addDoc,
 	collection,
 	deleteDoc,
@@ -58,11 +59,7 @@ const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 			if (!projectId) return
 
 			const columnsCollectionRef = collection(db, 'columns')
-			const columnsQuery = query(
-				columnsCollectionRef,
-				where('projectId', '==', projectId),
-				orderBy('order')
-			)
+			const columnsQuery = query(columnsCollectionRef, where('projectId', '==', projectId), orderBy('order'))
 			const columnsSnapshot = await getDocs(columnsQuery)
 			const columnsData = columnsSnapshot.docs.map(
 				doc =>
@@ -77,7 +74,9 @@ const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 			const tasksQuery = query(
 				tasksCollectionRef,
 				where('projectId', '==', projectId),
-				orderBy('order')
+				orderBy('order'),
+				orderBy('priority'),
+				orderBy('createdAt', 'asc')
 			)
 			const tasksSnapshot = await getDocs(tasksQuery)
 			const tasksData = tasksSnapshot.docs.map(
@@ -164,19 +163,12 @@ const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 
 		if (!over) return
 
-		console.log(
-			'drag ended',
-			event.active.data.current?.task?.columnId,
-			event.over?.data.current?.task?.columnId
-		)
+		console.log('drag ended', event.active.data.current?.task?.columnId, event.over?.data.current?.task?.columnId)
 
 		const activeColumnId = active.id
 		const overColumnId = over.id
 
-		if (
-			active.data.current?.type === 'Column' &&
-			over.data.current?.type === 'Column'
-		) {
+		if (active.data.current?.type === 'Column' && over.data.current?.type === 'Column') {
 			const activeIndex = columns.findIndex(col => col.id === activeColumnId)
 			const overIndex = columns.findIndex(col => col.id === overColumnId)
 
@@ -197,9 +189,7 @@ const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 
 				if (activeTask.columnId === overTask.columnId) {
 					const newTasks = tasks.map(task =>
-						task.id === activeTask.id
-							? { ...task, columnId: overTask.columnId }
-							: task
+						task.id === activeTask.id ? { ...task, columnId: overTask.columnId } : task
 					)
 					setTasks(newTasks)
 
@@ -209,11 +199,7 @@ const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 				const overColumn = over.data.current.column as Column
 
 				if (activeTask.columnId !== overColumn.id) {
-					const newTasks = tasks.map(task =>
-						task.id === activeTask.id
-							? { ...task, columnId: overColumn.id }
-							: task
-					)
+					const newTasks = tasks.map(task => (task.id === activeTask.id ? { ...task, columnId: overColumn.id } : task))
 					setTasks(newTasks)
 					await updateTaskColumn(activeTask.id, overColumn.id)
 				}
@@ -284,6 +270,7 @@ const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 			order: tasksInColumn.length,
 			priority: 'A1. High priority',
 			projectId: projectId,
+			createdAt: Timestamp.now(),
 		}
 
 		try {
@@ -334,12 +321,7 @@ const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 
 	return (
 		<div className={classes.inner}>
-			<DndContext
-				onDragStart={onDragStart}
-				onDragEnd={onDragEnd}
-				onDragOver={onDragOver}
-				sensors={sensors}
-			>
+			<DndContext onDragStart={onDragStart} onDragEnd={onDragEnd} onDragOver={onDragOver} sensors={sensors}>
 				<div className={classes.columns}>
 					<SortableContext items={columnsId}>
 						{columns.map(column => (
@@ -356,10 +338,7 @@ const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 						))}
 					</SortableContext>
 				</div>
-				<button
-					className={classes.addNewColumnButton}
-					onClick={createNewColumn}
-				>
+				<button className={classes.addNewColumnButton} onClick={createNewColumn}>
 					<img src={newColumnButton} alt='add new column' />
 					<span>Add new column</span>
 				</button>
@@ -377,13 +356,7 @@ const KanbanBoard: FC<IKanbanBoardProps> = ({ projectId }) => {
 								tasks={tasks.filter(task => task.columnId === activeColumn.id)}
 							/>
 						)}
-						{activeTask && (
-							<TaskCard
-								task={activeTask}
-								deleteTask={deleteTask}
-								updateTask={updateTask}
-							/>
-						)}
+						{activeTask && <TaskCard task={activeTask} deleteTask={deleteTask} updateTask={updateTask} />}
 					</DragOverlay>,
 					document.body
 				)}

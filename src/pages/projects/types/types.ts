@@ -1,3 +1,5 @@
+import { Timestamp } from 'firebase/firestore'
+
 export type ID = string | number
 
 export type Column = {
@@ -13,6 +15,7 @@ export type Task = {
 	order: number
 	priority: string
 	projectId: string
+	createdAt: Timestamp
 }
 
 export type Habit = {

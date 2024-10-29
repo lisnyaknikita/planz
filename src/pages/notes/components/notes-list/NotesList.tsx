@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react'
 
 import clsx from 'clsx'
-import { collection, getDocs, query, where } from 'firebase/firestore'
+import { collection, getDocs, orderBy, query, where } from 'firebase/firestore'
 import { Link } from 'react-router-dom'
 import { auth, db } from '../../../../../firebaseConfig'
 import { Note } from '../../../projects/types/types'
@@ -24,7 +24,7 @@ const NotesList: FC<INotesListProps> = ({ isListView, isNoteOpened, currentNoteI
 		const getNoteList = async () => {
 			setIsLoading(true)
 			try {
-				const q = query(notesCollectionRef, where('userId', '==', currentUser?.uid))
+				const q = query(notesCollectionRef, where('userId', '==', currentUser?.uid), orderBy('createdAt', 'asc'))
 				const data = await getDocs(q)
 
 				const filteredData = data.docs.map(doc => ({
