@@ -1,60 +1,66 @@
-import { User } from 'firebase/auth';
-import { doc, getDoc, getFirestore } from 'firebase/firestore';
-import { useEffect, useState } from 'react';
-import { app } from '../firebaseConfig';
-import SigninPage from './pages/sign-in/Signin';
-import SignupPage from './pages/sign-up/Signup';
-import { observeAuthState } from './services/observer';
-import Layout from './ui/layout/Layout';
+import { User } from 'firebase/auth'
+import { doc, getDoc, getFirestore } from 'firebase/firestore'
+import { useEffect, useState } from 'react'
+import { app } from '../firebaseConfig'
+import SigninPage from './pages/sign-in/Signin'
+import SignupPage from './pages/sign-up/Signup'
+import { observeAuthState } from './services/observer'
+import Layout from './ui/layout/Layout'
 
-const firestore = getFirestore(app);
+const firestore = getFirestore(app)
 
 export interface ExtendedUser extends User {
-  name: string;
+	name: string
 }
 
 function App() {
-  const [user, setUser] = useState<ExtendedUser | null>(null);
-  const [isLogin, setIsLogin] = useState<boolean>(false);
+	const [user, setUser] = useState<ExtendedUser | null>(null)
+	const [isLogin, setIsLogin] = useState<boolean>(false)
+	const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    const fetchUserData = async (user: User) => {
-      const userDoc = await getDoc(doc(firestore, 'users', user.uid));
-      if (userDoc.exists()) {
-        const userData = userDoc.data();
-        setUser({
-          ...user,
-          name: userData?.name,
-        } as ExtendedUser);
-      }
-    };
+	useEffect(() => {
+		const fetchUserData = async (user: User) => {
+			const userDoc = await getDoc(doc(firestore, 'users', user.uid))
+			if (userDoc.exists()) {
+				const userData = userDoc.data()
+				setUser({
+					...user,
+					name: userData?.name,
+				} as ExtendedUser)
+			}
+		}
 
-    const unsubscribe = observeAuthState(async (user) => {
-      if (user) {
-        await fetchUserData(user);
-      } else {
-        setUser(null);
-      }
-    });
+		const unsubscribe = observeAuthState(async user => {
+			if (user) {
+				await fetchUserData(user)
+			} else {
+				setUser(null)
+			}
+			setLoading(false)
+		})
 
-    return () => unsubscribe();
-  }, []);
+		return () => unsubscribe()
+	}, [])
 
-  const toggleAuthMode = () => {
-    setIsLogin(!isLogin);
-  };
+	const toggleAuthMode = () => {
+		setIsLogin(!isLogin)
+	}
 
-  return (
-    <>
-      {user ? (
-        <Layout user={user} />
-      ) : isLogin ? (
-        <SigninPage toggleAuthMode={toggleAuthMode} />
-      ) : (
-        <SignupPage toggleAuthMode={toggleAuthMode} />
-      )}
-    </>
-  );
+	if (loading) {
+		return <div className='loader'>Loading...</div>
+	}
+
+	return (
+		<>
+			{user ? (
+				<Layout user={user} />
+			) : isLogin ? (
+				<SigninPage toggleAuthMode={toggleAuthMode} />
+			) : (
+				<SignupPage toggleAuthMode={toggleAuthMode} />
+			)}
+		</>
+	)
 }
 
-export default App;
+export default App
