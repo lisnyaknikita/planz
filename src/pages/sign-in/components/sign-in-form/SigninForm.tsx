@@ -1,5 +1,6 @@
 import { FC, useState } from 'react'
 
+import toast from 'react-hot-toast'
 import { loginUser } from '../../../../services/signInService'
 import classes from './SigninForm.module.scss'
 
@@ -12,8 +13,10 @@ const SigninForm: FC = () => {
 		e.preventDefault()
 		try {
 			await loginUser(email, password)
+			toast.success('You have successfully logged in!')
 		} catch (error) {
 			setError('Invalid email or password')
+			toast.error('Login error: Please check your email and password.')
 		}
 	}
 

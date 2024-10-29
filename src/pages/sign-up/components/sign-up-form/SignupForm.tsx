@@ -1,6 +1,7 @@
 import { FC, useState } from 'react'
 import { registerUser } from '../../../../services/signUpService.ts'
 
+import toast from 'react-hot-toast'
 import classes from './SignupForm.module.scss'
 
 const SignupForm: FC = () => {
@@ -17,8 +18,10 @@ const SignupForm: FC = () => {
 		}
 		try {
 			await registerUser(email, password, name)
+			toast.success('You have successfully registered! Reload the page')
 		} catch (error: any) {
 			setError(error.message)
+			toast.error('Registration error.')
 		}
 	}
 
