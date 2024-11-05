@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react'
 
-import { deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore'
+import { collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore'
 import { useNavigate, useParams } from 'react-router-dom'
 import { db } from '../../../../../firebaseConfig'
 import deleteProjectButton from '../../../../assets/icons/delete.svg'
@@ -39,16 +39,51 @@ const ProjectPage: FC = () => {
 		fetchNote()
 	}, [projectId])
 
+	// const onDeleteProject = async () => {
+	// 	if (!projectId) return
+
+	// 	try {
+	// 		if (confirm('Do you realy want to delete this project?')) {
+	// 			await deleteDoc(doc(db, 'projects', projectId))
+	// 			navigate('/projects')
+	// 		} else return
+	// 	} catch (error) {
+	// 		console.error('Error deleting project:', error)
+	// 	}
+	// }
 	const onDeleteProject = async () => {
 		if (!projectId) return
 
 		try {
-			if (confirm('Do you realy want to delete this project?')) {
+			if (confirm('Do you really want to delete this project?')) {
+				// Удаление связанных колонок
+				const columnsRef = collection(db, 'columns')
+				const columnsQuery = query(columnsRef, where('projectId', '==', projectId))
+				const columnsSnapshot = await getDocs(columnsQuery)
+				const columnIds: string[] = []
+
+				for (const columnDoc of columnsSnapshot.docs) {
+					columnIds.push(columnDoc.id)
+					await deleteDoc(columnDoc.ref)
+				}
+
+				// Удаление связанных задач
+				const tasksRef = collection(db, 'tasks')
+				const tasksQuery = query(tasksRef, where('projectId', '==', projectId))
+				const tasksSnapshot = await getDocs(tasksQuery)
+
+				for (const taskDoc of tasksSnapshot.docs) {
+					await deleteDoc(taskDoc.ref)
+				}
+
+				// Удаление проекта
 				await deleteDoc(doc(db, 'projects', projectId))
 				navigate('/projects')
-			} else return
+			} else {
+				return
+			}
 		} catch (error) {
-			console.error('Error deleting project:', error)
+			console.error('Error deleting project and related documents:', error)
 		}
 	}
 
@@ -88,16 +123,10 @@ const ProjectPage: FC = () => {
 				{!editMode ? (
 					<div className={classes.projectTitle}>
 						<h2>{projectTitle}</h2>
-						<button
-							className={classes.editTitleButton}
-							onClick={handleEditClick}
-						>
+						<button className={classes.editTitleButton} onClick={handleEditClick}>
 							<img src={editTitleButton} alt='edit title' />
 						</button>
-						<button
-							className={classes.deleteProjectButton}
-							onClick={onDeleteProject}
-						>
+						<button className={classes.deleteProjectButton} onClick={onDeleteProject}>
 							<img src={deleteProjectButton} alt='delete this project' />
 						</button>
 					</div>
