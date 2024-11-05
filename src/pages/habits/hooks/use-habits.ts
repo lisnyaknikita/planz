@@ -1,4 +1,15 @@
-import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from 'firebase/firestore'
+import {
+	Timestamp,
+	addDoc,
+	collection,
+	deleteDoc,
+	doc,
+	getDocs,
+	orderBy,
+	query,
+	updateDoc,
+	where,
+} from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import { auth, db } from '../../../../firebaseConfig'
 import { Habit } from '../../projects/types/types'
@@ -16,18 +27,21 @@ const useHabits = () => {
 	const fetchHabits = async () => {
 		setIsHabitsLoading(true)
 		try {
-			const q = query(habitsCollectionRef, where('userId', '==', currentUser?.uid))
+			const q = query(
+				habitsCollectionRef,
+				where('userId', '==', currentUser?.uid),
+				orderBy('createdAt', 'asc'),
+				orderBy('completed')
+			)
 			const data = await getDocs(q)
 
 			const filteredData = data.docs.map(doc => ({
 				...(doc.data() as Habit),
 				id: doc.id,
 			}))
-
 			setHabits(filteredData)
 		} catch (error) {
 			console.error(error)
-			setError('Error fetching habits')
 		} finally {
 			setIsHabitsLoading(false)
 		}
@@ -40,10 +54,11 @@ const useHabits = () => {
 		}
 
 		try {
-			await addDoc(habitsCollectionRef, {
+			await addDoc(collection(db, 'habits'), {
 				title: newHabitTitle,
 				completed: false,
 				userId: auth?.currentUser?.uid,
+				createdAt: Timestamp.now(),
 			})
 			setError('')
 			fetchHabits()
