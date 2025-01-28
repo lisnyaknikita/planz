@@ -1,18 +1,22 @@
 import { FC, useEffect, useState } from 'react'
-
-import classes from './Notes.module.scss'
+import { useNavigate } from 'react-router-dom'
 
 import cardViewButton from '../../assets/icons/cards-view.svg'
 import listViewButton from '../../assets/icons/list-view.svg'
 import plusButton from '../../assets/icons/plus.svg'
 
 import clsx from 'clsx'
+
 import { Timestamp, addDoc, collection } from 'firebase/firestore'
-import { useNavigate } from 'react-router-dom'
 import { auth, db } from '../../../firebaseConfig'
+
 import { useNotesView } from '../../hooks/useNotesView'
+
 import Modal from '../../ui/modal/Modal'
+
 import NotesList from './components/notes-list/NotesList'
+
+import classes from './Notes.module.scss'
 
 const NotesPage: FC = () => {
 	const [isNotesModalOpened, setIsNotesModalOpened] = useState(false)
