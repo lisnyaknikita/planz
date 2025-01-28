@@ -7,60 +7,23 @@ import listViewButton from '../../assets/icons/list-view.svg'
 import plusButton from '../../assets/icons/plus.svg'
 
 import clsx from 'clsx'
-import { Timestamp, addDoc, collection, doc, getDoc, setDoc } from 'firebase/firestore'
+import { Timestamp, addDoc, collection } from 'firebase/firestore'
 import { useNavigate } from 'react-router-dom'
 import { auth, db } from '../../../firebaseConfig'
+import { useNotesView } from '../../hooks/useNotesView'
 import Modal from '../../ui/modal/Modal'
 import NotesList from './components/notes-list/NotesList'
 
 const NotesPage: FC = () => {
-	const [isListView, setIsListView] = useState(false)
 	const [isNotesModalOpened, setIsNotesModalOpened] = useState(false)
 	const [newNoteTitle, setNewNoteTitle] = useState('')
 	const [error, setError] = useState<string>('')
+	const { isListView, onChangeView } = useNotesView()
 
-	const currentUser = auth?.currentUser
 	const navigate = useNavigate()
-
-	const fetchUserViewPreference = async () => {
-		if (!currentUser) return
-
-		try {
-			const userDocRef = doc(db, 'users', currentUser.uid)
-			const userDoc = await getDoc(userDocRef)
-
-			if (userDoc.exists()) {
-				const userData = userDoc.data()
-				if (userData && typeof userData.isListView === 'boolean') {
-					setIsListView(userData.isListView)
-				}
-			}
-		} catch (error) {
-			console.error('Error fetching user view preference:', error)
-		}
-	}
-
-	const saveUserViewPreference = async (newView: boolean) => {
-		if (!currentUser) return
-
-		try {
-			const userDocRef = doc(db, 'users', currentUser.uid)
-			await setDoc(userDocRef, { isListView: newView }, { merge: true })
-		} catch (error) {
-			console.error('Error saving user view preference:', error)
-		}
-	}
 
 	function toggleModalVisibility() {
 		setIsNotesModalOpened(true)
-	}
-
-	function onChangeView() {
-		setIsListView(prev => {
-			const newView = !prev
-			saveUserViewPreference(newView)
-			return newView
-		})
 	}
 
 	const onSubmitNote = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -93,12 +56,6 @@ const NotesPage: FC = () => {
 	useEffect(() => {
 		document.title = 'Planz | Notes'
 	}, [])
-
-	useEffect(() => {
-		if (currentUser) {
-			fetchUserViewPreference()
-		}
-	}, [currentUser])
 
 	return (
 		<div className={classes.wrapper}>

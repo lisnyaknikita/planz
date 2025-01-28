@@ -1,6 +1,5 @@
 import { ChangeEvent, FC, useState } from 'react'
-
-import classes from './Layout.module.scss'
+import { Link, Route, Routes, useNavigate } from 'react-router-dom'
 
 import editBtn from '../../assets/icons/edit.svg'
 import ToggleIcon from '../../assets/icons/nav-toggle.svg'
@@ -9,10 +8,12 @@ import SettingsIcon from '../../assets/icons/settings.svg'
 
 import clsx from 'clsx'
 
-import { Link, Route, Routes, useNavigate } from 'react-router-dom'
 import { ExtendedUser } from '../../App'
+
 import Navigation from '../../components/navigation/Navigation'
+
 import { useUserAvatar } from '../../hooks/useUserAvatar'
+
 import HabitsPage from '../../pages/habits/Habits'
 import NotesPage from '../../pages/notes/Notes'
 import NotePage from '../../pages/notes/components/note/Note'
@@ -20,11 +21,16 @@ import ProjectsPage from '../../pages/projects/Projects'
 import ProjectPage from '../../pages/projects/components/project/Project'
 import TimerPage from '../../pages/timer/Timer'
 import TimerSettings from '../../pages/timer/components/timer-settings/TimerSettings'
+
 import { logoutUser } from '../../services/logoutService'
 import { updateUserName } from '../../services/updateUserInfoService'
 import { uploadAvatar } from '../../services/uploadAvatarService'
+
 import { TimerProvider } from '../../shared/TimerContext'
+
 import Modal from '../modal/Modal'
+
+import classes from './Layout.module.scss'
 
 interface ILayoutProps {
 	user: ExtendedUser
