@@ -1,10 +1,14 @@
 import { User } from 'firebase/auth'
 import { doc, getDoc, getFirestore } from 'firebase/firestore'
-import { useEffect, useState } from 'react'
 import { app } from '../firebaseConfig'
+
+import { useEffect, useState } from 'react'
+
 import SigninPage from './pages/sign-in/Signin'
 import SignupPage from './pages/sign-up/Signup'
+
 import { observeAuthState } from './services/observer'
+
 import Layout from './ui/layout/Layout'
 
 const firestore = getFirestore(app)
