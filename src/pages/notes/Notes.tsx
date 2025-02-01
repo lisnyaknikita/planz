@@ -1,5 +1,4 @@
-import { FC, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { FC, useEffect } from 'react'
 
 import cardViewButton from '../../assets/icons/cards-view.svg'
 import listViewButton from '../../assets/icons/list-view.svg'
@@ -7,55 +6,26 @@ import plusButton from '../../assets/icons/plus.svg'
 
 import clsx from 'clsx'
 
-import { Timestamp, addDoc, collection } from 'firebase/firestore'
-import { auth, db } from '../../../firebaseConfig'
-
 import { useNotesView } from '../../hooks/notes/useNotesView'
 
 import Modal from '../../ui/modal/Modal'
 
 import NotesList from './components/notes-list/NotesList'
 
+import { useCreateNote } from '../../hooks/notes/useCreateNote'
 import classes from './Notes.module.scss'
 
 const NotesPage: FC = () => {
-	const [isNotesModalOpened, setIsNotesModalOpened] = useState(false)
-	const [newNoteTitle, setNewNoteTitle] = useState('')
-	const [error, setError] = useState<string>('')
 	const { isListView, onChangeView } = useNotesView()
-
-	const navigate = useNavigate()
-
-	function toggleModalVisibility() {
-		setIsNotesModalOpened(true)
-	}
-
-	const onSubmitNote = async (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault()
-
-		if (!newNoteTitle.trim()) {
-			setError('Title cannot be empty')
-			return
-		}
-
-		try {
-			const newNoteRef = await addDoc(collection(db, 'notes'), {
-				title: newNoteTitle,
-				text: 'Type something...',
-				userId: auth?.currentUser?.uid,
-				createdAt: Timestamp.now(),
-			})
-
-			navigate(`/note/${newNoteRef.id}`)
-
-			setNewNoteTitle('')
-			setError('')
-			setIsNotesModalOpened(false)
-		} catch (error) {
-			setError('Failed to create note')
-			console.error('Error creating note:', error)
-		}
-	}
+	const {
+		error,
+		isNotesModalOpened,
+		setIsNotesModalOpened,
+		newNoteTitle,
+		onSubmitNote,
+		setNewNoteTitle,
+		toggleModalVisibility,
+	} = useCreateNote()
 
 	useEffect(() => {
 		document.title = 'Planz | Notes'
