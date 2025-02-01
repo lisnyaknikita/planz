@@ -1,6 +1,6 @@
 import { doc, getDoc } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
-import { db } from '../../firebaseConfig'
+import { db } from '../../../firebaseConfig'
 
 export const useFetchNote = ({ noteId }: { noteId: string | undefined }) => {
 	const [noteText, setNoteText] = useState<string>('')

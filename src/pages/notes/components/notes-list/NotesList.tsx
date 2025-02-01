@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import clsx from 'clsx'
 
-import { useFetchNoteList } from '../../../../hooks/useFetchNoteList'
+import { useFetchNoteList } from '../../../../hooks/notes/useFetchNoteList'
 
 import classes from './NotesList.module.scss'
 

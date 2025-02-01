@@ -10,7 +10,7 @@ import clsx from 'clsx'
 import { Timestamp, addDoc, collection } from 'firebase/firestore'
 import { auth, db } from '../../../firebaseConfig'
 
-import { useNotesView } from '../../hooks/useNotesView'
+import { useNotesView } from '../../hooks/notes/useNotesView'
 
 import Modal from '../../ui/modal/Modal'
 

@@ -1,6 +1,6 @@
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
-import { auth, db } from '../../firebaseConfig'
+import { auth, db } from '../../../firebaseConfig'
 
 export const useNotesView = () => {
 	const [isListView, setIsListView] = useState(false)

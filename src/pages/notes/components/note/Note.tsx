@@ -5,8 +5,8 @@ import clsx from 'clsx'
 
 import deleteIcon from '../../../../assets/icons/delete.svg'
 
-import { useFetchNote } from '../../../../hooks/useFetchNote'
-import { useNoteActions } from '../../../../hooks/useNoteActions'
+import { useFetchNote } from '../../../../hooks/notes/useFetchNote'
+import { useNoteActions } from '../../../../hooks/notes/useNoteActions'
 
 import NotesList from '../notes-list/NotesList'
 

@@ -1,7 +1,7 @@
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
-import { auth, db } from '../../firebaseConfig'
-import { Note } from '../pages/projects/types/types'
+import { auth, db } from '../../../firebaseConfig'
+import { Note } from '../../pages/projects/types/types'
 
 export const useFetchNoteList = () => {
 	const [isLoading, setIsLoading] = useState(false)

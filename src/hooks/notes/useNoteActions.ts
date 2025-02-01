@@ -1,7 +1,7 @@
 import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { db } from '../../firebaseConfig'
+import { db } from '../../../firebaseConfig'
 
 interface IUseNoteActionsProps {
 	noteId?: string
