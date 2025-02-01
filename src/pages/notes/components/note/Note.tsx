@@ -1,48 +1,24 @@
+import { FC } from 'react'
+import { useParams } from 'react-router-dom'
+
 import clsx from 'clsx'
-import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
-import { FC, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { db } from '../../../../../firebaseConfig'
+
 import deleteIcon from '../../../../assets/icons/delete.svg'
+
 import { useFetchNote } from '../../../../hooks/useFetchNote'
+import { useNoteActions } from '../../../../hooks/useNoteActions'
+
 import NotesList from '../notes-list/NotesList'
+
 import classes from './Note.module.scss'
 
 const NotePage: FC = () => {
 	const { noteId } = useParams<{ noteId: string }>()
-	const navigate = useNavigate()
-	const [editNoteMode, setEditNoteMode] = useState<boolean>(false)
-	const [editTitleMode, setEditTitleMode] = useState<boolean>(false)
+
 	const { isNoteLoading, noteText, noteTitle, setNoteText, setNoteTitle } = useFetchNote({ noteId })
-
-	const onDeleteNote = async () => {
-		if (!noteId) return
-
-		try {
-			if (confirm('Do you really want to delete this note?')) {
-				await deleteDoc(doc(db, 'notes', noteId))
-				navigate('/')
-			} else return
-		} catch (error) {
-			console.error('Error deleting note:', error)
-		}
-	}
-
-	const onUpdateNote = async () => {
-		if (!noteId) return
-
-		try {
-			const noteRef = doc(db, 'notes', noteId)
-			await updateDoc(noteRef, {
-				title: noteTitle,
-				text: noteText,
-			})
-			setEditNoteMode(false)
-			setEditTitleMode(false)
-		} catch (error) {
-			console.error('Error updating note:', error)
-		}
-	}
+	const { editNoteMode, editTitleMode, onDeleteNote, onUpdateNote, setEditNoteMode, setEditTitleMode } = useNoteActions(
+		{ noteId, noteText, noteTitle }
+	)
 
 	if (isNoteLoading) {
 		return (
