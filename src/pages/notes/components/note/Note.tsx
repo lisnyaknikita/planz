@@ -1,56 +1,25 @@
 import clsx from 'clsx'
-import { deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore'
-import { FC, useEffect, useState } from 'react'
+import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
+import { FC, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { db } from '../../../../../firebaseConfig'
 import deleteIcon from '../../../../assets/icons/delete.svg'
+import { useFetchNote } from '../../../../hooks/useFetchNote'
 import NotesList from '../notes-list/NotesList'
 import classes from './Note.module.scss'
 
 const NotePage: FC = () => {
 	const { noteId } = useParams<{ noteId: string }>()
 	const navigate = useNavigate()
-	const [noteText, setNoteText] = useState<string>('')
-	const [noteTitle, setNoteTitle] = useState<string>('')
 	const [editNoteMode, setEditNoteMode] = useState<boolean>(false)
 	const [editTitleMode, setEditTitleMode] = useState<boolean>(false)
-	const [isNoteLoading, setIsNoteLoading] = useState<boolean>(false)
-
-	console.log(noteId)
-
-	useEffect(() => {
-		const fetchNote = async () => {
-			if (noteId) {
-				setIsNoteLoading(true)
-				try {
-					console.log('Fetching note with ID:', noteId)
-					const noteRef = doc(db, 'notes', noteId)
-					const noteSnap = await getDoc(noteRef)
-					if (noteSnap.exists()) {
-						const noteData = noteSnap.data()
-						setNoteTitle(noteData.title || '')
-						setNoteText(noteData.text || '')
-					} else {
-						console.error('No such document!')
-					}
-				} catch (error) {
-					console.error('Error fetching note:', error)
-				} finally {
-					setIsNoteLoading(false)
-				}
-			} else {
-				console.error('No noteId provided')
-			}
-		}
-
-		fetchNote()
-	}, [noteId])
+	const { isNoteLoading, noteText, noteTitle, setNoteText, setNoteTitle } = useFetchNote({ noteId })
 
 	const onDeleteNote = async () => {
 		if (!noteId) return
 
 		try {
-			if (confirm('Do you realy want to delete this note?')) {
+			if (confirm('Do you really want to delete this note?')) {
 				await deleteDoc(doc(db, 'notes', noteId))
 				navigate('/')
 			} else return
