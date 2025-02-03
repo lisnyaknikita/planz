@@ -7,6 +7,7 @@ import Modal from '../../ui/modal/Modal'
 import ProjectsList from './components/projects-list/ProjectsList'
 
 import { useCreateProject } from '../../hooks/projects/useCreateProject'
+
 import classes from './Projects.module.scss'
 
 const ProjectsPage: FC = () => {
