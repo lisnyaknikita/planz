@@ -1,7 +1,8 @@
 import { FC } from 'react'
 
-import classes from './Signin.module.scss'
 import SigninForm from './components/sign-in-form/SigninForm'
+
+import classes from './Signin.module.scss'
 
 interface ISigninPageProps {
 	toggleAuthMode: () => void

@@ -13,6 +13,7 @@ import Modal from '../../ui/modal/Modal'
 import NotesList from './components/notes-list/NotesList'
 
 import { useCreateNote } from '../../hooks/notes/useCreateNote'
+
 import classes from './Notes.module.scss'
 
 const NotesPage: FC = () => {

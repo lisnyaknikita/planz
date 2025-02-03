@@ -1,10 +1,14 @@
 import { FC, useEffect, useState } from 'react'
+
 import completeButton from '../../assets/icons/complete-btn.svg'
 import deleteButton from '../../assets/icons/delete.svg'
 import plusButton from '../../assets/icons/plus.svg'
+
+import useHabits from '../../hooks/habits/useHabits'
+
 import Modal from '../../ui/modal/Modal'
+
 import classes from './Habits.module.scss'
-import useHabits from './hooks/use-habits'
 
 const HabitsPage: FC = () => {
 	const [isHabitModalOpened, setIsHabitModalOpened] = useState(false)
