@@ -3,19 +3,18 @@ import { FC, useEffect, useState } from 'react'
 import classes from './Timer.module.scss'
 
 import { getAuth } from 'firebase/auth'
-import { getFirestore } from 'firebase/firestore'
 import { Link } from 'react-router-dom'
 import pauseButton from '../../assets/icons/pause.svg'
 import playButton from '../../assets/icons/play.svg'
 import timerButton from '../../assets/icons/timer.svg'
 import { useTimer } from '../../shared/TimerContext'
+import { formatTime } from '../../utilities/formatTime'
 
 const TimerPage: FC = () => {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [_userId, setUserId] = useState<string | null>(null)
 	const { timerRunning, timerSeconds, currentPhase, numSessions, completedSessions, startTimer, stopTimer, isLoading } =
 		useTimer()
-	//@ts-ignore
-	const firestore = getFirestore()
 	const auth = getAuth()
 
 	useEffect(() => {
@@ -28,13 +27,7 @@ const TimerPage: FC = () => {
 		})
 		document.title = 'Planz | Timer'
 		return () => unsubscribe()
-	}, [])
-
-	const formatTime = (seconds: number) => {
-		const minutes = Math.floor(seconds / 60)
-		const remainingSeconds = seconds % 60
-		return `${minutes}:${remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds}`
-	}
+	}, [auth])
 
 	return (
 		<div className={classes.wrapper}>
