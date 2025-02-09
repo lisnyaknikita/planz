@@ -7,9 +7,8 @@ import { CSS } from '@dnd-kit/utilities'
 import deleteColumnButton from '../../../../../assets/icons/delete.svg'
 import { Column, ID, Task } from '../../../types/types'
 
-import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
-import { db } from '../../../../../../firebaseConfig'
 import addNewTaskIcon from '../../../../../assets/icons/add-new-column-btn.svg'
+import { useColumnActions } from '../../../../../hooks/projects/kanban/useColumnActions'
 import TaskCard from '../task-card/TaskCard'
 
 interface IColumnContainerProps {
@@ -32,53 +31,29 @@ const ColumnContainer: FC<IColumnContainerProps> = ({
 	updateTask,
 }) => {
 	const [editMode, setEditMode] = useState(false)
+	const { handleUpdateColumn, handleDeleteColumn } = useColumnActions(updateColumn, deleteColumn)
 
 	const tasksIds = useMemo(() => {
 		return tasks.map(task => task.id)
 	}, [tasks])
 
-	const { setNodeRef, attributes, listeners, transform, transition } =
-		useSortable({
-			id: column.id,
-			data: {
-				type: 'Column',
-				column,
-			},
-			disabled: editMode,
-		})
+	const { setNodeRef, attributes, listeners, transform, transition } = useSortable({
+		id: column.id,
+		data: {
+			type: 'Column',
+			column,
+		},
+		disabled: editMode,
+	})
 
 	const style = {
 		transition,
 		transform: CSS.Transform.toString(transform),
 	}
 
-	async function handleUpdateColumn(id: ID, title: string) {
-		updateColumn(id, title)
-		try {
-			const columnRef = doc(db, 'columns', id.toString())
-			await updateDoc(columnRef, { title })
-		} catch (error) {
-			console.error('Error updating column in Firestore: ', error)
-		}
-	}
-
-	async function handleDeleteColumn(id: ID) {
-		deleteColumn(id)
-		try {
-			await deleteDoc(doc(db, 'columns', id.toString()))
-		} catch (error) {
-			console.error('Error deleting column from Firestore: ', error)
-		}
-	}
-
 	return (
 		<div className={classes.columnContainer} ref={setNodeRef} style={style}>
-			<div
-				className={classes.titleAndDelete}
-				onClick={() => setEditMode(true)}
-				{...attributes}
-				{...listeners}
-			>
+			<div className={classes.titleAndDelete} onClick={() => setEditMode(true)} {...attributes} {...listeners}>
 				<div className={classes.columnTitle}>
 					{!editMode && column.title}
 					{editMode && (
@@ -96,29 +71,18 @@ const ColumnContainer: FC<IColumnContainerProps> = ({
 						/>
 					)}
 				</div>
-				<button
-					className={classes.deleteColumnButton}
-					onClick={() => handleDeleteColumn(column.id)}
-				>
+				<button className={classes.deleteColumnButton} onClick={() => handleDeleteColumn(column.id)}>
 					<img src={deleteColumnButton} alt='delete column' />
 				</button>
 			</div>
 			<div className={classes.tasks}>
 				<SortableContext items={tasksIds}>
 					{tasks.map(task => (
-						<TaskCard
-							key={task.id}
-							task={task}
-							deleteTask={deleteTask}
-							updateTask={updateTask}
-						/>
+						<TaskCard key={task.id} task={task} deleteTask={deleteTask} updateTask={updateTask} />
 					))}
 				</SortableContext>
 			</div>
-			<button
-				className={classes.addNewTask}
-				onClick={() => createTask(column.id)}
-			>
+			<button className={classes.addNewTask} onClick={() => createTask(column.id)}>
 				<img src={addNewTaskIcon} alt='add new task' />
 				<span>Add new task</span>
 			</button>
