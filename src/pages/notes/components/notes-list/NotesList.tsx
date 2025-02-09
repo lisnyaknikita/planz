@@ -1,10 +1,10 @@
-import { FC, useEffect, useState } from 'react'
+import { FC } from 'react'
+import { Link } from 'react-router-dom'
 
 import clsx from 'clsx'
-import { collection, getDocs, orderBy, query, where } from 'firebase/firestore'
-import { Link } from 'react-router-dom'
-import { auth, db } from '../../../../../firebaseConfig'
-import { Note } from '../../../projects/types/types'
+
+import { useFetchNoteList } from '../../../../hooks/notes/useFetchNoteList'
+
 import classes from './NotesList.module.scss'
 
 interface INotesListProps {
@@ -14,33 +14,7 @@ interface INotesListProps {
 }
 
 const NotesList: FC<INotesListProps> = ({ isListView, isNoteOpened, currentNoteId }) => {
-	const [isLoading, setIsLoading] = useState(false)
-	const [noteList, setNoteList] = useState<Note[]>([])
-	const { currentUser } = auth
-
-	const notesCollectionRef = collection(db, 'notes')
-
-	useEffect(() => {
-		const getNoteList = async () => {
-			setIsLoading(true)
-			try {
-				const q = query(notesCollectionRef, where('userId', '==', currentUser?.uid), orderBy('createdAt', 'asc'))
-				const data = await getDocs(q)
-
-				const filteredData = data.docs.map(doc => ({
-					...(doc.data() as Note),
-					id: doc.id,
-				}))
-				setNoteList(filteredData)
-			} catch (error) {
-				console.error(error)
-			} finally {
-				setIsLoading(false)
-			}
-		}
-
-		getNoteList()
-	}, [currentUser])
+	const { noteList, isLoading } = useFetchNoteList()
 
 	if (isLoading) {
 		return <p style={{ margin: '0 auto' }}>Loading notes...</p>

@@ -1,8 +1,6 @@
-import { ChangeEvent, FC, useEffect, useState } from 'react'
+import { ChangeEvent, FC, useState } from 'react'
+import { Link, Route, Routes, useNavigate } from 'react-router-dom'
 
-import classes from './Layout.module.scss'
-
-import testAvatar from '../../assets/icons/avatar.jpg'
 import editBtn from '../../assets/icons/edit.svg'
 import ToggleIcon from '../../assets/icons/nav-toggle.svg'
 import quitBtn from '../../assets/icons/quit.svg'
@@ -10,11 +8,12 @@ import SettingsIcon from '../../assets/icons/settings.svg'
 
 import clsx from 'clsx'
 
-import { doc, getDoc } from 'firebase/firestore'
-import { Link, Route, Routes, useNavigate } from 'react-router-dom'
-import { auth, db } from '../../../firebaseConfig'
 import { ExtendedUser } from '../../App'
+
 import Navigation from '../../components/navigation/Navigation'
+
+import { useUserAvatar } from '../../hooks/useUserAvatar'
+
 import HabitsPage from '../../pages/habits/Habits'
 import NotesPage from '../../pages/notes/Notes'
 import NotePage from '../../pages/notes/components/note/Note'
@@ -22,11 +21,16 @@ import ProjectsPage from '../../pages/projects/Projects'
 import ProjectPage from '../../pages/projects/components/project/Project'
 import TimerPage from '../../pages/timer/Timer'
 import TimerSettings from '../../pages/timer/components/timer-settings/TimerSettings'
+
 import { logoutUser } from '../../services/logoutService'
 import { updateUserName } from '../../services/updateUserInfoService'
 import { uploadAvatar } from '../../services/uploadAvatarService'
+
 import { TimerProvider } from '../../shared/TimerContext'
+
 import Modal from '../modal/Modal'
+
+import classes from './Layout.module.scss'
 
 interface ILayoutProps {
 	user: ExtendedUser
@@ -37,29 +41,10 @@ const Layout: FC<ILayoutProps> = ({ user }) => {
 	const [isSettingsModalOpened, setIsSettingsModalOpened] = useState(false)
 	const [isEditingName, setIsEditingName] = useState(false)
 	const [newName, setNewName] = useState(user.name)
-	const [avatar, setAvatar] = useState<string>(testAvatar)
+
+	const { avatar, setAvatar } = useUserAvatar()
 
 	const navigate = useNavigate()
-
-	useEffect(() => {
-		const fetchUserData = async () => {
-			try {
-				if (auth.currentUser) {
-					const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid))
-					if (userDoc.exists()) {
-						const userData = userDoc.data()
-						if (userData.avatar) {
-							setAvatar(userData.avatar)
-						}
-					}
-				}
-			} catch (error) {
-				console.error(error)
-			}
-		}
-
-		fetchUserData()
-	}, [auth.currentUser])
 
 	function toggleNavigationVisibility() {
 		setIsNavigationVisible(prev => !prev)

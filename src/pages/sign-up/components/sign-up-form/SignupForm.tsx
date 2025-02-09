@@ -1,8 +1,11 @@
 import { FC } from 'react'
+
 import { registerUser } from '../../../../services/signUpService.ts'
 
 import { SubmitHandler, useForm } from 'react-hook-form'
+
 import toast from 'react-hot-toast'
+
 import classes from './SignupForm.module.scss'
 
 interface IFormValues {
@@ -12,37 +15,17 @@ interface IFormValues {
 }
 
 const SignupForm: FC = () => {
-	// const [email, setEmail] = useState<string>('')
-	// const [password, setPassword] = useState<string>('')
-	// const [name, setName] = useState('')
-	// const [error, setError] = useState<string>('')
-
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<IFormValues>({ mode: 'onChange' })
-
-	// const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
-	// 	e.preventDefault()
-	// 	if (password.length < 8) {
-	// 		setError('Password must be at least 8 characters long')
-	// 		return
-	// 	}
-	// 	try {
-	// 		await registerUser(email, password, name)
-	// 		toast.success('You have successfully registered! Reload the page')
-	// 	} catch (error: any) {
-	// 		setError(error.message)
-	// 		toast.error('Registration error.')
-	// 	}
-	// }
+	} = useForm<IFormValues>({ mode: 'onBlur' })
 
 	const onSubmit: SubmitHandler<IFormValues> = async data => {
 		try {
 			await registerUser(data.email, data.password, data.name)
 			toast.success('You have successfully registered! Reload the page')
-		} catch (error: any) {
+		} catch (error) {
 			toast.error('Registration error.')
 		}
 	}
@@ -106,7 +89,6 @@ const SignupForm: FC = () => {
 				/>
 				{errors.password && <p className={classes.error}>{errors.password.message}</p>}
 			</label>
-			{/* {error && <p className={classes.error}>{error}</p>} */}
 			<button className={classes.button} type='submit'>
 				Create account
 			</button>

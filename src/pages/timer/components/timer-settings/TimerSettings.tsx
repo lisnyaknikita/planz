@@ -1,24 +1,22 @@
 import { FC, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 
 import { getAuth } from 'firebase/auth'
-import { doc, getFirestore, setDoc } from 'firebase/firestore'
-import { Link } from 'react-router-dom'
+
 import backButton from '../../../../assets/icons/back-btn.svg'
+
+import { useUpdateTimerSettings } from '../../../../hooks/timer/useUpdateTimerSettings'
+
 import { useTimer } from '../../../../shared/TimerContext'
+
 import classes from './TimerSettings.module.scss'
 
 const TimerSettings: FC = () => {
-	const {
-		flowDuration,
-		breakDuration,
-		numSessions,
-		updateFlowDuration,
-		updateBreakDuration,
-		updateNumSessions,
-	} = useTimer()
+	const { flowDuration, breakDuration, numSessions, updateFlowDuration, updateBreakDuration, updateNumSessions } =
+		useTimer()
 
 	const [userId, setUserId] = useState<string | null>(null)
-	const firestore = getFirestore()
+	const { updateTimerSettings } = useUpdateTimerSettings({ userId, breakDuration, flowDuration, numSessions })
 
 	useEffect(() => {
 		const auth = getAuth()
@@ -32,26 +30,6 @@ const TimerSettings: FC = () => {
 		document.title = 'Planz | Timer settings'
 		return () => unsubscribe()
 	}, [])
-
-	const updateTimerSettings = async () => {
-		try {
-			if (userId) {
-				const timerSettingsDocRef = doc(
-					firestore,
-					'timer-settings',
-					`settings-for-${userId}`
-				)
-				await setDoc(timerSettingsDocRef, {
-					flowDuration,
-					breakDuration,
-					numSessions,
-				})
-				console.log('Timer settings updated successfully')
-			}
-		} catch (error) {
-			console.error('Error updating timer settings:', error)
-		}
-	}
 
 	return (
 		<div className={classes.wrapper}>

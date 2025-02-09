@@ -11,8 +11,8 @@ import {
 	where,
 } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
-import { auth, db } from '../../../../firebaseConfig'
-import { Habit } from '../../projects/types/types'
+import { auth, db } from '../../../firebaseConfig'
+import { Habit } from '../../pages/projects/types/types'
 
 const habitsCollectionRef = collection(db, 'habits')
 

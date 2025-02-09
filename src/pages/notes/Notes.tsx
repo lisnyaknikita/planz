@@ -1,104 +1,36 @@
-import { FC, useEffect, useState } from 'react'
-
-import classes from './Notes.module.scss'
+import { FC, useEffect } from 'react'
 
 import cardViewButton from '../../assets/icons/cards-view.svg'
 import listViewButton from '../../assets/icons/list-view.svg'
 import plusButton from '../../assets/icons/plus.svg'
 
 import clsx from 'clsx'
-import { Timestamp, addDoc, collection, doc, getDoc, setDoc } from 'firebase/firestore'
-import { useNavigate } from 'react-router-dom'
-import { auth, db } from '../../../firebaseConfig'
+
+import { useNotesView } from '../../hooks/notes/useNotesView'
+
 import Modal from '../../ui/modal/Modal'
+
 import NotesList from './components/notes-list/NotesList'
 
+import { useCreateNote } from '../../hooks/notes/useCreateNote'
+
+import classes from './Notes.module.scss'
+
 const NotesPage: FC = () => {
-	const [isListView, setIsListView] = useState(false)
-	const [isNotesModalOpened, setIsNotesModalOpened] = useState(false)
-	const [newNoteTitle, setNewNoteTitle] = useState('')
-	const [error, setError] = useState<string>('')
-
-	const currentUser = auth?.currentUser
-	const navigate = useNavigate()
-
-	const fetchUserViewPreference = async () => {
-		if (!currentUser) return
-
-		try {
-			const userDocRef = doc(db, 'users', currentUser.uid)
-			const userDoc = await getDoc(userDocRef)
-
-			if (userDoc.exists()) {
-				const userData = userDoc.data()
-				if (userData && typeof userData.isListView === 'boolean') {
-					setIsListView(userData.isListView)
-				}
-			}
-		} catch (error) {
-			console.error('Error fetching user view preference:', error)
-		}
-	}
-
-	const saveUserViewPreference = async (newView: boolean) => {
-		if (!currentUser) return
-
-		try {
-			const userDocRef = doc(db, 'users', currentUser.uid)
-			await setDoc(userDocRef, { isListView: newView }, { merge: true })
-		} catch (error) {
-			console.error('Error saving user view preference:', error)
-		}
-	}
-
-	function toggleModalVisibility() {
-		setIsNotesModalOpened(true)
-	}
-
-	function onChangeView() {
-		setIsListView(prev => {
-			const newView = !prev
-			saveUserViewPreference(newView)
-			return newView
-		})
-	}
-
-	const onSubmitNote = async (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault()
-
-		if (!newNoteTitle.trim()) {
-			setError('Title cannot be empty')
-			return
-		}
-
-		try {
-			const newNoteRef = await addDoc(collection(db, 'notes'), {
-				title: newNoteTitle,
-				text: 'Type something...',
-				userId: auth?.currentUser?.uid,
-				createdAt: Timestamp.now(),
-			})
-
-			navigate(`/note/${newNoteRef.id}`)
-
-			setNewNoteTitle('')
-			setError('')
-			setIsNotesModalOpened(false)
-		} catch (error) {
-			setError('Failed to create note')
-			console.error('Error creating note:', error)
-		}
-	}
+	const { isListView, onChangeView } = useNotesView()
+	const {
+		error,
+		isNotesModalOpened,
+		setIsNotesModalOpened,
+		newNoteTitle,
+		onSubmitNote,
+		setNewNoteTitle,
+		toggleModalVisibility,
+	} = useCreateNote()
 
 	useEffect(() => {
 		document.title = 'Planz | Notes'
 	}, [])
-
-	useEffect(() => {
-		if (currentUser) {
-			fetchUserViewPreference()
-		}
-	}, [currentUser])
 
 	return (
 		<div className={classes.wrapper}>

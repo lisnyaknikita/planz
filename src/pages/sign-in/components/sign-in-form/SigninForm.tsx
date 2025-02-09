@@ -1,8 +1,10 @@
 import { FC } from 'react'
-
 import { SubmitHandler, useForm } from 'react-hook-form'
+
 import toast from 'react-hot-toast'
+
 import { loginUser } from '../../../../services/signInService'
+
 import classes from './SigninForm.module.scss'
 
 interface IFormValues {
@@ -12,26 +14,11 @@ interface IFormValues {
 }
 
 const SigninForm: FC = () => {
-	// const [email, setEmail] = useState<string>('')
-	// const [password, setPassword] = useState<string>('')
-	// const [error, setError] = useState<string>('')
-
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<IFormValues>({ mode: 'onChange' })
-
-	// const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-	// 	e.preventDefault()
-	// 	try {
-	// 		await loginUser(email, password)
-	// 		toast.success('You have successfully logged in!')
-	// 	} catch (error) {
-	// 		setError('Invalid email or password')
-	// 		toast.error('Login error: Please check your email and password.')
-	// 	}
-	// }
+	} = useForm<IFormValues>({ mode: 'onBlur' })
 
 	const onSubmit: SubmitHandler<IFormValues> = async data => {
 		try {
@@ -76,7 +63,6 @@ const SigninForm: FC = () => {
 				/>
 				{errors.password && <p className={classes.error}>{errors.password.message}</p>}
 			</label>
-			{/* {error && <p className={classes.error}>{error}</p>} */}
 			<button className={classes.button} type='submit'>
 				Log in
 			</button>
