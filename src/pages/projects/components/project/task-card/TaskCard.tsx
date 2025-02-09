@@ -1,12 +1,15 @@
 import { FC, useEffect } from 'react'
 
 import { ID, Task } from '../../../types/types'
-import classes from './TaskCard.module.scss'
 
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+
 import deleteTaskButton from '../../../../../assets/icons/delete.svg'
+
 import { useTaskActions } from '../../../../../hooks/projects/kanban/useTaskActions'
+
+import classes from './TaskCard.module.scss'
 
 interface ITaskCardProps {
 	task: Task

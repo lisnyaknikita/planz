@@ -1,15 +1,18 @@
 import { FC, useMemo, useState } from 'react'
 
-import classes from './ColumnContainer.module.scss'
-
 import { SortableContext, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import deleteColumnButton from '../../../../../assets/icons/delete.svg'
-import { Column, ID, Task } from '../../../types/types'
 
 import addNewTaskIcon from '../../../../../assets/icons/add-new-column-btn.svg'
+import deleteColumnButton from '../../../../../assets/icons/delete.svg'
+
+import { Column, ID, Task } from '../../../types/types'
+
 import { useColumnActions } from '../../../../../hooks/projects/kanban/useColumnActions'
+
 import TaskCard from '../task-card/TaskCard'
+
+import classes from './ColumnContainer.module.scss'
 
 interface IColumnContainerProps {
 	column: Column

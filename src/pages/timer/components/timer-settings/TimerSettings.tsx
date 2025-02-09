@@ -1,10 +1,14 @@
 import { FC, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 
 import { getAuth } from 'firebase/auth'
-import { Link } from 'react-router-dom'
+
 import backButton from '../../../../assets/icons/back-btn.svg'
+
 import { useUpdateTimerSettings } from '../../../../hooks/timer/useUpdateTimerSettings'
+
 import { useTimer } from '../../../../shared/TimerContext'
+
 import classes from './TimerSettings.module.scss'
 
 const TimerSettings: FC = () => {

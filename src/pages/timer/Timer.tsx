@@ -1,14 +1,17 @@
 import { FC, useEffect, useState } from 'react'
-
-import classes from './Timer.module.scss'
+import { Link } from 'react-router-dom'
 
 import { getAuth } from 'firebase/auth'
-import { Link } from 'react-router-dom'
+
 import pauseButton from '../../assets/icons/pause.svg'
 import playButton from '../../assets/icons/play.svg'
 import timerButton from '../../assets/icons/timer.svg'
+
 import { useTimer } from '../../shared/TimerContext'
+
 import { formatTime } from '../../utilities/formatTime'
+
+import classes from './Timer.module.scss'
 
 const TimerPage: FC = () => {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars

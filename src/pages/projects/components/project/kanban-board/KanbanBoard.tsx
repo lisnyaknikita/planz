@@ -1,16 +1,18 @@
 import { FC } from 'react'
-
-import classes from './KanbanBoard.module.scss'
+import { createPortal } from 'react-dom'
 
 import newColumnButton from '../../../../../assets/icons/add-new-column-btn.svg'
+
 import ColumnContainer from '../column-container/ColumnContainer'
+import TaskCard from '../task-card/TaskCard'
 
 import { DndContext, DragOverlay } from '@dnd-kit/core'
 import { SortableContext } from '@dnd-kit/sortable'
-import { createPortal } from 'react-dom'
+
 import { useKanbanData } from '../../../../../hooks/projects/kanban/useKanbanData'
 import { useKanbanDragAndDrop } from '../../../../../hooks/projects/kanban/useKanbanDragAndDrop'
-import TaskCard from '../task-card/TaskCard'
+
+import classes from './KanbanBoard.module.scss'
 
 interface IKanbanBoardProps {
 	projectId: string

@@ -24,7 +24,6 @@ export const useUpdateTimerSettings = ({
 					breakDuration,
 					numSessions,
 				})
-				console.log('Timer settings updated successfully')
 			}
 		} catch (error) {
 			console.error('Error updating timer settings:', error)
