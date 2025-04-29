@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 
 import clsx from 'clsx'
@@ -19,6 +19,18 @@ const NotePage: FC = () => {
 	const { editNoteMode, editTitleMode, onDeleteNote, onUpdateNote, setEditNoteMode, setEditTitleMode } = useNoteActions(
 		{ noteId, noteText, noteTitle }
 	)
+
+	const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+	useEffect(() => {
+		if (editNoteMode && textareaRef.current) {
+			const textarea = textareaRef.current
+			const length = textarea.value.length
+			textarea.focus()
+			textarea.setSelectionRange(length, length)
+			textarea.scrollTop = textarea.scrollHeight
+		}
+	}, [editNoteMode])
 
 	if (isNoteLoading) {
 		return (
@@ -68,6 +80,7 @@ const NotePage: FC = () => {
 						)}
 						{editNoteMode ? (
 							<textarea
+								ref={textareaRef}
 								autoFocus={true}
 								className={classes.noteTextArea}
 								value={noteText}
